@@ -14,17 +14,33 @@ module.exports =
     # rubyBlockConverterViewState: @rubyBlockConverterView.serialize()
     
   toCurly: ->
-    editor = atom.workspace.activePaneItem
+    # editor = atom.workspace.activePaneItem()
+    editor = atom.workspace.getActiveEditor()
     @findDo editor
     
   findDo: (editor) ->
-    editor.moveCursorUp()
+    # editor.moveCursorUp()
+    # editor.moveCursorToEndOfLine()
+    # editor.selectToFirstCharacterOfLine()
+    # # selected = editor.getSelectedText()
+    # # selected.scan(/\sdo\s/, @doToBrace(editor))
+    # range = editor.getSelectedBufferRange()
+    # # # range.scan(/\sdo\s/, @doToBrace(editor))
+    # regexDo = /\sdo$/
+    # editor.buffer.scanInRange regexDo, range, (obj) ->
+    #   obj.replace " { "
+    # editor.moveCursorDown()
+    # editor.moveCursorToFirstCharacterOfLine()
+    # editor.deleteToBeginningOfLine()
+    # editor.backspace()
+    editor.moveCursorDown()
     editor.moveCursorToEndOfLine()
     editor.selectToFirstCharacterOfLine()
-    # selected = editor.getSelectedText()
-    # selected.scan(/\sdo\s/, @doToBrace(editor))
     range = editor.getSelectedBufferRange()
-    range.scan(/\sdo\s/, @doToBrace(editor))
-  
+    regexEnd = /^end$/
+    editor.buffer.scanInRange regexEnd, range, (obj) ->
+      # obj.replace " }"
+      console.log obj.matchText
+      
   doToBrace: (editor) ->
     console.log 'found: do'
