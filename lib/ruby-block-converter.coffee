@@ -8,25 +8,26 @@ module.exports =
   activate: (state) ->
     atom.workspaceView.command "ruby-block-converter:toCurlyBrackets", =>
       @toCurlyBrackets()
-    atom.workspaceView.command "ruby-block-converter:toDoEnd", => @toDoEnd()
+    atom.workspaceView.command "ruby-block-converter:toDoEnd", =>
+      @toDoEnd()
 
   deactivate: ->
-    
+
   toCurlyBrackets: ->
     @editor = atom.workspace.getActiveEditor()
-    buffer = @editor.buffer
-    buffer.beginTransaction()
+    @buffer = @editor.buffer
+    @buffer.beginTransaction()
     @replaceDo()
     @replaceEnd()
-    buffer.commitTransaction()
+    @buffer.commitTransaction()
 
   toDoEnd: ->
     @editor = atom.workspace.getActiveEditor()
-    buffer = @editor.buffer
-    buffer.beginTransaction()
+    @buffer = @editor.buffer
+    @buffer.beginTransaction()
     @replaceOpenCurly()
     @replaceClosedCurly()
-    buffer.commitTransaction()
+    @buffer.commitTransaction()
 
   replaceOpenCurly: ->
     @editor.moveCursorToBeginningOfLine()
@@ -41,12 +42,22 @@ module.exports =
   replaceClosedCurly: ->
     @editor.moveCursorToBeginningOfLine()
     @editor.selectToEndOfLine()
+    selection = @editor.getSelection()
+    selection.autoIndentSelectedRows()
     
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_CLOSED_CURLY, range, (obj) ->
       console.log 'found closed curly'
       obj.replace " \nend"
       obj.stop()
+    
+    # delete extra space and move cursor to a convenient spot
+    @editor.moveCursorToBeginningOfLine()
+    @editor.moveCursorUp 1
+    @editor.moveCursorToEndOfLine()
+    @editor.selectToPreviousWordBoundary()
+    selection = @editor.getSelection()
+    selection.delete()
 
   replaceDo: ->
     # find do
