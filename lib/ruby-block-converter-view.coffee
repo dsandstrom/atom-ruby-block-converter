@@ -6,9 +6,10 @@ class RubyBlockConverterView extends View
     @div class: 'ruby-block-converter overlay from-top', =>
       @div "The RubyBlockConverter package is Alive! It's ALIVE!", class: "message"
 
-  initialize: ->
+  initialize: (serializeState, rubyBlockConverter) ->
     # atom.workspaceView.command "ruby-block-converter:toggle", => @toggle()
-    atom.workspaceView.command "ruby-block-converter:toCurly", => @toCurly()
+    @delegate = rubyBlockConverter
+    # atom.workspaceView.command "ruby-block-converter:toCurly", => @toCurly()
     
   toCurly: ->
     # editor = atom.workspace.activePaneItem()
@@ -17,31 +18,25 @@ class RubyBlockConverterView extends View
     
   findDo: (editor) ->
     editor.transact ->
-      # find do
-      editor.moveCursorUp()
-      editor.moveCursorToEndOfLine()
-      editor.selectToFirstCharacterOfLine()
-      # selected = editor.getSelectedText()
-      # selected.scan(/\sdo\s/, @doToBrace(editor))
-      range = editor.getSelectedBufferRange()
-      # # range.scan(/\sdo\s/, @doToBrace(editor))
-      regexDoOnly = /\sdo$/
-      regexDoBar = /\sdo\s\|/
-      editor.buffer.scanInRange regexDoOnly, range, (obj) ->
-        console.log 'found do only'
-        obj.replace " {"
-        obj.stop()
-      editor.buffer.scanInRange regexDoBar, range, (obj) ->
-        console.log 'found do bar'
-        obj.replace " { |"
-        obj.stop()
-      # selection = editor.getSelection()
-      # selectedDo = selection.getText()
-      # editor.deleteLine()
-      # editor.moveCursorDown()
-      # editor.moveCursorToFirstCharacterOfLine()
-      # editor.deleteToBeginningOfLine()
-      # editor.backspace()
+      @delegate.replaceDo editor
+      # # find do
+      # editor.moveCursorUp()
+      # editor.moveCursorToEndOfLine()
+      # editor.selectToFirstCharacterOfLine()
+      # # selected = editor.getSelectedText()
+      # # selected.scan(/\sdo\s/, @doToBrace(editor))
+      # range = editor.getSelectedBufferRange()
+      # # # range.scan(/\sdo\s/, @doToBrace(editor))
+      # regexDoOnly = /\sdo$/
+      # regexDoBar = /\sdo\s\|/
+      # editor.buffer.scanInRange regexDoOnly, range, (obj) ->
+      #   console.log 'found do only'
+      #   obj.replace " {"
+      #   obj.stop()
+      # editor.buffer.scanInRange regexDoBar, range, (obj) ->
+      #   console.log 'found do bar'
+      #   obj.replace " { |"
+      #   obj.stop()
       
       # find end
       editor.moveCursorDown 2
