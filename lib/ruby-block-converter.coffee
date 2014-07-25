@@ -3,6 +3,9 @@ REGEX_DO_BAR       = /\sdo\s\|/
 REGEX_OPEN_CURLY   = /\s\{\s/
 REGEX_CLOSED_CURLY = /\s\}$/
 
+foundStart = false
+foundEnd   = false
+
 module.exports =
 
   activate: (state) ->
@@ -15,19 +18,35 @@ module.exports =
 
   toCurlyBrackets: ->
     @editor = atom.workspace.getActiveEditor()
-    @buffer = @editor.buffer
-    @buffer.beginTransaction()
+    
+    foundStart = false
+    foundEnd   = false
+
+    @editor.buffer.beginTransaction()
     @replaceDo()
-    @replaceEnd()
-    @buffer.commitTransaction()
+    @replaceEnd() if foundStart
+    
+    if foundStart && foundEnd
+      @editor.buffer.commitTransaction()
+    else
+      console.log 'Did not find valid block'
+      @editor.buffer.abortTransaction()
 
   toDoEnd: ->
     @editor = atom.workspace.getActiveEditor()
-    @buffer = @editor.buffer
-    @buffer.beginTransaction()
+    
+    foundStart = false
+    foundEnd   = false
+    
+    @editor.buffer.beginTransaction()
     @replaceOpenCurly()
-    @replaceClosedCurly()
-    @buffer.commitTransaction()
+    @replaceClosedCurly() if foundStart
+    
+    if foundStart && foundEnd
+      @editor.buffer.commitTransaction()
+    else
+      console.log 'Did not find valid block'
+      @editor.buffer.abortTransaction()
 
   replaceOpenCurly: ->
     @editor.moveCursorToBeginningOfLine()
@@ -35,7 +54,8 @@ module.exports =
     
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_OPEN_CURLY, range, (obj) ->
-      console.log 'found open curly'
+      # console.log 'found open curly'
+      foundStart = true
       obj.replace " do\n"
       obj.stop()
   
@@ -47,7 +67,8 @@ module.exports =
     
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_CLOSED_CURLY, range, (obj) ->
-      console.log 'found closed curly'
+      # console.log 'found closed curly'
+      foundEnd = true
       obj.replace " \nend"
       obj.stop()
     
@@ -67,14 +88,18 @@ module.exports =
     
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_DO_ONLY, range, (obj) ->
-      console.log 'found do only'
+      # console.log 'found do only'
+      foundStart = true
       obj.replace " {"
       obj.stop()
-    @editor.buffer.scanInRange REGEX_DO_BAR, range, (obj) ->
-      console.log 'found do bar'
-      obj.replace " { |"
-      obj.stop()
-  
+    
+    unless foundStart
+      @editor.buffer.scanInRange REGEX_DO_BAR, range, (obj) ->
+        # console.log 'found do bar'
+        foundStart = true
+        obj.replace " { |"
+        obj.stop()
+
   replaceEnd: ->
     # find end
     @editor.moveCursorDown 2
@@ -83,16 +108,18 @@ module.exports =
     range = @editor.getSelectedBufferRange()
     regexEnd = /^end$/
     @editor.buffer.scanInRange regexEnd, range, (obj) ->
+      foundEnd = true
       obj.replace ''
       obj.stop()
-    @editor.deleteLine()
-    @editor.moveCursorUp 1
-    @editor.moveCursorToFirstCharacterOfLine()
-    @editor.selectToEndOfLine()
-    selection = @editor.getSelection()
-    selectedLine = selection.getText()
-    @editor.deleteLine()
-    @editor.moveCursorUp 1
-    @editor.moveCursorToEndOfLine()
-    selection = @editor.getSelection()
-    selection.insertText ' ' + selectedLine + ' }'
+    if foundEnd
+      @editor.deleteLine()
+      @editor.moveCursorUp 1
+      @editor.moveCursorToFirstCharacterOfLine()
+      @editor.selectToEndOfLine()
+      selection = @editor.getSelection()
+      selectedLine = selection.getText()
+      @editor.deleteLine()
+      @editor.moveCursorUp 1
+      @editor.moveCursorToEndOfLine()
+      selection = @editor.getSelection()
+      selection.insertText ' ' + selectedLine + ' }'

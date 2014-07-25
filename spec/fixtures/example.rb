@@ -15,3 +15,5 @@ end
 end
 
 1.times { puts 'hello' }
+
+17.times { |banana| puts banana }
