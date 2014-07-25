@@ -1,78 +1,87 @@
-# RubyBlockConverterView = require './ruby-block-converter-view'
+REGEX_DO_ONLY      = /\sdo$/
+REGEX_DO_BAR       = /\sdo\s\|/
+REGEX_OPEN_CURLY   = /\s\{\s/
+REGEX_CLOSED_CURLY = /\s\}$/
 
 module.exports =
-  # rubyBlockConverterView: null
 
   activate: (state) ->
-    # @rubyBlockConverterView = new RubyBlockConverterView state.rubyBlockConverterViewState, @
     atom.workspaceView.command "ruby-block-converter:toCurlyBrackets", =>
       @toCurlyBrackets()
     atom.workspaceView.command "ruby-block-converter:toDoEnd", => @toDoEnd()
 
   deactivate: ->
-    # @rubyBlockConverterView.destroy()
-
-  # serialize: ->
-  #   # rubyBlockConverterViewState: @rubyBlockConverterView.serialize()
     
   toCurlyBrackets: ->
-    editor = atom.workspace.getActiveEditor()
-    buffer = editor.buffer
+    @editor = atom.workspace.getActiveEditor()
+    buffer = @editor.buffer
     buffer.beginTransaction()
-    @replaceDo editor
-    @replaceEnd editor
+    @replaceDo()
+    @replaceEnd()
     buffer.commitTransaction()
 
   toDoEnd: ->
-    editor = atom.workspace.getActiveEditor()
-    buffer = editor.buffer
+    @editor = atom.workspace.getActiveEditor()
+    buffer = @editor.buffer
     buffer.beginTransaction()
-    @replaceOpenCurly editor
-    @replaceCloseCurly editor
+    @replaceOpenCurly()
+    @replaceClosedCurly()
     buffer.commitTransaction()
 
-  replaceOpenCurly: (editor) ->
-  replaceCloseCurly: (editor) ->
+  replaceOpenCurly: ->
+    @editor.moveCursorToBeginningOfLine()
+    @editor.selectToEndOfLine()
+    
+    range = @editor.getSelectedBufferRange()
+    @editor.buffer.scanInRange REGEX_OPEN_CURLY, range, (obj) ->
+      console.log 'found open curly'
+      obj.replace " do\n"
+      obj.stop()
+  
+  replaceClosedCurly: ->
+    @editor.moveCursorToBeginningOfLine()
+    @editor.selectToEndOfLine()
+    
+    range = @editor.getSelectedBufferRange()
+    @editor.buffer.scanInRange REGEX_CLOSED_CURLY, range, (obj) ->
+      console.log 'found closed curly'
+      obj.replace " \nend"
+      obj.stop()
 
-  replaceDo: (editor) ->
+  replaceDo: ->
     # find do
-    editor.moveCursorUp()
-    editor.moveCursorToEndOfLine()
-    editor.selectToFirstCharacterOfLine()
-    # selected = editor.getSelectedText()
-    # selected.scan(/\sdo\s/, @doToBrace(editor))
-    range = editor.getSelectedBufferRange()
-    # # range.scan(/\sdo\s/, @doToBrace(editor))
-    regexDoOnly = /\sdo$/
-    regexDoBar = /\sdo\s\|/
-    editor.buffer.scanInRange regexDoOnly, range, (obj) ->
+    @editor.moveCursorUp()
+    @editor.moveCursorToEndOfLine()
+    @editor.selectToFirstCharacterOfLine()
+    
+    range = @editor.getSelectedBufferRange()
+    @editor.buffer.scanInRange REGEX_DO_ONLY, range, (obj) ->
       console.log 'found do only'
       obj.replace " {"
       obj.stop()
-    editor.buffer.scanInRange regexDoBar, range, (obj) ->
+    @editor.buffer.scanInRange REGEX_DO_BAR, range, (obj) ->
       console.log 'found do bar'
       obj.replace " { |"
       obj.stop()
   
-  replaceEnd: (editor) ->
+  replaceEnd: ->
     # find end
-    editor.moveCursorDown 2
-    editor.moveCursorToEndOfLine()
-    editor.selectToFirstCharacterOfLine()
-    range = editor.getSelectedBufferRange()
+    @editor.moveCursorDown 2
+    @editor.moveCursorToEndOfLine()
+    @editor.selectToFirstCharacterOfLine()
+    range = @editor.getSelectedBufferRange()
     regexEnd = /^end$/
-    editor.buffer.scanInRange regexEnd, range, (obj) ->
+    @editor.buffer.scanInRange regexEnd, range, (obj) ->
       obj.replace ''
       obj.stop()
-    editor.deleteLine()
-    editor.moveCursorUp 1
-    editor.moveCursorToFirstCharacterOfLine()
-    editor.selectToEndOfLine()
-    selection = editor.getSelection()
+    @editor.deleteLine()
+    @editor.moveCursorUp 1
+    @editor.moveCursorToFirstCharacterOfLine()
+    @editor.selectToEndOfLine()
+    selection = @editor.getSelection()
     selectedLine = selection.getText()
-    # console.log selectedDo
-    editor.deleteLine()
-    editor.moveCursorUp 1
-    editor.moveCursorToEndOfLine()
-    selection = editor.getSelection()
+    @editor.deleteLine()
+    @editor.moveCursorUp 1
+    @editor.moveCursorToEndOfLine()
+    selection = @editor.getSelection()
     selection.insertText ' ' + selectedLine + ' }'
