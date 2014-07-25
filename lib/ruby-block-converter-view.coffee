@@ -30,9 +30,11 @@ class RubyBlockConverterView extends View
       editor.buffer.scanInRange regexDoOnly, range, (obj) ->
         console.log 'found do only'
         obj.replace " {"
+        obj.stop()
       editor.buffer.scanInRange regexDoBar, range, (obj) ->
         console.log 'found do bar'
         obj.replace " { |"
+        obj.stop()
       # selection = editor.getSelection()
       # selectedDo = selection.getText()
       # editor.deleteLine()
