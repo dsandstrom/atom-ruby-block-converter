@@ -2,9 +2,12 @@
   "name": "ruby-block-converter",
   "main": "./lib/ruby-block-converter",
   "version": "0.0.0",
-  "description": "A short description of your package",
-  "activationEvents": ["ruby-block-converter:toCurly"],
-  "repository": "https://github.com/atom/ruby-block-converter",
+  "description": "Convert Ruby blocks to/from single-line and multi-line",
+  "activationEvents": [
+    "ruby-block-converter:toCurlyBrackets",
+    "ruby-block-converter:toDoEnd"
+    ],
+  "repository": "https://github.com/dsandstrom/atom-ruby-block-converter",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"

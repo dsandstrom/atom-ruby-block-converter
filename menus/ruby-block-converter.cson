@@ -1,15 +1,16 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
-'context-menu':
-  '.overlayer':
-      'Enable ruby-block-converter': 'ruby-block-converter:toggle'
+# 'context-menu':
+#   '.overlayer':
+#       'Enable ruby-block-converter': 'ruby-block-converter:toggle'
 
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'ruby-block-converter'
+      'label': 'Ruby Block Converter'
       'submenu': [
-        { 'label': 'Toggle', 'command': 'ruby-block-converter:toggle' }
+        { 'label': 'To Curly Brackets ({})', 'command': 'ruby-block-converter:toCurlyBrackets' }
+        { 'label': 'To Do End', 'command': 'ruby-block-converter:toDoEnd' }
       ]
     ]
   }

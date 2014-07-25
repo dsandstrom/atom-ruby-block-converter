@@ -1,26 +1,39 @@
-RubyBlockConverterView = require './ruby-block-converter-view'
+# RubyBlockConverterView = require './ruby-block-converter-view'
 
 module.exports =
-  rubyBlockConverterView: null
+  # rubyBlockConverterView: null
 
   activate: (state) ->
     # @rubyBlockConverterView = new RubyBlockConverterView state.rubyBlockConverterViewState, @
-    atom.workspaceView.command "ruby-block-converter:toCurly", => @toCurly()
+    atom.workspaceView.command "ruby-block-converter:toCurlyBrackets", =>
+      @toCurlyBrackets()
+    atom.workspaceView.command "ruby-block-converter:toDoEnd", => @toDoEnd()
 
   deactivate: ->
-    @rubyBlockConverterView.destroy()
+    # @rubyBlockConverterView.destroy()
 
   # serialize: ->
   #   # rubyBlockConverterViewState: @rubyBlockConverterView.serialize()
     
-  toCurly: ->
+  toCurlyBrackets: ->
     editor = atom.workspace.getActiveEditor()
     buffer = editor.buffer
     buffer.beginTransaction()
     @replaceDo editor
     @replaceEnd editor
     buffer.commitTransaction()
-  
+
+  toDoEnd: ->
+    editor = atom.workspace.getActiveEditor()
+    buffer = editor.buffer
+    buffer.beginTransaction()
+    @replaceOpenCurly editor
+    @replaceCloseCurly editor
+    buffer.commitTransaction()
+
+  replaceOpenCurly: (editor) ->
+  replaceCloseCurly: (editor) ->
+
   replaceDo: (editor) ->
     # find do
     editor.moveCursorUp()
