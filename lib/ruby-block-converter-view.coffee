@@ -25,9 +25,14 @@ class RubyBlockConverterView extends View
       # selected.scan(/\sdo\s/, @doToBrace(editor))
       range = editor.getSelectedBufferRange()
       # # range.scan(/\sdo\s/, @doToBrace(editor))
-      regexDo = /\sdo$/
-      editor.buffer.scanInRange regexDo, range, (obj) ->
-        obj.replace " { "
+      regexDoOnly = /\sdo$/
+      regexDoBar = /\sdo\s\|/
+      editor.buffer.scanInRange regexDoOnly, range, (obj) ->
+        console.log 'found do only'
+        obj.replace " {"
+      editor.buffer.scanInRange regexDoBar, range, (obj) ->
+        console.log 'found do bar'
+        obj.replace " { |"
       # selection = editor.getSelection()
       # selectedDo = selection.getText()
       # editor.deleteLine()
@@ -56,7 +61,7 @@ class RubyBlockConverterView extends View
       editor.moveCursorUp 1
       editor.moveCursorToEndOfLine()
       selection = editor.getSelection()
-      selection.insertText selectedLine + ' }'
+      selection.insertText ' ' + selectedLine + ' }'
     
   doToBrace: (editor) ->
     console.log 'found: do'
