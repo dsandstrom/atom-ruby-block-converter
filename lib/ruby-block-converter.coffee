@@ -17,24 +17,16 @@ module.exports =
 
   deactivate: ->
 
+  # Converts do-end blocks to curly bracket blocks
   toCurlyBrackets: ->
-    @editor = atom.workspace.getActiveEditor()
-    
-    foundStart = false
-    foundEnd   = false
-
-    @editor.buffer.beginTransaction()
+    @initializeTransaction()
     @replaceDo()
     @replaceEnd() if foundStart
     @finishTransaction()
 
+  # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->
-    @editor = atom.workspace.getActiveEditor()
-    
-    foundStart = false
-    foundEnd   = false
-    
-    @editor.buffer.beginTransaction()
+    @initializeTransaction()
     @replaceOpenCurly()
     @replaceClosedCurly() if foundStart
     @finishTransaction()
@@ -42,12 +34,11 @@ module.exports =
   replaceOpenCurly: ->
     @editor.moveCursorToBeginningOfLine()
     @editor.selectToEndOfLine()
-    foundOpenCurlyBar = false
-    
+
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_OPEN_CURLY_BAR, range, (obj) ->
-      # console.log 'found open curly'
       foundStart = true
+      # replace scaces and convert bracket
       barText = obj.matchText
       barText = barText.replace /\s/g, ''
       barText = barText.replace /\{/, ''
@@ -126,6 +117,12 @@ module.exports =
       selection = @editor.getSelection()
       selection.insertText ' ' + selectedLine + ' }'
   
+  initializeTransaction: ->
+    foundStart = false
+    foundEnd   = false
+    @editor = atom.workspace.getActiveEditor()
+    @editor.buffer.beginTransaction()
+
   finishTransaction: ->
     if foundStart && foundEnd
       @editor.buffer.commitTransaction()
