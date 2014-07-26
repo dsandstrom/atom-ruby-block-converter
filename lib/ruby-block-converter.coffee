@@ -23,14 +23,14 @@ module.exports =
     @initializeTransaction()
     @replaceDo()
     @replaceEnd() if foundStart
-    @finishTransaction()
+    @finalizeTransaction()
 
   # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->
     @initializeTransaction()
     @replaceOpenCurly()
     @replaceClosedCurly() if foundStart
-    @finishTransaction()
+    @finalizeTransaction()
 
   replaceOpenCurly: ->
     @editor.moveCursorToBeginningOfLine()
@@ -124,7 +124,7 @@ module.exports =
     @editor = atom.workspace.getActiveEditor()
     @editor.buffer.beginTransaction()
 
-  finishTransaction: ->
+  finalizeTransaction: ->
     if foundStart && foundEnd
       @editor.buffer.commitTransaction()
     else
