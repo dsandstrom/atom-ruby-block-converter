@@ -4,8 +4,6 @@
   "version": "0.0.0",
   "description": "Convert Ruby blocks to/from single-line and multi-line",
   "activationEvents": [
-    "ruby-block-converter:toCurlyBrackets",
-    "ruby-block-converter:toDoEnd"
     ],
   "repository": "https://github.com/dsandstrom/atom-ruby-block-converter",
   "license": "MIT",
@@ -13,5 +11,7 @@
     "atom": ">0.50.0"
   },
   "dependencies": {
+    "fs-plus": "2.x",
+    "temp": "~0.6.0"
   }
 }

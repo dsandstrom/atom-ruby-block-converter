@@ -19,10 +19,11 @@ class CurlyConverter
       
   replaceDo: ->
     # find do
+    # console.log @editor.getText()
     @editor.moveCursorUp()
     @editor.moveCursorToEndOfLine()
     @editor.selectToFirstCharacterOfLine()
-    
+    # console.log 'Do text: ' + @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_DO_ONLY, range, (obj) ->
       # console.log 'found do only'
@@ -36,15 +37,17 @@ class CurlyConverter
         foundStart = true
         obj.replace " { |"
         obj.stop()
+    # console.log foundStart
 
   replaceEnd: ->
     # find end
+    # console.log 'help'
     @editor.moveCursorDown 2
     @editor.moveCursorToEndOfLine()
     @editor.selectToFirstCharacterOfLine()
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_END, range, (obj) ->
-      # console.log 'found end'
+      console.log 'found end'
       foundEnd = true
       obj.replace ''
       obj.stop()
