@@ -24,7 +24,7 @@ class DoEndConverter
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_OPEN_CURLY_BAR, range, (obj) ->
       foundStart = true
-      # replace scaces and convert bracket
+      # replace spaces and convert bracket
       barText = obj.matchText
       barText = barText.replace /\s/g, ''
       barText = barText.replace /\{/, ''
@@ -43,6 +43,10 @@ class DoEndConverter
     @editor.selectToEndOfLine()
     selection = @editor.getSelection()
     selection.autoIndentSelectedRows()
+    @editor.moveCursorToBeginningOfLine()
+    @editor.selectToEndOfLine()
+    selection = @editor.getSelection()
+    console.log ':' + selection.getText()
     
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_CLOSED_CURLY, range, (obj) ->
