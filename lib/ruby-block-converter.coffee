@@ -66,8 +66,13 @@ module.exports =
       obj.replace " \nend"
       obj.stop()
     
-    # delete extra space and move cursor to a convenient spot
+    # indent end
     @editor.moveCursorToBeginningOfLine()
+    @editor.selectToEndOfLine()
+    selection = @editor.getSelection()
+    selection.autoIndentSelectedRows()
+    
+    # delete extra space and move cursor to a convenient spot
     @editor.moveCursorUp 1
     @editor.moveCursorToEndOfLine()
     @editor.selectToPreviousWordBoundary()
