@@ -38,19 +38,60 @@ describe 'RubyBlockConverter', ->
       atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
       expect(editor.getText()).toBe ''
     
-    it 'converts it to a single line block with brackets', ->
-      editor.insertText("1.times do\n  puts 'hello'\nend\n")
-      editor.moveCursorUp 2
-      atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
-      expect(editor.getText()).toBe "1.times { puts 'hello' }\n"
-
+    describe 'when no variable', ->
+      it 'converts it to a single line block with brackets', ->
+        editor.insertText("1.times do\n  puts 'hello'\nend\n")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe "1.times { puts 'hello' }\n"
+    
+    describe 'when tabs', ->
+      it 'converts it to a single line block with brackets', ->
+        editor.insertText("1.times do\n\t\tputs 'hello'\nend\n")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe "1.times { puts 'hello' }\n"
+    
+    describe 'when a variable', ->
+      it 'converts it to a single line block with brackets', ->
+        editor.insertText("1.times do |bub|\n  puts bub\nend\n")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe "1.times { |bub| puts bub }\n"
+    
+    describe 'when nested', ->
+      it 'converts it to a nested single line block with brackets', ->
+        textStart = "1.times do |bub|\n  2.times do |cow|\n    puts bub + cow\nend\nend\n"
+        textEnd = "1.times do |bub|\n  2.times { |cow| puts bub + cow }\nend\n"
+        editor.insertText(textStart)
+        editor.moveCursorUp 3
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe textEnd
+      
   describe 'toDoEnd', ->
     it 'does not change an empty file', ->
       atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
       expect(editor.getText()).toBe ''
     
-    it 'converts it to a multi line block with do-end', ->
-      editor.insertText("1.times { puts 'hello' }\n")
-      editor.moveCursorUp 2
-      atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-      expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend\n"
+    describe 'when no variable', ->
+      it 'converts it to a multi line block with do-end', ->
+        editor.insertText("1.times { puts 'hello' }\n")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend\n"
+    
+    describe 'when a variable', ->
+      it 'converts it to a multi line block with do-end', ->
+        editor.insertText("1.times { |bub| puts 'hello' }\n")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe "1.times do |bub|\n  puts 'hello'\nend\n"
+    
+    describe 'when nested', ->
+      it 'converts it to a multi line block with do-end', ->
+        textStart = "1.times do |bub|\n  2.times { |cow| puts bub + cow }\nend\n"
+        textEnd = "1.times do |bub|\n  2.times do |cow|\n    puts bub + cow\n  end\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd

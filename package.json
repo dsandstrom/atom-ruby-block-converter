@@ -3,8 +3,7 @@
   "main": "./lib/ruby-block-converter",
   "version": "0.0.0",
   "description": "Convert Ruby blocks to/from single-line and multi-line",
-  "activationEvents": [
-    ],
+  "activationEvents": [],
   "repository": "https://github.com/dsandstrom/atom-ruby-block-converter",
   "license": "MIT",
   "engines": {
