@@ -3,6 +3,7 @@ REGEX_DO_BAR       = /\sdo\s\|/
 REGEX_OPEN_CURLY_ONLY   = /\s\{\s/
 REGEX_OPEN_CURLY_BAR   = /\s\{\s\|.*\|\s/
 REGEX_CLOSED_CURLY = /\s\}$/
+REGEX_END = /end$/
 
 foundStart = false
 foundEnd   = false
@@ -99,8 +100,8 @@ module.exports =
     @editor.moveCursorToEndOfLine()
     @editor.selectToFirstCharacterOfLine()
     range = @editor.getSelectedBufferRange()
-    regexEnd = /^end$/
-    @editor.buffer.scanInRange regexEnd, range, (obj) ->
+    @editor.buffer.scanInRange REGEX_END, range, (obj) ->
+      console.log 'found end'
       foundEnd = true
       obj.replace ''
       obj.stop()

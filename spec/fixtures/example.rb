@@ -17,3 +17,7 @@ end
 1.times { puts 'hello' }
 
 17.times { |banana| puts banana }
+
+43.times do |donkey|
+  9.times { |gym| puts donkey + gym }
+end
