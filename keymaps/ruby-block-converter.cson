@@ -1,5 +1,3 @@
-'.workspace':
-  'ctrl-alt-o': 'ruby-block-converter:toggle'
 '.editor':
   'ctrl-{': 'ruby-block-converter:toCurlyBrackets'
   'ctrl-}': 'ruby-block-converter:toDoEnd'
