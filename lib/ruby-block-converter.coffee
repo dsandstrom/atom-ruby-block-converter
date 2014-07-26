@@ -1,6 +1,7 @@
 REGEX_DO_ONLY      = /\sdo$/
 REGEX_DO_BAR       = /\sdo\s\|/
-REGEX_OPEN_CURLY   = /\s\{\s/
+REGEX_OPEN_CURLY_ONLY   = /\s\{\s/
+REGEX_OPEN_CURLY_BAR   = /\s\{\s\|.*\|\s/
 REGEX_CLOSED_CURLY = /\s\}$/
 
 foundStart = false
@@ -25,12 +26,7 @@ module.exports =
     @editor.buffer.beginTransaction()
     @replaceDo()
     @replaceEnd() if foundStart
-    
-    if foundStart && foundEnd
-      @editor.buffer.commitTransaction()
-    else
-      console.log 'Did not find valid block'
-      @editor.buffer.abortTransaction()
+    @finishTransaction()
 
   toDoEnd: ->
     @editor = atom.workspace.getActiveEditor()
@@ -41,23 +37,29 @@ module.exports =
     @editor.buffer.beginTransaction()
     @replaceOpenCurly()
     @replaceClosedCurly() if foundStart
-    
-    if foundStart && foundEnd
-      @editor.buffer.commitTransaction()
-    else
-      console.log 'Did not find valid block'
-      @editor.buffer.abortTransaction()
+    @finishTransaction()
 
   replaceOpenCurly: ->
     @editor.moveCursorToBeginningOfLine()
     @editor.selectToEndOfLine()
+    foundOpenCurlyBar = false
     
     range = @editor.getSelectedBufferRange()
-    @editor.buffer.scanInRange REGEX_OPEN_CURLY, range, (obj) ->
+    @editor.buffer.scanInRange REGEX_OPEN_CURLY_BAR, range, (obj) ->
       # console.log 'found open curly'
       foundStart = true
-      obj.replace " do\n"
+      barText = obj.matchText
+      barText = barText.replace /\s/g, ''
+      barText = barText.replace /\{/, ''
+      obj.replace " do #{barText}\n"
       obj.stop()
+  
+    unless foundStart
+      @editor.buffer.scanInRange REGEX_OPEN_CURLY_ONLY, range, (obj) ->
+        # console.log 'found open curly'
+        foundStart = true
+        obj.replace " do\n"
+        obj.stop()
   
   replaceClosedCurly: ->
     @editor.moveCursorToBeginningOfLine()
@@ -123,3 +125,10 @@ module.exports =
       @editor.moveCursorToEndOfLine()
       selection = @editor.getSelection()
       selection.insertText ' ' + selectedLine + ' }'
+  
+  finishTransaction: ->
+    if foundStart && foundEnd
+      @editor.buffer.commitTransaction()
+    else
+      console.log 'Did not find valid block'
+      @editor.buffer.abortTransaction()
