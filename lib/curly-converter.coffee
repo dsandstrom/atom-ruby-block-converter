@@ -8,7 +8,7 @@ module.exports =
 class CurlyConverter extends RubyBlockConverter
   foundStart = false
   foundEnd   = false
-  
+
   constructor: ->
     super
     foundStart = false
@@ -16,7 +16,7 @@ class CurlyConverter extends RubyBlockConverter
     @replaceDo()
     @replaceEnd() if foundStart
     @finalizeTransaction foundStart && foundEnd
-      
+
   replaceDo: ->
     # find do
     # console.log @editor.getText()
@@ -30,7 +30,7 @@ class CurlyConverter extends RubyBlockConverter
       foundStart = true
       obj.replace " {"
       obj.stop()
-    
+
     unless foundStart
       @editor.buffer.scanInRange REGEX_DO_BAR, range, (obj) ->
         # console.log 'found do bar'

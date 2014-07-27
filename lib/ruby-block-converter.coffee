@@ -3,6 +3,8 @@ class RubyBlockConverter
   constructor: ->
     @initializeTransaction()
 
+  destroy: ->
+
   initializeTransaction: ->
     @editor = atom.workspace.getActiveEditor()
     @editor.buffer.beginTransaction()
