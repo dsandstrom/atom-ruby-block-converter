@@ -1,6 +1,6 @@
 {
   "name": "ruby-block-converter",
-  "main": "./lib/ruby-block-converter",
+  "main": "./lib/main",
   "version": "0.1.0",
   "description": "Convert Ruby blocks to/from single-line and multi-line",
   "activationEvents": [],
