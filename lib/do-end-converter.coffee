@@ -1,21 +1,21 @@
+RubyBlockConverter = require './ruby-block-converter'
+
 REGEX_OPEN_CURLY_ONLY = /\s\{\s/
 REGEX_OPEN_CURLY_BAR  = /\s\{\s\|.*\|\s/
 REGEX_CLOSED_CURLY    = /\s\}$/
 
 module.exports =
-class DoEndConverter
+class DoEndConverter extends RubyBlockConverter
   foundStart = false
   foundEnd   = false
   
-  constructor: (editor) ->
-    @editor = editor
+  constructor: ->
+    super
     foundStart = false
     foundEnd   = false
     @replaceOpenCurly()
     @replaceClosedCurly() if foundStart
-    
-  foundBlock: ->
-    foundStart && foundEnd
+    @finalizeTransaction foundStart && foundEnd
   
   replaceOpenCurly: ->
     @editor.moveCursorToBeginningOfLine()
@@ -46,7 +46,7 @@ class DoEndConverter
     @editor.moveCursorToBeginningOfLine()
     @editor.selectToEndOfLine()
     selection = @editor.getSelection()
-    console.log ':' + selection.getText()
+    # console.log ':' + selection.getText()
     
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_CLOSED_CURLY, range, (obj) ->

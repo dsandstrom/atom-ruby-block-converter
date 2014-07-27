@@ -8,11 +8,11 @@ module.exports =
       @toCurlyBrackets()
     atom.workspaceView.command "ruby-block-converter:toDoEnd", =>
       @toDoEnd()
+    @editor = atom.workspace.getActiveEditor()
 
   deactivate: ->
 
   initializeTransaction: ->
-    @editor = atom.workspace.getActiveEditor()
     @editor.buffer.beginTransaction()
   
   finalizeTransaction: (foundBlock) ->
@@ -24,12 +24,13 @@ module.exports =
 
   # Converts do-end blocks to curly bracket blocks
   toCurlyBrackets: ->
-    @initializeTransaction()
-    @curlyConverter = new CurlyConverter @editor
-    @finalizeTransaction @curlyConverter.foundBlock()
+    # @initializeTransaction()
+    @curlyConverter = new CurlyConverter()
+    # @editor = atom.workspace.getActiveEditor()
+    # @finalizeTransaction @curlyConverter.foundBlock()
 
   # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->
-    @initializeTransaction()
-    @doEndConverter = new DoEndConverter @editor
-    @finalizeTransaction @doEndConverter.foundBlock()
+    # @initializeTransaction()
+    @doEndConverter = new DoEndConverter()
+    # @finalizeTransaction @doEndConverter.foundBlock()

@@ -1,21 +1,21 @@
+RubyBlockConverter = require './ruby-block-converter'
+
 REGEX_DO_ONLY = /\sdo$/
 REGEX_DO_BAR  = /\sdo\s\|/
 REGEX_END     = /end$/
 
 module.exports =
-class CurlyConverter
+class CurlyConverter extends RubyBlockConverter
   foundStart = false
   foundEnd   = false
   
-  constructor: (editor) ->
-    @editor = editor
+  constructor: ->
+    super
     foundStart = false
     foundEnd   = false
     @replaceDo()
     @replaceEnd() if foundStart
-  
-  foundBlock: ->
-    foundStart && foundEnd
+    @finalizeTransaction foundStart && foundEnd
       
   replaceDo: ->
     # find do
