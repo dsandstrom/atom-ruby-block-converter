@@ -1,4 +1,4 @@
-# Ruby Block Converter
+# Ruby Block Converter [![Build Status](https://travis-ci.org/dsandstrom/atom-ruby-block-converter.svg?branch=master)](https://travis-ci.org/dsandstrom/atom-ruby-block-converter)
 ### An Atom Package
 
 Convert Ruby blocks from single line format to/from multi line format.
