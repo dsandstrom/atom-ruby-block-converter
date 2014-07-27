@@ -8,7 +8,7 @@ module.exports =
 class DoEndConverter extends RubyBlockConverter
   foundStart = false
   foundEnd   = false
-  
+
   constructor: ->
     super
     foundStart = false
@@ -16,7 +16,7 @@ class DoEndConverter extends RubyBlockConverter
     @replaceOpenCurly()
     @replaceClosedCurly() if foundStart
     @finalizeTransaction foundStart && foundEnd
-  
+
   replaceOpenCurly: ->
     @editor.moveCursorToBeginningOfLine()
     @editor.selectToEndOfLine()
@@ -30,14 +30,14 @@ class DoEndConverter extends RubyBlockConverter
       barText = barText.replace /\{/, ''
       obj.replace " do #{barText}\n"
       obj.stop()
-  
+
     unless foundStart
       @editor.buffer.scanInRange REGEX_OPEN_CURLY_ONLY, range, (obj) ->
         # console.log 'found open curly'
         foundStart = true
         obj.replace " do\n"
         obj.stop()
-  
+
   replaceClosedCurly: ->
     @editor.moveCursorToBeginningOfLine()
     @editor.selectToEndOfLine()
@@ -47,14 +47,14 @@ class DoEndConverter extends RubyBlockConverter
     @editor.selectToEndOfLine()
     selection = @editor.getSelection()
     # console.log ':' + selection.getText()
-    
+
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_CLOSED_CURLY, range, (obj) ->
       # console.log 'found closed curly'
       foundEnd = true
       obj.replace " \nend"
       obj.stop()
-    
+
     # indent end
     @editor.moveCursorToBeginningOfLine()
     @editor.selectToEndOfLine()
