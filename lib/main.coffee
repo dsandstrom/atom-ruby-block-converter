@@ -24,13 +24,8 @@ module.exports =
 
   # Converts do-end blocks to curly bracket blocks
   toCurlyBrackets: ->
-    # @initializeTransaction()
     @curlyConverter = new CurlyConverter()
-    # @editor = atom.workspace.getActiveEditor()
-    # @finalizeTransaction @curlyConverter.foundBlock()
 
   # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->
-    # @initializeTransaction()
     @doEndConverter = new DoEndConverter()
-    # @finalizeTransaction @doEndConverter.foundBlock()
