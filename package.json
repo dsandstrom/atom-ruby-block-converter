@@ -1,7 +1,7 @@
 {
   "name": "ruby-block-converter",
   "main": "./lib/main",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Convert Ruby blocks to/from single-line and multi-line",
   "activationEvents": [],
   "repository": "https://github.com/dsandstrom/atom-ruby-block-converter",
