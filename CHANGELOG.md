@@ -1,3 +1,6 @@
-## 0.1.0 - First Release
-* Every feature added
-* Every bug fixed
+## 0.4.0 - 2014-07-26
+* Added Travis CI
+* Revised/Cleaned up code
+
+## 0.1.0 - 2014-07-26
+* Initial
