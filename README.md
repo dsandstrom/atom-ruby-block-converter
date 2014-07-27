@@ -7,15 +7,15 @@ Or from curly brackets to/from do-end statements.
 #### Instructions
 > *{ } --> do-end*
 
-Place cursor on line and hit the shortcut. Default: `ctrl-shift-]`
+Place cursor on line and hit the shortcut. Default: `ctrl-{`
 
 > *do-end --> { }*
 
 Place cursor on second line (the one below `do`)
-and hit the shortcut Default: `ctrl-shift-[`
+and hit the shortcut Default: `ctrl-}`
 
 #### Notes
-In Beta, only supports blocks with text that is only one line.
+In Beta, only toggles *single-line* blocks.
 
 #### Commands
 ```coffee
