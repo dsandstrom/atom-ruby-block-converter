@@ -47,7 +47,7 @@ class CurlyConverter extends RubyBlockConverter
     @editor.selectToFirstCharacterOfLine()
     range = @editor.getSelectedBufferRange()
     @editor.buffer.scanInRange REGEX_END, range, (obj) ->
-      console.log 'found end'
+      # console.log 'found end'
       foundEnd = true
       obj.replace ''
       obj.stop()

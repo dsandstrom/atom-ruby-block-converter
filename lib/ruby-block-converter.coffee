@@ -11,5 +11,5 @@ class RubyBlockConverter
     if foundBlock
       @editor.buffer.commitTransaction()
     else
-      console.log 'Did not find valid block'
+      # console.log 'Did not find valid block'
       @editor.buffer.abortTransaction()
