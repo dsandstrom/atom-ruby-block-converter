@@ -11,6 +11,7 @@ class CurlyConverter extends RubyBlockConverter
   foundStartOnCurrent = false
   foundStartOnNext = false
   foundEnd   = false
+  rangeForDo = null
   max_levels = 3
 
   constructor: ->
@@ -32,8 +33,9 @@ class CurlyConverter extends RubyBlockConverter
     currentLineRange = @editor.getSelectedBufferRange()
     @scanForDo @editor, currentLineRange
     foundStartOnCurrent = foundStart
+    # interate up lines until do is found or reached max levels
     i = 0
-    while !foundStart && i < max_levels && i += 1
+    while !foundStart && i < max_levels
       # move one line up
       @editor.moveCursorUp()
       @editor.moveCursorToEndOfLine()
@@ -41,10 +43,12 @@ class CurlyConverter extends RubyBlockConverter
       nextLineRange = @editor.getSelectedBufferRange()
       @scanForDo @editor, nextLineRange
       foundStartOnNext = foundStart
+      i += 1
 
   scanForDo: (editor, range) ->
     editor.buffer.backwardsScanInRange REGEX_DO, range, (obj) ->
       foundStart = true
+      rangeForDo = range
       afterDo = obj.matchText.replace(/\sdo/, '')[0]
       obj.replace ' {' + afterDo ?= ''
       obj.stop()
