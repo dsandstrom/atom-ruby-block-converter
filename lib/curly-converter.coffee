@@ -20,8 +20,8 @@ class CurlyConverter extends RubyBlockConverter
     foundStartOnNext = false
     foundEnd   = false
     @findAndReplaceDo()
-    # @findAndReplaceEnd() if foundStart
-    @finalizeTransaction foundStart #&& foundEnd
+    @findAndReplaceEnd() if foundStart
+    @finalizeTransaction foundStart && foundEnd
 
   findAndReplaceDo: ->
     currentLineRange = null
