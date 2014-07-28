@@ -1,45 +1,55 @@
 RubyBlockConverter = require './ruby-block-converter'
 
-REGEX_DO_ONLY = /\sdo$/
-REGEX_DO_BAR  = /\sdo\s\|/
+REGEX_DO = /\sdo\b/
+# REGEX_DO_ONLY = /\sdo$/
+# REGEX_DO_BAR  = /\sdo\s\|/
 REGEX_END     = /end$/
 
 module.exports =
 class CurlyConverter extends RubyBlockConverter
   foundStart = false
+  foundStartOnCurrent = false
+  foundStartOnNext = false
   foundEnd   = false
+  max_levels = 3
 
   constructor: ->
     super
     foundStart = false
+    foundStartOnCurrent = false
+    foundStartOnNext = false
     foundEnd   = false
-    @replaceDo()
-    @replaceEnd() if foundStart
-    @finalizeTransaction foundStart && foundEnd
+    @findAndReplaceDo()
+    # @findAndReplaceEnd() if foundStart
+    @finalizeTransaction foundStart #&& foundEnd
 
-  replaceDo: ->
-    # find do
-    # console.log @editor.getText()
-    @editor.moveCursorUp()
+  findAndReplaceDo: ->
+    currentLineRange = null
+    nextLineRange = null
+    # look on current line
     @editor.moveCursorToEndOfLine()
     @editor.selectToFirstCharacterOfLine()
-    # console.log 'Do text: ' + @editor.getSelection().getText()
-    range = @editor.getSelectedBufferRange()
-    @editor.buffer.scanInRange REGEX_DO_ONLY, range, (obj) ->
-      # console.log 'found do only'
+    currentLineRange = @editor.getSelectedBufferRange()
+    @scanForDo @editor, currentLineRange
+    foundStartOnCurrent = foundStart
+    i = 0
+    while !foundStart && i < max_levels && i += 1
+      # move one line up
+      @editor.moveCursorUp()
+      @editor.moveCursorToEndOfLine()
+      @editor.selectToFirstCharacterOfLine()
+      nextLineRange = @editor.getSelectedBufferRange()
+      @scanForDo @editor, nextLineRange
+      foundStartOnNext = foundStart
+
+  scanForDo: (editor, range) ->
+    editor.buffer.backwardsScanInRange REGEX_DO, range, (obj) ->
       foundStart = true
-      obj.replace " {"
+      afterDo = obj.matchText.replace(/\sdo/, '')[0]
+      obj.replace ' {' + afterDo ?= ''
       obj.stop()
 
-    unless foundStart
-      @editor.buffer.scanInRange REGEX_DO_BAR, range, (obj) ->
-        # console.log 'found do bar'
-        foundStart = true
-        obj.replace " { |"
-        obj.stop()
-    # console.log foundStart
-
-  replaceEnd: ->
+  findAndReplaceEnd: ->
     # find end
     # console.log 'help'
     @editor.moveCursorDown 2
