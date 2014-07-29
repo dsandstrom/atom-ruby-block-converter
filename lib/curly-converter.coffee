@@ -1,11 +1,10 @@
 RubyBlockConverter = require './ruby-block-converter'
+
 # FIXME: only does inner loop right
 # need to count dos and make sure the right amount of ends
 
 REGEX_DO = /\sdo\b/
-# REGEX_DO_ONLY = /\sdo$/
-# REGEX_DO_BAR  = /\sdo\s\|/
-REGEX_END     = /end\b/
+REGEX_END = /end\b/
 
 module.exports =
 class CurlyConverter extends RubyBlockConverter
@@ -36,9 +35,9 @@ class CurlyConverter extends RubyBlockConverter
     # move cursor incase in the middle of end
     initialCursor = @editor.getCursorBufferPosition()
     # console.log @editor.getCursor().isInsideWord()
-    cursor = @editor.getCursor()
-    startOfCurrentWord = cursor.getBeginningOfCurrentWordBufferPosition()
-    startOfNextWord = cursor.getBeginningOfNextWordBufferPosition()
+    # cursor = @editor.getCursor()
+    # startOfCurrentWord = cursor.getBeginningOfCurrentWordBufferPosition()
+    # startOfNextWord = cursor.getBeginningOfNextWordBufferPosition()
     # endOfCurrentWord = cursor.getBeginningOfNextWordBufferPosition()
     # console.log initialCursor
     # console.log startOfCurrentWord
@@ -49,9 +48,11 @@ class CurlyConverter extends RubyBlockConverter
     #     # console.log 'move cursor to end'
     #     @editor.moveCursorToEndOfWord()
     endOfWordCursor = @editor.getCursorBufferPosition()
+
     @findAndReplaceDo()
     @findAndReplaceEnd() if foundStart
     @collapseBlock() if foundStart && foundEnd
+    @editor.setCursorBufferPosition initialCursor
     @finalizeTransaction foundStart && foundEnd
 
   scanForDo: (editor, range) ->
@@ -130,12 +131,6 @@ class CurlyConverter extends RubyBlockConverter
         i += 1
 
   collapseBlock: ->
-    # console.log 'foundStartOnCurrent: ' + foundStartOnCurrent
-    # console.log 'foundStartOnNext: ' + foundStartOnNext
-    # console.log 'foundStartOnSecond: ' + foundStartOnSecond
-    # console.log 'foundEndOnCurrent: ' + foundEndOnCurrent
-    # console.log 'foundEndOnNext: ' + foundEndOnNext
-    # console.log 'foundEndOnSecond: ' + foundEndOnSecond
     @editor.setCursorBufferPosition initialCursor
     # move cursor to the do, then collapse
     if foundStartOnNext && foundEndOnNext

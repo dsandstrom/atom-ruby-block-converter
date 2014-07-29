@@ -28,3 +28,12 @@ end
 43.times do |donkey|
   9.times { |gym| puts donkey + gym }
 end
+
+6.times {
+  puts 2 * banana
+}
+
+6.times {
+  puts 2 * banana
+  puts 2 * banana
+}
