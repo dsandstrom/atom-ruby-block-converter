@@ -24,8 +24,8 @@ class DoEndConverter extends RubyBlockConverter
 
     @findAndReplaceOpenCurly()
     @findAndReplaceClosedCurly() if foundStart
-    console.log 'foundStart :' + foundStart
-    console.log 'foundEnd :' + foundEnd
+    # console.log 'foundStart :' + foundStart
+    # console.log 'foundEnd :' + foundEnd
     @unCollapseBlock() if foundStart && foundEnd
     if unCollapsed
       @editor.setCursorBufferPosition startRange.end
@@ -33,16 +33,18 @@ class DoEndConverter extends RubyBlockConverter
       @editor.moveCursorToEndOfLine()
     else
       @editor.setCursorBufferPosition initialCursor
-    @finalizeTransaction foundStart && foundEnd
+    @finalizeTransaction foundStart #&& foundEnd
 
   scanForOpen: (editor, range) ->
     editor.buffer.scanInRange /\s\{\s/, range, (obj) ->
+      # console.log 'found start'
       foundStart = true
       startRange = obj.range
       obj.replace ' do '
       obj.stop()
     unless foundStart
       editor.buffer.scanInRange /\s\{$/, range, (obj) ->
+        # console.log 'found start'
         foundStart = true
         startRange = obj.range
         obj.replace ' do'
@@ -73,6 +75,7 @@ class DoEndConverter extends RubyBlockConverter
     r = @editor.getSelectedBufferRange()
     # scan for open
     @scanForOpen @editor, r
+    # console.log foundStart
     foundStartOnCurrent = foundStart
     # go up lines until one { is found
     i = 0
@@ -88,9 +91,9 @@ class DoEndConverter extends RubyBlockConverter
     if initialCursor != null && startRange != null
       # make sure there is no } between the { and cursor
       # move after end of current word
-      startingPoint = [startRange.end.row, startRange.end.row]
-      endingPoint = [initialCursor.row, initialCursor.column]
-      @scanForClosed @editor, [startingPoint, endingPoint]
+      # startingPoint = [startRange.end.row, startRange.end.row]
+      # endingPoint = [initialCursor.row, initialCursor.column]
+      # @scanForClosed @editor, [startingPoint, endingPoint]
       if foundEnd
         # found end too early
         foundEnd = false
@@ -112,9 +115,9 @@ class DoEndConverter extends RubyBlockConverter
         i += 1
 
   unCollapseBlock: ->
-    console.log 'unCollapse'
+    # console.log 'unCollapse'
     foundDoBar = false
-    unCollapsedDo = false
+    # unCollapsedDo = false
     unCollapsedEnd = false
     @editor.setSelectedBufferRange endRange
     @editor.selectToEndOfWord()
@@ -140,8 +143,8 @@ class DoEndConverter extends RubyBlockConverter
           # and new line after do$
           @editor.buffer.scanInRange /do/, newStartRange, (obj) ->
             obj.replace "do\n"
-            unCollapsedDo = true
-      unCollapsed = unCollapsedDo && unCollapsedEnd
+            # unCollapsedDo = true
+            unCollapsed = true
 
       # indent new block
       @editor.setCursorBufferPosition initialCursor

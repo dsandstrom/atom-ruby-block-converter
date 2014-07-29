@@ -93,6 +93,7 @@ describe 'RubyBlockConverter', ->
         textEnd = "1.times do |bub|\n  2.times do |cow|\n    puts bub + cow\n  end\nend\n"
         editor.insertText textStart
         editor.moveCursorUp 2
-        editor.moveCursorRight 12
+        editor.moveCursorToEndOfLine()
+        editor.moveCursorLeft 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
