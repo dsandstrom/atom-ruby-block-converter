@@ -12,6 +12,7 @@ class DoEndConverter extends RubyBlockConverter
   startRange = null
   endRange = null
   initialCursor = null
+  unCollapsed = false
   maxLevels = 3
 
   constructor: ->
@@ -23,8 +24,15 @@ class DoEndConverter extends RubyBlockConverter
 
     @findAndReplaceOpenCurly()
     @findAndReplaceClosedCurly() if foundStart
+    console.log 'foundStart :' + foundStart
+    console.log 'foundEnd :' + foundEnd
     @unCollapseBlock() if foundStart && foundEnd
-    # @editor.setCursorBufferPosition initialCursor
+    if unCollapsed
+      @editor.setCursorBufferPosition startRange.end
+      @editor.moveCursorDown 1
+      @editor.moveCursorToEndOfLine()
+    else
+      @editor.setCursorBufferPosition initialCursor
     @finalizeTransaction foundStart && foundEnd
 
   scanForOpen: (editor, range) ->
@@ -101,48 +109,44 @@ class DoEndConverter extends RubyBlockConverter
         @editor.selectToFirstCharacterOfLine()
         range = @editor.getSelectedBufferRange()
         @scanForClosed @editor, range
-        # if i == 0
-        #   foundEndOnNext = foundEnd
-        # if i == 1
-        #   foundEndOnSecond = foundEnd
         i += 1
 
   unCollapseBlock: ->
-    @editor.setCursorBufferPosition initialCursor
-    console.log startRange.start.row
-    console.log endRange.start.row
-    newEndRangeStart = [endRange.start.row, endRange.start.columns - 1]
-    newEndRangeEnd = [endRange.end.row, endRange.end.columns + 1]
-    newEndRange = [newEndRangeStart, newEndRangeEnd]
+    console.log 'unCollapse'
+    foundDoBar = false
+    unCollapsedDo = false
+    unCollapsedEnd = false
     @editor.setSelectedBufferRange endRange
     @editor.selectToEndOfWord()
-    range = @editor.getSelectedBufferRange()
+    newEndRange = @editor.getSelectedBufferRange()
+    # only do same line
     if startRange.start.row == endRange.start.row
-      @editor.buffer.scanInRange /\send/, range, (obj) ->
-        console.log 'test'
+      # add new line in front of new end
+      @editor.buffer.scanInRange /\send/, newEndRange, (obj) ->
         obj.replace "\nend"
-      @editor.buffer.scanInRange /do/, startRange, (obj) ->
-        obj.replace "do\n"
+        unCollapsedEnd = true
+      if unCollapsedEnd
+        # range needs to get bigger
+        @editor.setCursorBufferPosition startRange.start
+        @editor.selectToEndOfLine()
+        newStartRange = @editor.getSelectedBufferRange()
+        # and new line after bars
+        @editor.buffer.scanInRange /do\s\|.*\|/, newStartRange, (obj) ->
+          text = obj.matchText
+          obj.replace "#{text}\n"
+          foundDoBar = true
+          unCollapsedDo = true
+        unless foundDoBar
+          # and new line after do$
+          @editor.buffer.scanInRange /do/, newStartRange, (obj) ->
+            obj.replace "do\n"
+            unCollapsedDo = true
+      unCollapsed = unCollapsedDo && unCollapsedEnd
+
+      # indent new block
       @editor.setCursorBufferPosition initialCursor
       @editor.moveCursorToFirstCharacterOfLine()
       @editor.selectDown 2
       @editor.selectToEndOfLine()
       selection = @editor.getSelection()
       selection.autoIndentSelectedRows()
-    # move cursor to the do, then collapse
-    # if foundStartOnNext && foundEndOnNext
-    #   @editor.moveCursorUp()
-    #   @joinBlockLines @editor
-    # else if foundStartOnCurrent && foundEndOnSecond
-    #   @joinBlockLines @editor
-    # else if foundStartOnSecond && foundEndOnCurrent
-    #   @editor.moveCursorUp 2
-    #   @joinBlockLines @editor
-
-
-  # joinBlockLines: (editor) ->
-  #   editor.moveCursorToFirstCharacterOfLine()
-  #   editor.selectDown 2
-  #   editor.selectToEndOfLine()
-  #   editor.getSelection().joinLines()
-  #   editor.moveCursorToEndOfLine()

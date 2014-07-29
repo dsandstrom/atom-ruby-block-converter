@@ -37,3 +37,7 @@ end
   puts 2 * banana
   puts 2 * banana
 }
+
+43.times do |donkey|
+  9.times { |gym| puts donkey + gym }
+end

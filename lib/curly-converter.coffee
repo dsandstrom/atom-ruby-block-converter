@@ -20,6 +20,7 @@ class CurlyConverter extends RubyBlockConverter
   endOfWordCursor = null
   doRange = null
   endRange = null
+  collapsed = false
   maxLevels = 3
 
   constructor: ->
@@ -32,6 +33,7 @@ class CurlyConverter extends RubyBlockConverter
     foundEndOnCurrent = false
     foundEndOnNext = false
     foundEndOnSecond = false
+    collapsed = false
     # move cursor incase in the middle of end
     initialCursor = @editor.getCursorBufferPosition()
     # console.log @editor.getCursor().isInsideWord()
@@ -39,20 +41,25 @@ class CurlyConverter extends RubyBlockConverter
     # startOfCurrentWord = cursor.getBeginningOfCurrentWordBufferPosition()
     # startOfNextWord = cursor.getBeginningOfNextWordBufferPosition()
     # endOfCurrentWord = cursor.getBeginningOfNextWordBufferPosition()
-    # console.log initialCursor
-    # console.log startOfCurrentWord
-    # console.log endOfCurrentWord
-    # move to end of word if not at the first character and not after the last
+    # # console.log initialCursor
+    # # console.log startOfCurrentWord
+    # # console.log endOfCurrentWord
+    # # move to end of word if not at the first character and not after the last
+    endOfWordCursor = initialCursor
     # if startOfCurrentWord.row == startOfNextWord.row == initialCursor.row
     #   if startOfCurrentWord.column < initialCursor.column
     #     # console.log 'move cursor to end'
-    #     @editor.moveCursorToEndOfWord()
-    endOfWordCursor = @editor.getCursorBufferPosition()
+    #     endOfWordCursor = endOfCurrentWord
 
     @findAndReplaceDo()
     @findAndReplaceEnd() if foundStart
     @collapseBlock() if foundStart && foundEnd
-    @editor.setCursorBufferPosition initialCursor
+    if collapsed
+      @editor.setCursorBufferPosition doRange.start
+      @editor.moveCursorToEndOfLine()
+    else
+      @editor.setCursorBufferPosition initialCursor
+
     @finalizeTransaction foundStart && foundEnd
 
   scanForDo: (editor, range) ->
@@ -143,6 +150,7 @@ class CurlyConverter extends RubyBlockConverter
       @joinBlockLines @editor
 
   joinBlockLines: (editor) ->
+    collapsed = true
     editor.moveCursorToFirstCharacterOfLine()
     editor.selectDown 2
     editor.selectToEndOfLine()
