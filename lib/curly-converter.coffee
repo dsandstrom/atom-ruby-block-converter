@@ -82,7 +82,7 @@ class CurlyConverter extends RubyBlockConverter
           @scanForEnd @editor, range
           i += 1
       # cancel if end found on a line before cursor
-      if foundEnd
+      if foundEnd && initialCursor != null
         if endRange.start.row < initialCursor.row
           foundEnd = false
 

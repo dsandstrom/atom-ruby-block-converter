@@ -8,7 +8,7 @@ module.exports =
 class DoEndConverter extends RubyBlockConverter
   foundStart = false
   foundEnd   = false
-  foundStartOnCurrent = false
+  # foundStartOnCurrent = false
   startRange = null
   endRange = null
   initialCursor = null
@@ -19,7 +19,7 @@ class DoEndConverter extends RubyBlockConverter
     super
     foundStart = false
     foundEnd   = false
-    foundStartOnCurrent = false
+    # foundStartOnCurrent = false
     initialCursor = @editor.getCursorBufferPosition()
 
     @findAndReplaceOpenCurly()
@@ -33,7 +33,7 @@ class DoEndConverter extends RubyBlockConverter
       @editor.moveCursorToEndOfLine()
     else
       @editor.setCursorBufferPosition initialCursor
-    @finalizeTransaction foundStart #&& foundEnd
+    @finalizeTransaction foundStart && foundEnd
 
   scanForOpen: (editor, range) ->
     editor.buffer.scanInRange /\s\{\s/, range, (obj) ->
@@ -76,7 +76,7 @@ class DoEndConverter extends RubyBlockConverter
     # scan for open
     @scanForOpen @editor, r
     # console.log foundStart
-    foundStartOnCurrent = foundStart
+    # foundStartOnCurrent = foundStart
     # go up lines until one { is found
     i = 0
     while !foundStart && i < maxLevels
@@ -87,11 +87,12 @@ class DoEndConverter extends RubyBlockConverter
       @scanForOpen @editor, r
       i += 1
 
+
   findAndReplaceClosedCurly: ->
-    if initialCursor != null && startRange != null
+    if startRange != null
       # make sure there is no } between the { and cursor
       # move after end of current word
-      startingPoint = [startRange.end.row, startRange.end.row]
+      startingPoint = [startRange.end.row, startRange.end.column]
       # endingPoint = [initialCursor.row, initialCursor.column]
       @editor.setCursorBufferPosition startingPoint
       @editor.selectToEndOfLine()
@@ -113,6 +114,10 @@ class DoEndConverter extends RubyBlockConverter
         range = @editor.getSelectedBufferRange()
         @scanForClosed @editor, range
         i += 1
+      # cancel if end found on a line before cursor
+      if foundEnd && initialCursor != null
+        if endRange.start.row < initialCursor.row
+          foundEnd = false
 
   unCollapseBlock: ->
     # console.log 'unCollapse'
