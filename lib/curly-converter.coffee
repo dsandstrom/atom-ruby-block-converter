@@ -54,11 +54,11 @@ class CurlyConverter extends RubyBlockConverter
     @findAndReplaceDo()
     @findAndReplaceEnd() if foundStart
     @collapseBlock() if foundStart && foundEnd
-    if collapsed
-      @editor.setCursorBufferPosition doRange.start
-      @editor.moveCursorToEndOfLine()
-    else
-      @editor.setCursorBufferPosition initialCursor
+    # if collapsed
+    #   @editor.setCursorBufferPosition doRange.start
+    #   @editor.moveCursorToEndOfLine()
+    # else
+    #   @editor.setCursorBufferPosition initialCursor
 
     @finalizeTransaction foundStart && foundEnd
 
@@ -139,24 +139,39 @@ class CurlyConverter extends RubyBlockConverter
           i += 1
 
   collapseBlock: ->
-    console.log foundStartOnNext
-    console.log foundEndOnNext
+    console.log 'doRange: ' + doRange
+    console.log 'endRange: ' + endRange
 
-    @editor.setCursorBufferPosition initialCursor
-    # move cursor to the do, then collapse
-    if foundStartOnNext && foundEndOnNext
-      @editor.moveCursorUp()
-      @joinBlockLines @editor
-    else if foundStartOnCurrent && foundEndOnSecond
-      @joinBlockLines @editor
-    else if foundStartOnSecond && foundEndOnCurrent
-      @editor.moveCursorUp 2
-      @joinBlockLines @editor
+    if doRange.start.row + 2 == endRange.start.row
+      console.log 'collapse'
+      @editor.setCursorBufferPosition doRange.start
+      @editor.moveCursorToFirstCharacterOfLine()
+      @editor.selectDown 2
+      @editor.selectToEndOfLine()
+      @editor.getSelection().joinLines()
+      @editor.moveCursorToEndOfLine()
+    else if doRange.start.row + 1 == endRange.start.row
+      @editor.setCursorBufferPosition doRange.start
+      @editor.moveCursorToFirstCharacterOfLine()
+      @editor.selectDown 1
+      @editor.selectToEndOfLine()
+      @editor.getSelection().joinLines()
+      @editor.moveCursorToEndOfLine()
+    # @editor.setCursorBufferPosition initialCursor
+    # # move cursor to the do, then collapse
+    # if foundStartOnNext && foundEndOnNext
+    #   @editor.moveCursorUp()
+    #   @joinBlockLines @editor
+    # else if foundStartOnCurrent && foundEndOnSecond
+    #   @joinBlockLines @editor
+    # else if foundStartOnSecond && foundEndOnCurrent
+    #   @editor.moveCursorUp 2
+    #   @joinBlockLines @editor
 
   joinBlockLines: (editor) ->
     collapsed = true
     editor.moveCursorToFirstCharacterOfLine()
     editor.selectDown 2
     editor.selectToEndOfLine()
-    editor.getSelection().joinLines()
     editor.moveCursorToEndOfLine()
+    editor.getSelection().joinLines()
