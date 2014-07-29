@@ -130,12 +130,12 @@ class CurlyConverter extends RubyBlockConverter
         i += 1
 
   collapseBlock: ->
-    console.log 'foundStartOnCurrent: ' + foundStartOnCurrent
-    console.log 'foundStartOnNext: ' + foundStartOnNext
-    console.log 'foundStartOnSecond: ' + foundStartOnSecond
-    console.log 'foundEndOnCurrent: ' + foundEndOnCurrent
-    console.log 'foundEndOnNext: ' + foundEndOnNext
-    console.log 'foundEndOnSecond: ' + foundEndOnSecond
+    # console.log 'foundStartOnCurrent: ' + foundStartOnCurrent
+    # console.log 'foundStartOnNext: ' + foundStartOnNext
+    # console.log 'foundStartOnSecond: ' + foundStartOnSecond
+    # console.log 'foundEndOnCurrent: ' + foundEndOnCurrent
+    # console.log 'foundEndOnNext: ' + foundEndOnNext
+    # console.log 'foundEndOnSecond: ' + foundEndOnSecond
     @editor.setCursorBufferPosition initialCursor
     # move cursor to the do, then collapse
     if foundStartOnNext && foundEndOnNext
