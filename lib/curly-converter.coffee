@@ -10,11 +10,13 @@ REGEX_END     = /end\b/
 module.exports =
 class CurlyConverter extends RubyBlockConverter
   foundStart = false
+  foundEnd = false
   foundStartOnCurrent = false
+  foundStartOnNext = false
+  foundStartOnSecond = false
   foundEndOnCurrent = false
   foundEndOnNext = false
-  foundStartOnNext = false
-  foundEnd = false
+  foundEndOnSecond = false
   initialCursor = null
   endOfWordCursor = null
   doRange = null
@@ -24,9 +26,13 @@ class CurlyConverter extends RubyBlockConverter
   constructor: ->
     super
     foundStart = false
+    foundEnd   = false
     foundStartOnCurrent = false
     foundStartOnNext = false
-    foundEnd   = false
+    foundStartOnSecond = false
+    foundEndOnCurrent = false
+    foundEndOnNext = false
+    foundEndOnSecond = false
     # move cursor incase in the middle of end
     initialCursor = @editor.getCursorBufferPosition()
     # console.log @editor.getCursor().isInsideWord()
@@ -88,6 +94,8 @@ class CurlyConverter extends RubyBlockConverter
       @scanForDo @editor, r
       if i == 0
         foundStartOnNext = foundStart
+      if i == 1
+        foundStartOnSecond = foundStart
       i += 1
 
   findAndReplaceEnd: ->
@@ -117,12 +125,31 @@ class CurlyConverter extends RubyBlockConverter
         @scanForEnd @editor, range
         if i == 0
           foundEndOnNext = foundEnd
+        if i == 1
+          foundEndOnSecond = foundEnd
         i += 1
 
   collapseBlock: ->
-    # console.log 'foundStartOnCurrent: ' + foundStartOnCurrent
-    # console.log 'foundStartOnNext: ' + foundStartOnNext
-    # console.log 'foundEndOnCurrent: ' + foundEndOnCurrent
-    # console.log 'foundEndOnNext: ' + foundEndOnNext
-    # if foundStartOnNext && foundEndOnNext
-    #   console.log 'yp'
+    console.log 'foundStartOnCurrent: ' + foundStartOnCurrent
+    console.log 'foundStartOnNext: ' + foundStartOnNext
+    console.log 'foundStartOnSecond: ' + foundStartOnSecond
+    console.log 'foundEndOnCurrent: ' + foundEndOnCurrent
+    console.log 'foundEndOnNext: ' + foundEndOnNext
+    console.log 'foundEndOnSecond: ' + foundEndOnSecond
+    @editor.setCursorBufferPosition initialCursor
+    # move cursor to the do, then collapse
+    if foundStartOnNext && foundEndOnNext
+      @editor.moveCursorUp()
+      @joinBlockLines @editor
+    else if foundStartOnCurrent && foundEndOnSecond
+      @joinBlockLines @editor
+    else if foundStartOnSecond && foundEndOnCurrent
+      @editor.moveCursorUp 2
+      @joinBlockLines @editor
+
+  joinBlockLines: (editor) ->
+    @editor.moveCursorToFirstCharacterOfLine()
+    @editor.selectDown 2
+    @editor.selectToEndOfLine()
+    @editor.getSelection().joinLines()
+    @editor.moveCursorToEndOfLine()
