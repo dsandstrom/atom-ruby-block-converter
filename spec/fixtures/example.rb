@@ -14,6 +14,13 @@ end
   end
 end
 
+6.times do |banana|
+  puts banana
+  puts 2 * banana
+end
+
+1.times do puts 'hello' end
+
 1.times { puts 'hello' }
 
 17.times { |banana| puts banana }
