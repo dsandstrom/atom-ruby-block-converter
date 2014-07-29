@@ -111,33 +111,37 @@ class CurlyConverter extends RubyBlockConverter
       # make sure there is no end between the do and cursor
       # move after end of current word
       startingPoint = [doRange.end.row, doRange.end.column]
-      endingPoint = [endOfWordCursor.row, endOfWordCursor.column]
-      @scanForEnd @editor, [startingPoint, endingPoint]
-      if foundEnd
-        # found end too early
-        foundEnd = false
-      else
-        # initial cursor range
-        @editor.setCursorBufferPosition endOfWordCursor
-        @editor.selectToEndOfLine()
-        range = @editor.getSelectedBufferRange()
-        @scanForEnd @editor, range
-        foundEndOnCurrent = foundEnd
-      i = 0
-      while !foundEnd && i < maxLevels
-        # move down a line
-        @editor.moveCursorDown 1
-        @editor.moveCursorToEndOfLine()
-        @editor.selectToFirstCharacterOfLine()
-        range = @editor.getSelectedBufferRange()
-        @scanForEnd @editor, range
-        if i == 0
-          foundEndOnNext = foundEnd
-        if i == 1
-          foundEndOnSecond = foundEnd
-        i += 1
+      # endingPoint = [endOfWordCursor.row, endOfWordCursor.column]
+      @editor.setCursorBufferPosition startingPoint
+      @editor.selectToEndOfLine()
+      r = @editor.getSelectedBufferRange()
+      @scanForEnd @editor, r
+      foundEndOnCurrent = foundEnd
+      unless foundEnd
+        # # initial cursor range
+        # @editor.setCursorBufferPosition startingPoint
+        # @editor.selectToEndOfLine()
+        # range = @editor.getSelectedBufferRange()
+        # @scanForEnd @editor, range
+        # foundEndOnCurrent = foundEnd
+        i = 0
+        while !foundEnd && i < maxLevels
+          # move down a line
+          @editor.moveCursorDown 1
+          @editor.moveCursorToEndOfLine()
+          @editor.selectToFirstCharacterOfLine()
+          range = @editor.getSelectedBufferRange()
+          @scanForEnd @editor, range
+          if i == 0
+            foundEndOnNext = foundEnd
+          if i == 1
+            foundEndOnSecond = foundEnd
+          i += 1
 
   collapseBlock: ->
+    console.log foundStartOnNext
+    console.log foundEndOnNext
+
     @editor.setCursorBufferPosition initialCursor
     # move cursor to the do, then collapse
     if foundStartOnNext && foundEndOnNext
