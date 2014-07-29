@@ -28,13 +28,13 @@ class CurlyConverter extends RubyBlockConverter
     # console.log @editor.getCursor().isInsideWord()
     cursor = @editor.getCursor()
     startOfCurrentWord = cursor.getBeginningOfCurrentWordBufferPosition()
+    startOfNextWord = cursor.getBeginningOfNextWordBufferPosition()
     # endOfCurrentWord = cursor.getBeginningOfNextWordBufferPosition()
     console.log initialCursor
     console.log startOfCurrentWord
-    console.log cursor.isInsideWord()
     # console.log endOfCurrentWord
     # move to end of word if not at the first character and not after the last
-    if startOfCurrentWord.row == initialCursor.row
+    if startOfCurrentWord.row == startOfNextWord.row == initialCursor.row
       if startOfCurrentWord.column < initialCursor.column
         console.log 'move cursor to end'
         @editor.moveCursorToEndOfWord()
