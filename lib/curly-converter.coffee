@@ -62,7 +62,7 @@ class CurlyConverter extends RubyBlockConverter
       i += 1
 
   findAndReplaceEnd: ->
-    if initialCursor != null && doRange != null
+    if doRange != null
       # make sure there is no end between the do and cursor
       # move after end of current word
       startingPoint = [doRange.end.row, doRange.end.column]
@@ -81,6 +81,10 @@ class CurlyConverter extends RubyBlockConverter
           range = @editor.getSelectedBufferRange()
           @scanForEnd @editor, range
           i += 1
+      # cancel if end found on a line before cursor
+      if foundEnd
+        if endRange.start.row < initialCursor.row
+          foundEnd = false
 
   collapseBlock: ->
     # see how many lines between start and end
