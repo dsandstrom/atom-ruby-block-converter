@@ -148,8 +148,8 @@ class CurlyConverter extends RubyBlockConverter
       @joinBlockLines @editor
 
   joinBlockLines: (editor) ->
-    @editor.moveCursorToFirstCharacterOfLine()
-    @editor.selectDown 2
-    @editor.selectToEndOfLine()
-    @editor.getSelection().joinLines()
-    @editor.moveCursorToEndOfLine()
+    editor.moveCursorToFirstCharacterOfLine()
+    editor.selectDown 2
+    editor.selectToEndOfLine()
+    editor.getSelection().joinLines()
+    editor.moveCursorToEndOfLine()
