@@ -91,13 +91,13 @@ class DoEndConverter extends RubyBlockConverter
     if initialCursor != null && startRange != null
       # make sure there is no } between the { and cursor
       # move after end of current word
-      # startingPoint = [startRange.end.row, startRange.end.row]
+      startingPoint = [startRange.end.row, startRange.end.row]
       # endingPoint = [initialCursor.row, initialCursor.column]
-      # @scanForClosed @editor, [startingPoint, endingPoint]
-      if foundEnd
-        # found end too early
-        foundEnd = false
-      else
+      @editor.setCursorBufferPosition startingPoint
+      @editor.selectToEndOfLine()
+      range = @editor.getSelectedBufferRange()
+      @scanForClosed @editor, range
+      unless foundEnd
         # initial cursor range
         @editor.setCursorBufferPosition initialCursor
         @editor.selectToEndOfLine()

@@ -25,6 +25,7 @@ end
 
 17.times { |banana| puts banana }
 
+# TODO: doesn't unwrap well
 43.times do |donkey|
   9.times { |gym| puts donkey + gym }
 end
@@ -38,6 +39,7 @@ end
   puts 2 * banana
 }
 
+# TODO: still fails on outside of }
 43.times do |donkey|
   9.times { |gym| puts donkey + gym }
 end
