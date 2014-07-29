@@ -139,39 +139,14 @@ class CurlyConverter extends RubyBlockConverter
           i += 1
 
   collapseBlock: ->
-    console.log 'doRange: ' + doRange
-    console.log 'endRange: ' + endRange
+    # see how many lines between start and end
+    lineSeparation = endRange.start.row - doRange.start.row
 
-    if doRange.start.row + 2 == endRange.start.row
-      console.log 'collapse'
+    # join lines if it makes sense
+    if 1 <= lineSeparation <= 2
       @editor.setCursorBufferPosition doRange.start
       @editor.moveCursorToFirstCharacterOfLine()
-      @editor.selectDown 2
+      @editor.selectDown lineSeparation
       @editor.selectToEndOfLine()
       @editor.getSelection().joinLines()
       @editor.moveCursorToEndOfLine()
-    else if doRange.start.row + 1 == endRange.start.row
-      @editor.setCursorBufferPosition doRange.start
-      @editor.moveCursorToFirstCharacterOfLine()
-      @editor.selectDown 1
-      @editor.selectToEndOfLine()
-      @editor.getSelection().joinLines()
-      @editor.moveCursorToEndOfLine()
-    # @editor.setCursorBufferPosition initialCursor
-    # # move cursor to the do, then collapse
-    # if foundStartOnNext && foundEndOnNext
-    #   @editor.moveCursorUp()
-    #   @joinBlockLines @editor
-    # else if foundStartOnCurrent && foundEndOnSecond
-    #   @joinBlockLines @editor
-    # else if foundStartOnSecond && foundEndOnCurrent
-    #   @editor.moveCursorUp 2
-    #   @joinBlockLines @editor
-
-  joinBlockLines: (editor) ->
-    collapsed = true
-    editor.moveCursorToFirstCharacterOfLine()
-    editor.selectDown 2
-    editor.selectToEndOfLine()
-    editor.moveCursorToEndOfLine()
-    editor.getSelection().joinLines()
