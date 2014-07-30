@@ -13,6 +13,7 @@ class CurlyConverter extends RubyBlockConverter
   initialCursor = null
   doRange = null
   endRange = null
+  linesInFile = null
   maxLevels = 3
 
   constructor: ->
@@ -20,6 +21,9 @@ class CurlyConverter extends RubyBlockConverter
     foundStart = false
     foundEnd   = false
     initialCursor = @editor.getCursorBufferPosition()
+    @editor.selectAll()
+    linesInFile = @editor.getSelectedBufferRange().getRows().length
+    console.log 'linesInFile: ' + linesInFile
 
     @findAndReplaceDo()
     @findAndReplaceEnd() if foundStart
@@ -46,10 +50,14 @@ class CurlyConverter extends RubyBlockConverter
   notFirstRow: (editor) ->
     editor.getCursorBufferPosition().row > 0
 
+  notLastRow: (editor) ->
+    editor.getCursorBufferPosition().row + 1 < linesInFile
+
   findAndReplaceDo: ->
     # look on current line
     # only looks left because it makes finding the correct
     # end easier with nested blocks
+    @editor.setCursorBufferPosition initialCursor
     @editor.selectToFirstCharacterOfLine()
     # console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
@@ -62,7 +70,7 @@ class CurlyConverter extends RubyBlockConverter
       # move up line up
       @editor.moveCursorUp()
       @editor.moveCursorToEndOfLine()
-      console.log @editor.getCursorBufferPosition()
+      # console.log @editor.getCursorBufferPosition()
       @editor.selectToFirstCharacterOfLine()
       # console.log @editor.getSelection().getText()
       r = @editor.getSelectedBufferRange()
@@ -81,7 +89,7 @@ class CurlyConverter extends RubyBlockConverter
       unless foundEnd
         # initial cursor range
         i = 0
-        while !foundEnd && i < maxLevels
+        while !foundEnd && i < maxLevels && @notLastRow(@editor)
           # move down a line
           @editor.moveCursorDown 1
           @editor.moveCursorToEndOfLine()

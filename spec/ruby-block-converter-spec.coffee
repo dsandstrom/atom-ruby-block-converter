@@ -117,7 +117,7 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe startText
 
     describe 'when cursor is before do', ->
-      it "doesn't convert it", ->
+      fit "doesn't convert it", ->
         startText = "1.times do\n  puts 'hello'\nend\n"
         editor.insertText(startText)
         editor.moveCursorUp 3
@@ -187,3 +187,48 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend"
+
+    describe 'when cursor right of {', ->
+      it 'converts it to a multi line block with do-end', ->
+        startText = "1.times { puts 'hello' }\n"
+        endText = "1.times do\n  puts 'hello'\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 1
+        i = 0
+        while i < 9
+          editor.moveCursorRight()
+          i += 1
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe endText
+
+    describe 'when cursor left of {', ->
+      it "doesn't convert it", ->
+        startText = "1.times { puts 'hello' }\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 1
+        i = 0
+        while i < 8
+          editor.moveCursorRight()
+          i += 1
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe startText
+
+    # describe 'when cursor in the middle of do', ->
+    #   it "doesn't convert it", ->
+    #     startText = "1.times do\n  puts 'hello'\nend\n"
+    #     editor.insertText(startText)
+    #     editor.moveCursorUp 3
+    #     editor.moveCursorToEndOfLine()
+    #     editor.moveCursorLeft 1
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe startText
+    #
+    # describe 'when cursor is before do', ->
+    #   it "doesn't convert it", ->
+    #     startText = "1.times do\n  puts 'hello'\nend\n"
+    #     editor.insertText(startText)
+    #     editor.moveCursorUp 3
+    #     editor.moveCursorToEndOfLine()
+    #     editor.moveCursorLeft 2
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe startText
