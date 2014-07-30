@@ -31,36 +31,20 @@ class DoEndConverter extends RubyBlockConverter
     @finalizeTransaction foundStart && foundEnd
 
   scanForOpen: (editor, range) ->
-    editor.buffer.scanInRange /\s\{\s/, range, (obj) ->
+    editor.buffer.scanInRange /\s\{(\s|$)/, range, (obj) ->
       foundStart = true
       startRange = obj.range
-      obj.replace ' do '
+      afterOpen = obj.matchText.replace(/\s{/, '') || ''
+      obj.replace ' do' + afterOpen
       obj.stop()
-    unless foundStart
-      editor.buffer.scanInRange /\s\{$/, range, (obj) ->
-        foundStart = true
-        startRange = obj.range
-        obj.replace ' do'
-        obj.stop()
 
   scanForClosed: (editor, range) ->
-    editor.buffer.scanInRange /\s\}$/, range, (obj) ->
+    editor.buffer.scanInRange /(^|\s)\}(\W|$)/, range, (obj) ->
       foundEnd = true
       endRange = obj.range
-      obj.replace ' end'
+      beforeClosed = obj.matchText.replace(/}/, '') || ''
+      obj.replace beforeClosed + 'end'
       obj.stop()
-    unless foundEnd
-      editor.buffer.scanInRange /\s\}\W/, range, (obj) ->
-        foundEnd = true
-        endRange = obj.range
-        obj.replace ' end '
-        obj.stop()
-    unless foundEnd
-      editor.buffer.scanInRange /^\}/, range, (obj) ->
-        foundEnd = true
-        endRange = obj.range
-        obj.replace 'end'
-        obj.stop()
 
   notFirstRow: (editor) ->
     editor.getCursorBufferPosition().row > 0
@@ -86,7 +70,6 @@ class DoEndConverter extends RubyBlockConverter
       @scanForOpen @editor, r
       i += 1
 
-
   findAndReplaceClosedCurly: ->
     if startRange != null
       # make sure there is no } between the { and cursor
@@ -111,6 +94,7 @@ class DoEndConverter extends RubyBlockConverter
           foundEnd = false
 
   unCollapseBlock: ->
+    # TODO: maybe make it's own transaction
     foundDoBar = false
     unCollapsedEnd = false
     @editor.setSelectedBufferRange endRange

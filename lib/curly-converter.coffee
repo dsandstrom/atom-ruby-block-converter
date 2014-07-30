@@ -31,8 +31,8 @@ class CurlyConverter extends RubyBlockConverter
     editor.buffer.backwardsScanInRange /\sdo\b/, range, (obj) ->
       foundStart = true
       doRange = obj.range
-      afterDo = obj.matchText.replace(/\sdo/, '')[0]
-      obj.replace ' {' + afterDo ?= ''
+      afterDo = obj.matchText.replace(/\sdo/, '') ||  ''
+      obj.replace ' {' + afterDo
       obj.stop()
 
   scanForEnd: (editor, range) ->
@@ -94,6 +94,7 @@ class CurlyConverter extends RubyBlockConverter
           foundEnd = false
 
   collapseBlock: ->
+    # TODO: maybe make it's own transaction
     # see how many lines between start and end
     lineSeparation = endRange.start.row - doRange.start.row
 

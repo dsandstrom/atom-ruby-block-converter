@@ -31,11 +31,11 @@ end
   9.times { |gym| puts donkey + gym }
 end
 
-6.times {
+6.times { |banana|
   puts 2 * banana
 }
 
-6.times {
+6.times { |banana|
   puts 2 * banana
   puts 2 * banana
 }
