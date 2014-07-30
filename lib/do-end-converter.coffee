@@ -121,10 +121,11 @@ class DoEndConverter extends RubyBlockConverter
             obj.replace "do\n"
             unCollapsed = true
 
-      # indent new block
-      @editor.setCursorBufferPosition initialCursor
+      # indent new block based on original line
+      @editor.setCursorBufferPosition startRange.start
+      @editor.moveCursorDown 1
       @editor.moveCursorToFirstCharacterOfLine()
-      @editor.selectDown 2
+      @editor.selectDown 1
       @editor.selectToEndOfLine()
       selection = @editor.getSelection()
       selection.autoIndentSelectedRows()

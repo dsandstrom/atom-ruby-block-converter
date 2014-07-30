@@ -19,6 +19,17 @@ end
   puts 2 * banana
 end
 
+43.times do |donkey|
+
+
+
+
+
+
+
+  9.times { |gym| puts donkey + gym }
+end
+
 1.times do puts 'hello' end
 
 # not working on right of {
