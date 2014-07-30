@@ -18,7 +18,6 @@ class DoEndConverter extends RubyBlockConverter
     initialCursor = @editor.getCursorBufferPosition()
     @editor.selectAll()
     linesInFile = @editor.getSelectedBufferRange().getRows().length
-    console.log linesInFile
     @findAndReplaceOpenCurly()
     @findAndReplaceClosedCurly() if foundStart
     @unCollapseBlock() if foundStart && foundEnd
@@ -50,7 +49,6 @@ class DoEndConverter extends RubyBlockConverter
     editor.getCursorBufferPosition().row > 0
 
   notLastRow: (editor) ->
-    console.log editor.getCursorBufferPosition().row + 1
     editor.getCursorBufferPosition().row + 1 < linesInFile
 
   findAndReplaceOpenCurly: ->

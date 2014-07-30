@@ -12,10 +12,6 @@ describe 'RubyBlockConverter', ->
     atom.workspaceView = new WorkspaceView()
     atom.workspace = atom.workspaceView.model
     filePath = path.join(directory, 'example.rb')
-    # console.log filePath
-    # fs.writeFileSync(filePath, '')
-    # fs.writeFileSync(path.join(directory, 'sample.rb'), 'Some text.\n')
-    # atom.config.set('editor.softTabs', true)
     atom.config.set('editor.tabLength', 2)
 
     waitsForPromise ->
