@@ -4,6 +4,8 @@
 Convert Ruby blocks between single line and multi line formats.
 Or between curly brackets and do-end statements.
 
+![Screenshot](https://github.com/dsandstrom/atom-ruby-block-converter/raw/master/screen-1.gif) ![Screenshot](https://github.com/dsandstrom/atom-ruby-block-converter/raw/master/screen-2.gif)
+
 #### Instructions
 > *{ } --> do-end*
 
@@ -23,10 +25,3 @@ In Beta, doesn't handle outer nested blocks well.
 'ruby-block-converter:toCurlyBrackets'
 'ruby-block-converter:toDoEnd'
 ```
-
-
-<!-- ![A screenshot of your spankin' package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif) -->
-
-<!-- ### Notes -->
-
----
