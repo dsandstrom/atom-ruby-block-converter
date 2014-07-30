@@ -104,7 +104,7 @@ class DoEndConverter extends RubyBlockConverter
     # only do same line
     if startRange.start.row == endRange.start.row
       # add new line in front of new end
-      @editor.buffer.scanInRange /\send/, newEndRange, (obj) ->
+      @buffer.scanInRange /\send/, newEndRange, (obj) ->
         obj.replace "\nend"
         unCollapsedEnd = true
       if unCollapsedEnd
@@ -113,14 +113,14 @@ class DoEndConverter extends RubyBlockConverter
         @editor.selectToEndOfLine()
         newStartRange = @editor.getSelectedBufferRange()
         # and new line after bars
-        @editor.buffer.scanInRange /do\s\|.*\|/, newStartRange, (obj) ->
+        @buffer.scanInRange /do\s\|.*\|/, newStartRange, (obj) ->
           text = obj.matchText
           obj.replace "#{text}\n"
           foundDoBar = true
           unCollapsedDo = true
         unless foundDoBar
           # and new line after do$
-          @editor.buffer.scanInRange /do/, newStartRange, (obj) ->
+          @buffer.scanInRange /do/, newStartRange, (obj) ->
             obj.replace "do\n"
             unCollapsed = true
 

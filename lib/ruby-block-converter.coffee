@@ -7,12 +7,13 @@ class RubyBlockConverter
 
   initializeTransaction: ->
     @editor = atom.workspace.getActiveEditor()
-    @editor.buffer.beginTransaction()
+    @buffer = @editor.buffer
+    @buffer.beginTransaction()
 
   finalizeTransaction: (foundBlock) ->
     if foundBlock
-      @editor.buffer.commitTransaction()
+      @buffer.commitTransaction()
     else
-      if @editor != null && @editor.buffer != null
+      if @editor != null && @buffer != null
         # console.log 'Did not find valid block'
-        @editor.buffer.abortTransaction()
+        @buffer.abortTransaction()

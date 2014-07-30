@@ -60,3 +60,13 @@ end
 43.times do |donkey|
   9.times { |gym| puts donkey + gym }
 end
+
+describe "GET new" do
+
+  context "for a guest" do
+    it "redirects to root" do
+      get :new, {}
+      expect(response).to redirect_to root_path
+    end
+  end
+end
