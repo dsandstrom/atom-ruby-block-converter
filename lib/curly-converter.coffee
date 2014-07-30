@@ -3,9 +3,6 @@ RubyBlockConverter = require './ruby-block-converter'
 # FIXME: only does inner loop right
 # need to count dos and make sure the right amount of ends
 
-REGEX_DO = /\sdo\b/
-REGEX_END = /end\b/
-
 module.exports =
 class CurlyConverter extends RubyBlockConverter
   foundStart = false
@@ -23,7 +20,6 @@ class CurlyConverter extends RubyBlockConverter
     initialCursor = @editor.getCursorBufferPosition()
     @editor.selectAll()
     linesInFile = @editor.getSelectedBufferRange().getRows().length
-    # console.log 'linesInFile: ' + linesInFile
 
     @findAndReplaceDo()
     @findAndReplaceEnd() if foundStart
@@ -32,7 +28,7 @@ class CurlyConverter extends RubyBlockConverter
 
   scanForDo: (editor, range) ->
     # scan backwards for first do
-    editor.buffer.backwardsScanInRange REGEX_DO, range, (obj) ->
+    editor.buffer.backwardsScanInRange /\sdo\b/, range, (obj) ->
       foundStart = true
       doRange = obj.range
       afterDo = obj.matchText.replace(/\sdo/, '')[0]
@@ -59,20 +55,15 @@ class CurlyConverter extends RubyBlockConverter
     # end easier with nested blocks
     @editor.setCursorBufferPosition initialCursor
     @editor.selectToFirstCharacterOfLine()
-    # console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     @scanForDo @editor, range
     # interate up lines until do is found or reached max levels
-    # @editor.setCursorBufferPosition initialCursor
-    # console.log @notFirstRow(@editor)
     i = 0
     while !foundStart && i < maxLevels && @notFirstRow(@editor)
       # move up line up
       @editor.moveCursorUp()
       @editor.moveCursorToEndOfLine()
-      # console.log @editor.getCursorBufferPosition()
       @editor.selectToFirstCharacterOfLine()
-      # console.log @editor.getSelection().getText()
       r = @editor.getSelectedBufferRange()
       @scanForDo @editor, r
       i += 1
