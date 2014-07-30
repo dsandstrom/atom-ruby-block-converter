@@ -1,21 +1,22 @@
 # Ruby Block Converter [![Build Status](https://travis-ci.org/dsandstrom/atom-ruby-block-converter.svg?branch=master)](https://travis-ci.org/dsandstrom/atom-ruby-block-converter)
-### An Atom Package
+###### An Atom Package
 
-Convert Ruby blocks from single line format to/from multi line format.
-Or from curly brackets to/from do-end statements.
+Convert Ruby blocks between single line and multi line formats.
+Or between curly brackets and do-end statements.
 
 #### Instructions
 > *{ } --> do-end*
 
-Place cursor on line and hit the shortcut. Default: `ctrl-{`
+Place the cursor in between the brackets
+and hit the shortcut. Default: `ctrl-{`
 
 > *do-end --> { }*
 
-Place cursor on second line (the one below `do`)
+Place the cursor in between the do-end
 and hit the shortcut Default: `ctrl-}`
 
 #### Notes
-In Beta, only toggles *single-line* blocks.
+In Beta, doesn't handle outer nested blocks well.
 
 #### Commands
 ```coffee
@@ -29,8 +30,3 @@ In Beta, only toggles *single-line* blocks.
 <!-- ### Notes -->
 
 ---
-
-#### Todo/Bugs
-* Allow to just change styles when text is more than 1 line
-* Improve nested blocks
-* Requires new line at end of file

@@ -2,7 +2,7 @@
   "name": "ruby-block-converter",
   "main": "./lib/main",
   "version": "0.4.0",
-  "description": "Convert Ruby blocks to/from single-line and multi-line",
+  "description": "Convert Ruby blocks between 1-line ({}) and multi-line (do-end) formats",
   "activationEvents": [],
   "repository": "https://github.com/dsandstrom/atom-ruby-block-converter",
   "license": "MIT",
