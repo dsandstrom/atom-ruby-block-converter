@@ -41,8 +41,11 @@ class DoEndConverter extends RubyBlockConverter
     editor.buffer.scanInRange /(^|\s)\}(\W|$)/, range, (obj) ->
       foundEnd = true
       endRange = obj.range
-      beforeClosed = obj.matchText.replace(/}/, '') || ''
-      obj.replace beforeClosed + 'end'
+      match = obj.matchText.match(/([^\}])\}(.*)/, '')
+      if match != null
+        beforeClosed = match[1]
+        afterClosed = match[2]
+      obj.replace (beforeClosed ?= '') + 'end' + (afterClosed ?= '')
       obj.stop()
 
   notFirstRow: (editor) ->

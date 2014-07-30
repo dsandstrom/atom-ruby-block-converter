@@ -30,6 +30,12 @@ end
   9.times { |gym| puts donkey + gym }
 end
 
+1.times do
+  puts 'hello'
+end.to eq 'world'
+
+1.times { puts 'hello' }.to eq 'world'
+
 1.times do puts 'hello' end
 
 # not working on right of {
