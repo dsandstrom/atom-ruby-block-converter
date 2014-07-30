@@ -23,7 +23,7 @@ class CurlyConverter extends RubyBlockConverter
     initialCursor = @editor.getCursorBufferPosition()
     @editor.selectAll()
     linesInFile = @editor.getSelectedBufferRange().getRows().length
-    console.log 'linesInFile: ' + linesInFile
+    # console.log 'linesInFile: ' + linesInFile
 
     @findAndReplaceDo()
     @findAndReplaceEnd() if foundStart
@@ -64,7 +64,7 @@ class CurlyConverter extends RubyBlockConverter
     @scanForDo @editor, range
     # interate up lines until do is found or reached max levels
     # @editor.setCursorBufferPosition initialCursor
-    # console.log initialCursor
+    # console.log @notFirstRow(@editor)
     i = 0
     while !foundStart && i < maxLevels && @notFirstRow(@editor)
       # move up line up

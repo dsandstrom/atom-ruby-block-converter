@@ -13,6 +13,7 @@ class DoEndConverter extends RubyBlockConverter
   endRange = null
   initialCursor = null
   unCollapsed = false
+  linesInFile = null
   maxLevels = 3
 
   constructor: ->
@@ -21,7 +22,9 @@ class DoEndConverter extends RubyBlockConverter
     foundEnd   = false
     # foundStartOnCurrent = false
     initialCursor = @editor.getCursorBufferPosition()
-
+    @editor.selectAll()
+    linesInFile = @editor.getSelectedBufferRange().getRows().length
+    console.log linesInFile
     @findAndReplaceOpenCurly()
     @findAndReplaceClosedCurly() if foundStart
     # console.log 'foundStart :' + foundStart
@@ -37,19 +40,16 @@ class DoEndConverter extends RubyBlockConverter
 
   scanForOpen: (editor, range) ->
     editor.buffer.scanInRange /\s\{\s/, range, (obj) ->
-      # console.log 'found start'
       foundStart = true
       startRange = obj.range
       obj.replace ' do '
       obj.stop()
     unless foundStart
       editor.buffer.scanInRange /\s\{$/, range, (obj) ->
-        # console.log 'found start'
         foundStart = true
         startRange = obj.range
         obj.replace ' do'
         obj.stop()
-    console.log 'foundStart :' + foundStart
 
   scanForClosed: (editor, range) ->
     editor.buffer.scanInRange /\s\}$/, range, (obj) ->
@@ -70,8 +70,16 @@ class DoEndConverter extends RubyBlockConverter
         obj.replace 'end'
         obj.stop()
 
+  notFirstRow: (editor) ->
+    editor.getCursorBufferPosition().row > 0
+
+  notLastRow: (editor) ->
+    console.log editor.getCursorBufferPosition().row + 1
+    editor.getCursorBufferPosition().row + 1 < linesInFile
+
   findAndReplaceOpenCurly: ->
     # select to the left
+    @editor.setCursorBufferPosition initialCursor
     @editor.selectToFirstCharacterOfLine()
     r = @editor.getSelectedBufferRange()
     # scan for open
@@ -80,7 +88,7 @@ class DoEndConverter extends RubyBlockConverter
     # foundStartOnCurrent = foundStart
     # go up lines until one { is found
     i = 0
-    while !foundStart && i < maxLevels
+    while !foundStart && i < maxLevels && @notFirstRow(@editor)
       @editor.moveCursorUp 1
       @editor.moveCursorToFirstCharacterOfLine()
       @editor.selectToEndOfLine()
@@ -99,15 +107,14 @@ class DoEndConverter extends RubyBlockConverter
       @editor.selectToEndOfLine()
       range = @editor.getSelectedBufferRange()
       @scanForClosed @editor, range
-      unless foundEnd
-        # initial cursor range
-        @editor.setCursorBufferPosition initialCursor
-        @editor.selectToEndOfLine()
-        range = @editor.getSelectedBufferRange()
-        @scanForClosed @editor, range
-        foundEndOnCurrent = foundEnd
+      # unless foundEnd
+      #   # initial cursor range
+      #   @editor.setCursorBufferPosition initialCursor
+      #   @editor.selectToEndOfLine()
+      #   range = @editor.getSelectedBufferRange()
+      #   @scanForClosed @editor, range
       i = 0
-      while !foundEnd && i < maxLevels
+      while !foundEnd && i < maxLevels && @notLastRow(@editor)
         # move down a line
         @editor.moveCursorDown 1
         @editor.moveCursorToEndOfLine()

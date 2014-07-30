@@ -117,7 +117,7 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe startText
 
     describe 'when cursor is before do', ->
-      fit "doesn't convert it", ->
+      it "doesn't convert it", ->
         startText = "1.times do\n  puts 'hello'\nend\n"
         editor.insertText(startText)
         editor.moveCursorUp 3
@@ -135,6 +135,7 @@ describe 'RubyBlockConverter', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { puts 'hello' }\n")
         editor.moveCursorUp 2
+        editor.moveCursorRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend\n"
 
@@ -142,6 +143,7 @@ describe 'RubyBlockConverter', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { |bub| puts 'hello' }\n")
         editor.moveCursorUp 2
+        editor.moveCursorRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do |bub|\n  puts 'hello'\nend\n"
 
@@ -185,6 +187,7 @@ describe 'RubyBlockConverter', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { puts 'hello' }")
         editor.moveCursorUp 2
+        editor.moveCursorRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend"
 
@@ -194,6 +197,7 @@ describe 'RubyBlockConverter', ->
         endText = "1.times do\n  puts 'hello'\nend\n"
         editor.insertText(startText)
         editor.moveCursorUp 1
+        editor.moveCursorRight() for num in [0...13]
         i = 0
         while i < 9
           editor.moveCursorRight()
@@ -212,23 +216,3 @@ describe 'RubyBlockConverter', ->
           i += 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe startText
-
-    # describe 'when cursor in the middle of do', ->
-    #   it "doesn't convert it", ->
-    #     startText = "1.times do\n  puts 'hello'\nend\n"
-    #     editor.insertText(startText)
-    #     editor.moveCursorUp 3
-    #     editor.moveCursorToEndOfLine()
-    #     editor.moveCursorLeft 1
-    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-    #     expect(editor.getText()).toBe startText
-    #
-    # describe 'when cursor is before do', ->
-    #   it "doesn't convert it", ->
-    #     startText = "1.times do\n  puts 'hello'\nend\n"
-    #     editor.insertText(startText)
-    #     editor.moveCursorUp 3
-    #     editor.moveCursorToEndOfLine()
-    #     editor.moveCursorLeft 2
-    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-    #     expect(editor.getText()).toBe startText
