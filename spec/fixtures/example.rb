@@ -21,7 +21,7 @@ end
 
 1.times do puts 'hello' end
 
-# not working?
+# not working on right of {
 1.times { puts 'hello' }
 
 17.times { |banana| puts banana }
@@ -40,7 +40,6 @@ end
   puts 2 * banana
 }
 
-# TODO: still fails on outside of }
 43.times do |donkey|
   9.times { |gym| puts donkey + gym }
 end

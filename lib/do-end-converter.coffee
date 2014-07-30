@@ -49,6 +49,7 @@ class DoEndConverter extends RubyBlockConverter
         startRange = obj.range
         obj.replace ' do'
         obj.stop()
+    console.log 'foundStart :' + foundStart
 
   scanForClosed: (editor, range) ->
     editor.buffer.scanInRange /\s\}$/, range, (obj) ->
