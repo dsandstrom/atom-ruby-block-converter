@@ -11,6 +11,7 @@ class CurlyConverter extends RubyBlockConverter
   doRange = null
   endRange = null
   linesInFile = null
+  collapsed = false
   maxLevels = 3
 
   constructor: ->
@@ -24,6 +25,9 @@ class CurlyConverter extends RubyBlockConverter
     @findAndReplaceDo()
     @findAndReplaceEnd() if foundStart
     @collapseBlock() if foundStart && foundEnd
+    if !collapsed && initialCursor != null
+      @editor.setCursorBufferPosition initialCursor
+
     @finalizeTransaction foundStart && foundEnd
 
   scanForDo: (editor, range) ->
@@ -98,7 +102,7 @@ class CurlyConverter extends RubyBlockConverter
     # see how many lines between start and end
     lineSeparation = endRange.start.row - doRange.start.row
 
-    if 1 <= lineSeparation <= 2
+    if 1 <= lineSeparation and lineSeparation <= 2
       # join lines if it makes sense
       @editor.setCursorBufferPosition doRange.start
       @editor.moveCursorToFirstCharacterOfLine()
@@ -106,6 +110,4 @@ class CurlyConverter extends RubyBlockConverter
       @editor.selectToEndOfLine()
       @editor.getSelection().joinLines()
       @editor.moveCursorToEndOfLine()
-    else if initialCursor != null
-      # otherwise put cursor back to original spot
-      @editor.setCursorBufferPosition initialCursor
+      collapsed = true
