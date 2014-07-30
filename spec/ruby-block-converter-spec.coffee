@@ -3,8 +3,6 @@ path = require 'path'
 temp = require 'temp'
 {WorkspaceView} = require 'atom'
 
-# FIXME: doesn't work when no newline at the end
-
 describe 'RubyBlockConverter', ->
   [editor, buffer] = []
 
@@ -93,6 +91,41 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe startText
 
+    describe 'when no new line', ->
+      it 'converts it to a single line block with brackets', ->
+        editor.insertText("1.times do\n  puts 'hello'\nend")
+        editor.moveCursorUp 1
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe "1.times { puts 'hello' }"
+
+    describe 'when cursor right of do', ->
+      it 'converts it to a single line block with brackets', ->
+        editor.insertText("1.times do\n  puts 'hello'\nend\n")
+        editor.moveCursorUp 3
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe "1.times { puts 'hello' }\n"
+
+    describe 'when cursor in the middle of do', ->
+      it "doesn't convert it", ->
+        startText = "1.times do\n  puts 'hello'\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 3
+        editor.moveCursorToEndOfLine()
+        editor.moveCursorLeft 1
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe startText
+
+    describe 'when cursor is before do', ->
+      it "doesn't convert it", ->
+        startText = "1.times do\n  puts 'hello'\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 3
+        editor.moveCursorToEndOfLine()
+        editor.moveCursorLeft 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe startText
+
   describe 'toDoEnd', ->
     it 'does not change an empty file', ->
       atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
@@ -147,3 +180,10 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe startText
+
+    describe 'when no new line', ->
+      it 'converts it to a multi line block with do-end', ->
+        editor.insertText("1.times { puts 'hello' }")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend"

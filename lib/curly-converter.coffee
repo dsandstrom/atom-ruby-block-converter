@@ -43,20 +43,28 @@ class CurlyConverter extends RubyBlockConverter
       obj.replace '}'
       obj.stop()
 
+  notFirstRow: (editor) ->
+    editor.getCursorBufferPosition().row > 0
+
   findAndReplaceDo: ->
     # look on current line
     # only looks left because it makes finding the correct
     # end easier with nested blocks
     @editor.selectToFirstCharacterOfLine()
+    # console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     @scanForDo @editor, range
     # interate up lines until do is found or reached max levels
+    # @editor.setCursorBufferPosition initialCursor
+    # console.log initialCursor
     i = 0
-    while !foundStart && i < maxLevels
+    while !foundStart && i < maxLevels && @notFirstRow(@editor)
       # move up line up
       @editor.moveCursorUp()
       @editor.moveCursorToEndOfLine()
+      console.log @editor.getCursorBufferPosition()
       @editor.selectToFirstCharacterOfLine()
+      # console.log @editor.getSelection().getText()
       r = @editor.getSelectedBufferRange()
       @scanForDo @editor, r
       i += 1
