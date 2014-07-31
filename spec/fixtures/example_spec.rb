@@ -29,5 +29,12 @@ it "destroys the requested banner" do
   banner = FactoryGirl.create(:banner)
   expect do
     delete :destroy, { :id => banner.to_param }
+  end.to change(Banner, :count).by(-1)
+end
+
+it "destroys the requested banner" do
+  banner = FactoryGirl.create(:banner)
+  expect {
+    delete :destroy, { :id => banner.to_param }
   }.to change(Banner, :count).by(-1)
 end
