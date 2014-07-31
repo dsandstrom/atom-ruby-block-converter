@@ -5,9 +5,6 @@ class DoEndConverter extends RubyBlockConverter
   # TODO: make maxLevels a package option
   maxLevels = 3
 
-  # constructor: ->
-  #   super
-
   scanForOpen: (editor, range) ->
     startRange = null
     editor.buffer.backwardsScanInRange /\s\{(\s|$)/, range, (obj) ->
@@ -62,12 +59,9 @@ class DoEndConverter extends RubyBlockConverter
       endRange = @scanForClosed(@editor, r)
       i += 1
     # cancel if end found on a line before cursor
-    # needed?
-    # console.log "found end: #{endRange != null}"
     if endRange != null and @initialCursor != null
       if endRange.start.row < @initialCursor.row
         endRange = null
-    # console.log "found end: #{endRange != null}"
     endRange
 
   replaceBlock: (startRange, endRange) ->
@@ -83,16 +77,12 @@ class DoEndConverter extends RubyBlockConverter
       obj.replace 'do' + afterOpen
       obj.stop()
 
-  resetCursor: (unCollapsed, startRange) ->
-    if unCollapsed
-      @editor.setCursorBufferPosition startRange.end
-      @editor.moveCursorDown 1
-      @editor.moveCursorToEndOfLine()
-    else
-      @editor.setCursorBufferPosition(@initialCursor)
+  resetCursor: (startRange) ->
+    @editor.setCursorBufferPosition startRange.end
+    @editor.moveCursorDown 1
+    @editor.moveCursorToEndOfLine()
 
-  unCollapseBlock: (startRange, endRange) ->
-    # TODO: maybe make it's own transaction
+  collapseBlock: (startRange, endRange) ->
     foundDoBar = false
     unCollapsed = false
     unCollapsedEnd = false

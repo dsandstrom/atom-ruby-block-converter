@@ -170,3 +170,12 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe startText
+
+      it "doesn't move the cursor", ->
+        startText = "1.times do\n  puts 'hello'\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        editor.moveCursorRight() for n in [0...3]
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getCursorBufferPosition().row).toBe 1
+        expect(editor.getCursorBufferPosition().column).toBe 4

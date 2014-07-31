@@ -167,3 +167,12 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe startText
+
+      it "doesn't move the cursor", ->
+        startText = "1.times {\n  puts 'hello'\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        editor.moveCursorRight() for n in [0...3]
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getCursorBufferPosition().row).toBe 1
+        expect(editor.getCursorBufferPosition().column).toBe 4

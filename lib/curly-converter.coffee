@@ -83,11 +83,8 @@ class CurlyConverter extends RubyBlockConverter
       obj.replace '{' + afterDo
       obj.stop()
 
-  resetCursor: (collapsed, startRange=null) ->
-    if collapsed
-      @editor.moveCursorToEndOfLine()
-    else
-      @editor.setCursorBufferPosition(@initialCursor)
+  resetCursor: (startRange=null) ->
+    @editor.moveCursorToEndOfLine()
 
   collapseBlock: (startRange, endRange) ->
     # TODO: maybe make it's own transaction

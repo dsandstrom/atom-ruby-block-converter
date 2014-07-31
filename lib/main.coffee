@@ -24,12 +24,7 @@ module.exports =
     startRange = @curlyConverter.findDo()
     if startRange != null
       endRange = @curlyConverter.findEnd(startRange)
-      if endRange != null
-        @curlyConverter.replaceBlock(startRange, endRange)
-        collapsed = @curlyConverter.collapseBlock(startRange, endRange)
-        @curlyConverter.resetCursor(collapsed, startRange)
-    # console.log @buffer.currentTransaction
-    @curlyConverter.finalizeTransaction(startRange != null and endRange != null)
+    @curlyConverter.performTransaction(startRange, endRange)
 
   # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->
@@ -37,8 +32,4 @@ module.exports =
     startRange = @doEndConverter.findOpenCurly()
     if startRange != null
       endRange = @doEndConverter.findClosedCurly(startRange)
-      if endRange != null
-        @doEndConverter.replaceBlock(startRange, endRange)
-        unCollapsed = @doEndConverter.unCollapseBlock(startRange, endRange)
-        @doEndConverter.resetCursor(unCollapsed, startRange)
-    @doEndConverter.finalizeTransaction(startRange != null and endRange != null)
+    @doEndConverter.performTransaction(startRange, endRange)
