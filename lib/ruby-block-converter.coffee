@@ -5,6 +5,8 @@ class RubyBlockConverter
     @buffer = @editor.buffer
 
     @initialCursor = @editor.getCursorBufferPosition()
+    # FIXME: select all unfolds code
+    # find another way to cound lines
     @editor.selectAll()
     @linesInFile = @editor.getSelectedBufferRange().getRows().length
     @editor.setCursorBufferPosition @initialCursor
