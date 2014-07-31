@@ -131,3 +131,13 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 3
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe endText
+
+    describe 'when cursor is after end', ->
+      it "doesn't convert it", ->
+        startText = "1.times do\n  puts 'hello'\nend\n\n17.times { |banana| puts banana }\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        # editor.moveCursorToEndOfLine()
+        # editor.moveCursorLeft 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe startText

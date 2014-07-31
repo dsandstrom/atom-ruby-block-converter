@@ -28,7 +28,11 @@ module.exports =
         @curlyConverter.replaceBlock(startRange, endRange)
         collapsed = @curlyConverter.collapseBlock(startRange, endRange)
         @curlyConverter.resetCursor(collapsed, startRange)
-    @curlyConverter.finalizeTransaction(startRange != null and endRange != null)
+    # console.log @buffer.currentTransaction
+    try
+      @curlyConverter.finalizeTransaction(startRange != null and endRange != null)
+    catch error
+      throw error
 
   # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->

@@ -38,7 +38,6 @@ end.to eq 'world'
 
 1.times do puts 'hello' end
 
-# not working on right of {
 1.times { puts 'hello' }
 
 17.times { |banana| puts banana }
