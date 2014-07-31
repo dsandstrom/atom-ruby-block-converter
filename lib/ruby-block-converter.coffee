@@ -23,8 +23,8 @@ class RubyBlockConverter
     if startRange != null and endRange != null
       @buffer.beginTransaction()
       @replaceBlock(startRange, endRange)
-      @collapseBlock(startRange, endRange)
-      @resetCursor(startRange)
+      collapsed = @collapseBlock(startRange, endRange)
+      @resetCursor(collapsed, startRange)
       @buffer.commitTransaction()
     else if @initialCursor != null
       @editor.setCursorBufferPosition @initialCursor

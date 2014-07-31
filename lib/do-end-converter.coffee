@@ -77,10 +77,13 @@ class DoEndConverter extends RubyBlockConverter
       obj.replace 'do' + afterOpen
       obj.stop()
 
-  resetCursor: (startRange) ->
-    @editor.setCursorBufferPosition startRange.end
-    @editor.moveCursorDown 1
-    @editor.moveCursorToEndOfLine()
+  resetCursor: (collapsed, startRange) ->
+    if collapsed
+      @editor.setCursorBufferPosition startRange.end
+      @editor.moveCursorDown 1
+      @editor.moveCursorToEndOfLine()
+    else if @initialCursor != null
+      @editor.setCursorBufferPosition @initialCursor
 
   collapseBlock: (startRange, endRange) ->
     foundDoBar = false

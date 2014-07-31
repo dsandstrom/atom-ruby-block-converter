@@ -1,8 +1,5 @@
 RubyBlockConverter = require './ruby-block-converter'
 
-# FIXME: only does inner loop right
-# need to count dos and make sure the right amount of ends
-
 module.exports =
 class CurlyConverter extends RubyBlockConverter
   DO_REGEX = /\sdo\b/
@@ -14,8 +11,8 @@ class CurlyConverter extends RubyBlockConverter
   # constructor: ->
   #   super
 
-  difference: ->
-    @endCount - @startCount
+  foundMatchingEnd: ->
+    @endCount - @startCount == 1
 
   scanForDo: (editor, range) ->
     # scan backwards for first do
@@ -27,24 +24,13 @@ class CurlyConverter extends RubyBlockConverter
 
   scanForEnd: (that, editor, range) ->
     # scan for first end
-    # endRange = null
-    # startCount = 0
-    # endCount = 0
-    # difference = 0
     matchRanges = []
     editor.buffer.scanInRange END_REGEX, range, (obj) ->
-      # endCount += 1
-      that.endCount += 1
-      # endRange = obj.range
+      that.endCount++
       matchRanges.push obj.range
       # obj.stop()
     editor.buffer.scanInRange DO_REGEX, range, (obj) ->
-      that.startCount += 1
-      # startCount += 1
-    # difference = @endCount - @startCount
-    # console.log "diff: #{@difference()}"
-    # console.log @startCount
-    # console.log @endCount
+      that.startCount++
     matchRanges
 
   findDo: ->
@@ -69,10 +55,9 @@ class CurlyConverter extends RubyBlockConverter
     startRange
 
   findEnd: (startRange) ->
+    # TODO: if couldn't find matching end, go back to findDo and move up one
     that = this
     endRange = null
-    # startCount = 0
-    # endCount = 0
     matchRanges = []
     # make sure there is no end between the do and cursor
     # move after end of current word
@@ -81,29 +66,26 @@ class CurlyConverter extends RubyBlockConverter
     @editor.selectToEndOfLine()
     range = @editor.getSelectedBufferRange()
     matchRanges.push @scanForEnd(that, @editor, range)
-    endRange = matches[@endCount][0] if @difference() == 1
+    endRange = matches[@endCount][0] if @foundMatchingEnd()
 
     if endRange == null
       # initial cursor range
       i = 0
-      while (@difference() != 1) && endRange == null && i < @maxLevels && @notLastRow(@editor)
+      while !@foundMatchingEnd() && endRange == null && i < @maxLevels && @notLastRow(@editor)
         # move down a line
         @editor.moveCursorDown 1
         @editor.moveCursorToEndOfLine()
         @editor.selectToFirstCharacterOfLine()
         r = @editor.getSelectedBufferRange()
-        # endRangeMatches =
         lineMatches = @scanForEnd(that, @editor, r)
         if lineMatches.length > 0
           matchRanges.push lineMatches
-        endRange = matchRanges[@endCount][0] if @difference() == 1
+        endRange = matchRanges[@endCount][0] if @foundMatchingEnd()
         i += 1
-    # console.log endRange
     # cancel if end found on a line before cursor
     if endRange != null && @initialCursor != null
       if endRange.start.row < @initialCursor.row
         endRange = null
-    # console.log endRange
     endRange
 
   replaceBlock: (startRange, endRange) ->
@@ -119,11 +101,13 @@ class CurlyConverter extends RubyBlockConverter
       obj.replace '{' + afterDo
       obj.stop()
 
-  resetCursor: (startRange=null) ->
-    @editor.moveCursorToEndOfLine()
+  resetCursor: (collapsed, startRange=null) ->
+    if collapsed
+      @editor.moveCursorToEndOfLine()
+    else if @initialCursor != null
+      @editor.setCursorBufferPosition @initialCursor
 
   collapseBlock: (startRange, endRange) ->
-    # TODO: maybe make it's own transaction
     # see how many lines between start and end
     lineSeparation = endRange.start.row - startRange.start.row
 
