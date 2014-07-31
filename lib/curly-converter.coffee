@@ -101,7 +101,7 @@ class CurlyConverter extends RubyBlockConverter
     # cancel if end found on a line before cursor
     if endRange != null && @initialCursor != null
       if endRange.start.row < @initialCursor.row
-        console.log 'here'
+        endRange = null
     endRange
 
   replaceBlock: (startRange, endRange) ->
