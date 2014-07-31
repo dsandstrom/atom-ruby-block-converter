@@ -69,3 +69,5 @@ describe "GET new" do
     end
   end
 end
+
+43.times { |donkey| 9.times { |gym| puts donkey + gym } }
