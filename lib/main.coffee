@@ -21,6 +21,14 @@ module.exports =
   # Converts do-end blocks to curly bracket blocks
   toCurlyBrackets: ->
     @curlyConverter = new CurlyConverter()
+    startRange = @curlyConverter.findDo()
+    if startRange != null
+      endRange = @curlyConverter.findEnd(startRange)
+      if endRange != null
+        @curlyConverter.replaceBlock(startRange, endRange)
+        collapsed = @curlyConverter.collapseBlock(startRange, endRange)
+        @curlyConverter.resetCursor(collapsed, startRange)
+    @curlyConverter.finalizeTransaction(startRange != null and endRange != null)
 
   # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->

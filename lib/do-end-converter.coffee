@@ -2,22 +2,16 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
+  # TODO: make maxLevels a package option
   maxLevels = 3
 
-  constructor: ->
-    super
-    @startRange = null
-    @endRange = null
-    @unCollapsed = false
-    @initialCursor = @editor.getCursorBufferPosition()
-    @editor.selectAll()
-    @linesInFile = @editor.getSelectedBufferRange().getRows().length
-    @editor.setCursorBufferPosition @initialCursor
+  # constructor: ->
+  #   super
 
   scanForOpen: (editor, range) ->
     startRange = null
     editor.buffer.scanInRange /\s\{(\s|$)/, range, (obj) ->
-      console.log 'found start'
+      # console.log 'found start'
       startRange = obj.range
       obj.stop()
     startRange
@@ -25,16 +19,10 @@ class DoEndConverter extends RubyBlockConverter
   scanForClosed: (editor, range) ->
     endRange = null
     editor.buffer.scanInRange /(^|\s)\}(\W|$)/, range, (obj) ->
-      console.log 'found end'
+      # console.log 'found end'
       endRange = obj.range
       obj.stop()
     endRange
-
-  notFirstRow: (editor) ->
-    editor.getCursorBufferPosition().row > 0
-
-  notLastRow: (editor) ->
-    editor.getCursorBufferPosition().row + 1 < @linesInFile
 
   findOpenCurly: ->
     startRange = null
@@ -46,7 +34,7 @@ class DoEndConverter extends RubyBlockConverter
     startRange = @scanForOpen(@editor, r)
     # go up lines until one { is found
     i = 0
-    while (startRange == null) and i < maxLevels and @notFirstRow(@editor)
+    while startRange == null and i < maxLevels and @notFirstRow(@editor)
       @editor.moveCursorUp 1
       @editor.moveCursorToFirstCharacterOfLine()
       @editor.selectToEndOfLine()
@@ -65,7 +53,7 @@ class DoEndConverter extends RubyBlockConverter
     range = @editor.getSelectedBufferRange()
     endRange = @scanForClosed(@editor, range)
     i = 0
-    while (endRange == null) and i < maxLevels and @notLastRow(@editor)
+    while endRange == null and i < maxLevels and @notLastRow(@editor)
       # move down a line
       @editor.moveCursorDown 1
       @editor.moveCursorToEndOfLine()
