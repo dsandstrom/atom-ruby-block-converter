@@ -2,34 +2,38 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  # TODO: make maxLevels a package option
-  maxLevels = 3
+  OPEN_REGEX = /\s\{(\s|$)/
+  CLOSED_REGEX = /(^|\s)\}(\W|$)/
 
   scanForOpen: (editor, range) ->
+    # scan backwards for first {
     startRange = null
-    editor.buffer.backwardsScanInRange /\s\{(\s|$)/, range, (obj) ->
+    editor.buffer.backwardsScanInRange OPEN_REGEX, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
 
-  scanForClosed: (editor, range) ->
-    endRange = null
-    editor.buffer.scanInRange /(^|\s)\}(\W|$)/, range, (obj) ->
-      endRange = obj.range
-      obj.stop()
-    endRange
+  scanForClosed: (that, editor, range) ->
+    # scan for }, scan for matching {
+    matchRanges = []
+    editor.buffer.scanInRange CLOSED_REGEX, range, (obj) ->
+      that.endCount++
+      matchRanges.push obj.range
+    editor.buffer.scanInRange OPEN_REGEX, range, (obj) ->
+      that.startCount++
+    matchRanges
 
   findOpenCurly: ->
     startRange = null
     # select to the left
     @editor.setCursorBufferPosition @initialCursor
     @editor.selectToFirstCharacterOfLine()
-    r = @editor.getSelectedBufferRange()
+    range = @editor.getSelectedBufferRange()
     # scan for open
-    startRange = @scanForOpen(@editor, r)
+    startRange = @scanForOpen(@editor, range)
     # go up lines until one { is found
     i = 0
-    while startRange == null and i < maxLevels and @notFirstRow(@editor)
+    while startRange == null and i < @maxLevels and @notFirstRow(@editor)
       @editor.moveCursorUp 1
       @editor.moveCursorToFirstCharacterOfLine()
       @editor.selectToEndOfLine()
@@ -40,23 +44,31 @@ class DoEndConverter extends RubyBlockConverter
     startRange
 
   findClosedCurly: (startRange) ->
+    that = this
     endRange = null
+    matchRanges = []
     # make sure there is no } between the { and cursor
     # move after end of current word
     startingPoint = [startRange.end.row, startRange.end.column]
     @editor.setCursorBufferPosition startingPoint
     @editor.selectToEndOfLine()
     range = @editor.getSelectedBufferRange()
-    endRange = @scanForClosed(@editor, range)
+    lineMatches = @scanForClosed(that, @editor, range)
+    if lineMatches.length > 0
+      matchRanges.push lineMatches
+    endRange = matchRanges[@endCount - 1][0] if @foundMatchingEnd()
     i = 0
-    while endRange == null and i < maxLevels and @notLastRow(@editor)
+    while !@foundMatchingEnd() && endRange == null and i < @maxLevels and @notLastRow(@editor)
       # move down a line
       @editor.moveCursorDown 1
       @editor.moveCursorToEndOfLine()
       # @editor.selectToFirstCharacterOfLine()
       @editor.selectToBeginningOfLine()
       r = @editor.getSelectedBufferRange()
-      endRange = @scanForClosed(@editor, r)
+      lineMatches = @scanForClosed(that, @editor, r)
+      if lineMatches.length > 0
+        matchRanges.push lineMatches
+      endRange = matchRanges[@endCount - 1][0] if @foundMatchingEnd()
       i += 1
     # cancel if end found on a line before cursor
     if endRange != null and @initialCursor != null

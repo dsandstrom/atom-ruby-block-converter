@@ -1,20 +1,23 @@
 module.exports =
 class RubyBlockConverter
   maxLevels: 6
+  startCount: 0
+  endCount: 0
 
   constructor: ->
     @editor = atom.workspace.getActiveEditor()
     @buffer = @editor.buffer
-
     @initialCursor = @editor.getCursorBufferPosition()
     @linesInFile = @editor.getLineCount()
-    # @editor.setCursorBufferPosition @initialCursor
 
   destroy: ->
     @editor = null
     @buffer = null
     @initialCursor = null
     @linesInFile = null
+
+  foundMatchingEnd: ->
+    @endCount - @startCount == 1
 
   performTransaction: (startRange, endRange) ->
     if startRange != null and endRange != null

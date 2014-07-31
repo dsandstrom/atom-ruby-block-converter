@@ -5,15 +5,6 @@ class CurlyConverter extends RubyBlockConverter
   DO_REGEX = /\sdo\b/
   END_REGEX = /end/
 
-  startCount: 0
-  endCount: 0
-
-  # constructor: ->
-  #   super
-
-  foundMatchingEnd: ->
-    @endCount - @startCount == 1
-
   scanForDo: (editor, range) ->
     # scan backwards for first do
     startRange = null
@@ -65,8 +56,10 @@ class CurlyConverter extends RubyBlockConverter
     @editor.setCursorBufferPosition startingPoint
     @editor.selectToEndOfLine()
     range = @editor.getSelectedBufferRange()
-    matchRanges.push @scanForEnd(that, @editor, range)
-    endRange = matches[@endCount][0] if @foundMatchingEnd()
+    lineMatches = @scanForEnd(that, @editor, range)
+    if lineMatches.length > 0
+      matchRanges.push lineMatches
+    endRange = matchRanges[@endCount - 1][0] if @foundMatchingEnd()
 
     if endRange == null
       # initial cursor range
@@ -80,7 +73,7 @@ class CurlyConverter extends RubyBlockConverter
         lineMatches = @scanForEnd(that, @editor, r)
         if lineMatches.length > 0
           matchRanges.push lineMatches
-        endRange = matchRanges[@endCount][0] if @foundMatchingEnd()
+        endRange = matchRanges[@endCount - 1][0] if @foundMatchingEnd()
         i += 1
     # cancel if end found on a line before cursor
     if endRange != null && @initialCursor != null

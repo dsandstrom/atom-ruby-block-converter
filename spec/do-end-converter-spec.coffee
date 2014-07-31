@@ -179,3 +179,30 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getCursorBufferPosition().row).toBe 1
         expect(editor.getCursorBufferPosition().column).toBe 4
+
+    describe 'when converting outer nested block from top', ->
+      it 'converts it to a single line block with brackets', ->
+        startText = "context \"for tim\" {\n  it { expect(response).to redirect }\n}\n"
+        endText   = "context \"for tim\" do\n  it { expect(response).to redirect }\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 5
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe endText
+
+      it "doesn't move the cursor", ->
+        startText = "context \"for tim\" {\n  it { expect(response).to redirect }\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 5
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getCursorBufferPosition().row).toBe 0
+        expect(editor.getCursorBufferPosition().column).toBe 19
+
+    describe 'when converting outer nested block from bottom', ->
+      it "doesn't convert it", ->
+        startText = "context \"for tim\" {\n  it { expect(response).to redirect }\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 1
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe startText
