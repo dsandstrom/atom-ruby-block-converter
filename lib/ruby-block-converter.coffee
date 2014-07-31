@@ -21,7 +21,10 @@ class RubyBlockConverter
     else
       if @editor != null && @buffer != null
         # console.log 'Did not find valid block'
-        @buffer.abortTransaction()
+        try
+          @buffer.abortTransaction()
+        catch error
+          throw error
 
   notFirstRow: (editor) ->
     editor.getCursorBufferPosition().row > 0
