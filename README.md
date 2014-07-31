@@ -1,5 +1,5 @@
 # Ruby Block Converter
-###### An Atom Package - [Atom.io](https://atom.io/packages/ruby-block-converter) : [Github](https://github.com/dsandstrom/atom-ruby-block-converter) [![Build Status](https://travis-ci.org/dsandstrom/atom-ruby-block-converter.svg?branch=master)](https://travis-ci.org/dsandstrom/atom-ruby-block-converter)
+###### An Atom Package - [Atom.io](https://atom.io/packages/ruby-block-converter) : [Github](https://github.com/dsandstrom/atom-ruby-block-converter) : [![Build Status](https://travis-ci.org/dsandstrom/atom-ruby-block-converter.svg?branch=master)](https://travis-ci.org/dsandstrom/atom-ruby-block-converter)
 
 Convert Ruby blocks between single line and multi line formats.
 Or between curly brackets and do-end statements.
