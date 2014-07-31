@@ -116,9 +116,9 @@ class DoEndConverter extends RubyBlockConverter
       i += 1
     # cancel if end found on a line before cursor
     # needed?
-    # if @foundEnd() and @initialCursor != null
-    #   if @endRange.start.row < @initialCursor.row
-    #     @endRange = null
+    if endRange != null and @initialCursor != null
+      if endRange.start.row < @initialCursor.row
+        endRange = null
     endRange
 
   replaceBlock: (startRange, endRange) ->
@@ -137,8 +137,13 @@ class DoEndConverter extends RubyBlockConverter
       obj.replace 'do' + afterOpen
       obj.stop()
 
-  resetCursor: ->
-    @editor.setCursorBufferPosition(@initialCursor)
+  resetCursor: (unCollapsed, startRange) ->
+    if unCollapsed
+      @editor.setCursorBufferPosition startRange.end
+      @editor.moveCursorDown 1
+      @editor.moveCursorToEndOfLine()
+    else
+      @editor.setCursorBufferPosition(@initialCursor)
 
   unCollapseBlock: (startRange, endRange) ->
     # TODO: maybe make it's own transaction

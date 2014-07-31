@@ -30,5 +30,6 @@ module.exports =
       endRange = @doEndConverter.findClosedCurly(startRange)
       if endRange != null
         @doEndConverter.replaceBlock(startRange, endRange)
-        unless @doEndConverter.unCollapseBlock(startRange, endRange)
-          @doEndConverter.resetCursor()
+        unCollapsed = @doEndConverter.unCollapseBlock(startRange, endRange)
+        @doEndConverter.resetCursor(unCollapsed, startRange)
+    @doEndConverter.finalizeTransaction(startRange != null and endRange != null)
