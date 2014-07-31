@@ -2,28 +2,10 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  # foundStart = false
-  # foundEnd   = false
-  # change to attributes
-  # startRange = null
-  # endRange = null
-  # initialCursor = null
-  # unCollapsed = false
-  # linesInFile = null
   maxLevels = 3
-
-  # @startRange: null
-
-  foundStart: ->
-    @startRange != null
-
-  foundEnd: ->
-    @endRange != null
 
   constructor: ->
     super
-    # foundStart = false
-    # foundEnd   = false
     @startRange = null
     @endRange = null
     @unCollapsed = false
@@ -31,28 +13,12 @@ class DoEndConverter extends RubyBlockConverter
     @editor.selectAll()
     @linesInFile = @editor.getSelectedBufferRange().getRows().length
     @editor.setCursorBufferPosition @initialCursor
-    # @findOpenCurly()
-    # console.log @startRange
-    # @findClosedCurly() if @foundStart()
-    # if @foundStart() and @foundEnd()
-    #   @replaceBlock()
-    #   @unCollapseBlock()
-    # if @unCollapsed
-    #   @editor.setCursorBufferPosition @startRange.end
-    #   @editor.moveCursorDown 1
-    #   @editor.moveCursorToEndOfLine()
-    # else if @initialCursor != null
-    #   @editor.setCursorBufferPosition @initialCursor
-    # @finalizeTransaction @foundStart() and @foundEnd()
 
   scanForOpen: (editor, range) ->
     startRange = null
     editor.buffer.scanInRange /\s\{(\s|$)/, range, (obj) ->
       console.log 'found start'
       startRange = obj.range
-      # console.log @startRange
-      # afterOpen = obj.matchText.replace(/\s{/, '') || ''
-      # obj.replace ' do' + afterOpen
       obj.stop()
     startRange
 
@@ -60,13 +26,7 @@ class DoEndConverter extends RubyBlockConverter
     endRange = null
     editor.buffer.scanInRange /(^|\s)\}(\W|$)/, range, (obj) ->
       console.log 'found end'
-      # foundEnd = true
       endRange = obj.range
-      # match = obj.matchText.match(/([^\}])\}(.*)/, '')
-      # if match != null
-      #   beforeClosed = match[1]
-      #   afterClosed = match[2]
-      # obj.replace (beforeClosed ?= '') + 'end' + (afterClosed ?= '')
       obj.stop()
     endRange
 
@@ -83,7 +43,6 @@ class DoEndConverter extends RubyBlockConverter
     @editor.selectToFirstCharacterOfLine()
     r = @editor.getSelectedBufferRange()
     # scan for open
-    # console.log r.start
     startRange = @scanForOpen(@editor, r)
     # go up lines until one { is found
     i = 0
@@ -123,8 +82,6 @@ class DoEndConverter extends RubyBlockConverter
 
   replaceBlock: (startRange, endRange) ->
     @editor.buffer.scanInRange /\}/, endRange, (obj) ->
-      # foundEnd = true
-      # @endRange = obj.range
       match = obj.matchText.match(/([^\}])\}(.*)/, '')
       if match != null
         beforeClosed = match[1]
@@ -132,7 +89,6 @@ class DoEndConverter extends RubyBlockConverter
       obj.replace (beforeClosed ?= '') + 'end' + (afterClosed ?= '')
       obj.stop()
     @editor.buffer.scanInRange /\{/, startRange, (obj) ->
-      # @startRange = obj.range
       afterOpen = obj.matchText.replace(/\{/, '') || ''
       obj.replace 'do' + afterOpen
       obj.stop()
