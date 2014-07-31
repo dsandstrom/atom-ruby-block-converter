@@ -5,23 +5,53 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class CurlyConverter extends RubyBlockConverter
-  maxLevels = 3
+  doRegex: /\sdo\b/
+  endRegex: /end/
+
+  constructor: ->
+    super
+    @startCount = 0
+    @endCount = 0
+    # @matchRanges = []
+
+  addToStartCount: (num) ->
+    @startCount += num
+
+  addToEndCount: (num) ->
+    @endCount += num
+
+  difference: ->
+    @endCount - @startCount
 
   scanForDo: (editor, range) ->
     # scan backwards for first do
     startRange = null
-    editor.buffer.backwardsScanInRange /\sdo\b/, range, (obj) ->
+    editor.buffer.backwardsScanInRange @doRegex, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
 
-  scanForEnd: (editor, range) ->
+  scanForEnd: (that, editor, range) ->
     # scan for first end
-    endRange = null
-    editor.buffer.scanInRange /end/, range, (obj) ->
-      endRange = obj.range
-      obj.stop()
-    endRange
+    # endRange = null
+    # startCount = 0
+    # endCount = 0
+    # difference = 0
+    matchRanges = []
+    editor.buffer.scanInRange @endRegex, range, (obj) ->
+      # endCount += 1
+      that.endCount += 1
+      # endRange = obj.range
+      matchRanges.push obj.range
+      # obj.stop()
+    editor.buffer.scanInRange @doRegex, range, (obj) ->
+      that.startCount += 1
+      # startCount += 1
+    # difference = @endCount - @startCount
+    console.log "diff: #{@difference()}"
+    console.log @startCount
+    console.log @endCount
+    matchRanges
 
   findDo: ->
     startRange = null
@@ -34,7 +64,7 @@ class CurlyConverter extends RubyBlockConverter
     startRange = @scanForDo(@editor, range)
     # interate up lines until do is found or reached max levels
     i = 0
-    while startRange == null && i < maxLevels && @notFirstRow(@editor)
+    while startRange == null && i < @maxLevels && @notFirstRow(@editor)
       # move up line up
       @editor.moveCursorUp()
       @editor.moveCursorToEndOfLine()
@@ -45,29 +75,41 @@ class CurlyConverter extends RubyBlockConverter
     startRange
 
   findEnd: (startRange) ->
+    that = this
     endRange = null
+    # startCount = 0
+    # endCount = 0
+    matchRanges = []
     # make sure there is no end between the do and cursor
     # move after end of current word
     startingPoint = [startRange.end.row, startRange.end.column]
     @editor.setCursorBufferPosition startingPoint
     @editor.selectToEndOfLine()
     range = @editor.getSelectedBufferRange()
-    endRange = @scanForEnd(@editor, range)
+    matchRanges.push @scanForEnd(that, @editor, range)
+    endRange = matches[@endCount][0] if @difference() == 1
+
     if endRange == null
       # initial cursor range
       i = 0
-      while endRange == null && i < maxLevels && @notLastRow(@editor)
+      while (@difference() != 1) && endRange == null && i < @maxLevels && @notLastRow(@editor)
         # move down a line
         @editor.moveCursorDown 1
         @editor.moveCursorToEndOfLine()
         @editor.selectToFirstCharacterOfLine()
         r = @editor.getSelectedBufferRange()
-        endRange = @scanForEnd(@editor, r)
+        # endRangeMatches =
+        lineMatches = @scanForEnd(that, @editor, r)
+        if lineMatches.length > 0
+          matchRanges.push lineMatches
+        endRange = matchRanges[@endCount][0] if @difference() == 1
         i += 1
+    console.log endRange
     # cancel if end found on a line before cursor
     if endRange != null && @initialCursor != null
       if endRange.start.row < @initialCursor.row
         endRange = null
+    console.log endRange
     endRange
 
   replaceBlock: (startRange, endRange) ->

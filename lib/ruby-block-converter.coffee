@@ -1,5 +1,7 @@
 module.exports =
 class RubyBlockConverter
+  maxLevels: 6
+
   constructor: ->
     @editor = atom.workspace.getActiveEditor()
     @buffer = @editor.buffer
