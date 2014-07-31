@@ -25,3 +25,10 @@ module.exports =
   # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->
     @doEndConverter = new DoEndConverter()
+    startRange = @doEndConverter.findOpenCurly()
+    if startRange != null
+      endRange = @doEndConverter.findClosedCurly(startRange)
+      if endRange != null
+        @doEndConverter.replaceBlock(startRange, endRange)
+        unless @doEndConverter.unCollapseBlock(startRange, endRange)
+          @doEndConverter.resetCursor()

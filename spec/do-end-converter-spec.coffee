@@ -125,3 +125,22 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorRight() for num in [0...13]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
+
+    describe 'when run twice', ->
+      it 'converts it to a multi line block with do-end', ->
+        firstBlockStartText = "1.times do |bub|\n  2.times { |cow| puts bub + cow }\nend\n"
+        firstBlockEndText = "1.times do |bub|\n  2.times do |cow|\n    puts bub + cow\n  end\nend\n"
+        editor.insertText firstBlockStartText
+        editor.moveCursorUp 2
+        editor.moveCursorToEndOfLine()
+        editor.moveCursorLeft 1
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        # run again
+        editor.moveCursorToBottom()
+        editor.insertText "\n"
+        startText = "1.times {\n  puts 'hello'\n  puts 'world'\n}\n"
+        endText = "1.times do\n  puts 'hello'\n  puts 'world'\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe firstBlockEndText + "\n" + endText

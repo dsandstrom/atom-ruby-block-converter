@@ -2,101 +2,148 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  foundStart = false
-  foundEnd   = false
-  startRange = null
-  endRange = null
-  initialCursor = null
-  unCollapsed = false
-  linesInFile = null
+  # foundStart = false
+  # foundEnd   = false
+  # change to attributes
+  # startRange = null
+  # endRange = null
+  # initialCursor = null
+  # unCollapsed = false
+  # linesInFile = null
   maxLevels = 3
+
+  # @startRange: null
+
+  foundStart: ->
+    @startRange != null
+
+  foundEnd: ->
+    @endRange != null
 
   constructor: ->
     super
-    foundStart = false
-    foundEnd   = false
-    initialCursor = @editor.getCursorBufferPosition()
+    # foundStart = false
+    # foundEnd   = false
+    @startRange = null
+    @endRange = null
+    @unCollapsed = false
+    @initialCursor = @editor.getCursorBufferPosition()
     @editor.selectAll()
-    linesInFile = @editor.getSelectedBufferRange().getRows().length
-    @findAndReplaceOpenCurly()
-    @findAndReplaceClosedCurly() if foundStart
-    @unCollapseBlock() if foundStart && foundEnd
-    if unCollapsed
-      @editor.setCursorBufferPosition startRange.end
-      @editor.moveCursorDown 1
-      @editor.moveCursorToEndOfLine()
-    else
-      @editor.setCursorBufferPosition initialCursor
-    @finalizeTransaction foundStart && foundEnd
+    @linesInFile = @editor.getSelectedBufferRange().getRows().length
+    @editor.setCursorBufferPosition @initialCursor
+    # @findOpenCurly()
+    # console.log @startRange
+    # @findClosedCurly() if @foundStart()
+    # if @foundStart() and @foundEnd()
+    #   @replaceBlock()
+    #   @unCollapseBlock()
+    # if @unCollapsed
+    #   @editor.setCursorBufferPosition @startRange.end
+    #   @editor.moveCursorDown 1
+    #   @editor.moveCursorToEndOfLine()
+    # else if @initialCursor != null
+    #   @editor.setCursorBufferPosition @initialCursor
+    # @finalizeTransaction @foundStart() and @foundEnd()
 
   scanForOpen: (editor, range) ->
+    startRange = null
     editor.buffer.scanInRange /\s\{(\s|$)/, range, (obj) ->
-      foundStart = true
+      console.log 'found start'
       startRange = obj.range
-      afterOpen = obj.matchText.replace(/\s{/, '') || ''
-      obj.replace ' do' + afterOpen
+      # console.log @startRange
+      # afterOpen = obj.matchText.replace(/\s{/, '') || ''
+      # obj.replace ' do' + afterOpen
       obj.stop()
+    startRange
 
   scanForClosed: (editor, range) ->
+    endRange = null
     editor.buffer.scanInRange /(^|\s)\}(\W|$)/, range, (obj) ->
-      foundEnd = true
+      console.log 'found end'
+      # foundEnd = true
       endRange = obj.range
+      # match = obj.matchText.match(/([^\}])\}(.*)/, '')
+      # if match != null
+      #   beforeClosed = match[1]
+      #   afterClosed = match[2]
+      # obj.replace (beforeClosed ?= '') + 'end' + (afterClosed ?= '')
+      obj.stop()
+    endRange
+
+  notFirstRow: (editor) ->
+    editor.getCursorBufferPosition().row > 0
+
+  notLastRow: (editor) ->
+    editor.getCursorBufferPosition().row + 1 < @linesInFile
+
+  findOpenCurly: ->
+    startRange = null
+    # select to the left
+    @editor.setCursorBufferPosition @initialCursor
+    @editor.selectToFirstCharacterOfLine()
+    r = @editor.getSelectedBufferRange()
+    # scan for open
+    # console.log r.start
+    startRange = @scanForOpen(@editor, r)
+    # go up lines until one { is found
+    i = 0
+    while (startRange == null) and i < maxLevels and @notFirstRow(@editor)
+      @editor.moveCursorUp 1
+      @editor.moveCursorToFirstCharacterOfLine()
+      @editor.selectToEndOfLine()
+      r = @editor.getSelectedBufferRange()
+      startRange = @scanForOpen(@editor, r)
+      i += 1
+    startRange
+
+  findClosedCurly: (startRange) ->
+    endRange = null
+    # make sure there is no } between the { and cursor
+    # move after end of current word
+    startingPoint = [startRange.end.row, startRange.end.column]
+    @editor.setCursorBufferPosition startingPoint
+    @editor.selectToEndOfLine()
+    range = @editor.getSelectedBufferRange()
+    endRange = @scanForClosed(@editor, range)
+    i = 0
+    while (endRange == null) and i < maxLevels and @notLastRow(@editor)
+      # move down a line
+      @editor.moveCursorDown 1
+      @editor.moveCursorToEndOfLine()
+      @editor.selectToFirstCharacterOfLine()
+      r = @editor.getSelectedBufferRange()
+      endRange = @scanForClosed(@editor, r)
+      i += 1
+    # cancel if end found on a line before cursor
+    # needed?
+    # if @foundEnd() and @initialCursor != null
+    #   if @endRange.start.row < @initialCursor.row
+    #     @endRange = null
+    endRange
+
+  replaceBlock: (startRange, endRange) ->
+    @editor.buffer.scanInRange /\}/, endRange, (obj) ->
+      # foundEnd = true
+      # @endRange = obj.range
       match = obj.matchText.match(/([^\}])\}(.*)/, '')
       if match != null
         beforeClosed = match[1]
         afterClosed = match[2]
       obj.replace (beforeClosed ?= '') + 'end' + (afterClosed ?= '')
       obj.stop()
+    @editor.buffer.scanInRange /\{/, startRange, (obj) ->
+      # @startRange = obj.range
+      afterOpen = obj.matchText.replace(/\{/, '') || ''
+      obj.replace 'do' + afterOpen
+      obj.stop()
 
-  notFirstRow: (editor) ->
-    editor.getCursorBufferPosition().row > 0
+  resetCursor: ->
+    @editor.setCursorBufferPosition(@initialCursor)
 
-  notLastRow: (editor) ->
-    editor.getCursorBufferPosition().row + 1 < linesInFile
-
-  findAndReplaceOpenCurly: ->
-    # select to the left
-    @editor.setCursorBufferPosition initialCursor
-    @editor.selectToFirstCharacterOfLine()
-    r = @editor.getSelectedBufferRange()
-    # scan for open
-    @scanForOpen @editor, r
-    # go up lines until one { is found
-    i = 0
-    while !foundStart && i < maxLevels && @notFirstRow(@editor)
-      @editor.moveCursorUp 1
-      @editor.moveCursorToFirstCharacterOfLine()
-      @editor.selectToEndOfLine()
-      r = @editor.getSelectedBufferRange()
-      @scanForOpen @editor, r
-      i += 1
-
-  findAndReplaceClosedCurly: ->
-    if startRange != null
-      # make sure there is no } between the { and cursor
-      # move after end of current word
-      startingPoint = [startRange.end.row, startRange.end.column]
-      @editor.setCursorBufferPosition startingPoint
-      @editor.selectToEndOfLine()
-      range = @editor.getSelectedBufferRange()
-      @scanForClosed @editor, range
-      i = 0
-      while !foundEnd && i < maxLevels && @notLastRow(@editor)
-        # move down a line
-        @editor.moveCursorDown 1
-        @editor.moveCursorToEndOfLine()
-        @editor.selectToFirstCharacterOfLine()
-        range = @editor.getSelectedBufferRange()
-        @scanForClosed @editor, range
-        i += 1
-      # cancel if end found on a line before cursor
-      if foundEnd && initialCursor != null
-        if endRange.start.row < initialCursor.row
-          foundEnd = false
-
-  unCollapseBlock: ->
+  unCollapseBlock: (startRange, endRange) ->
     # TODO: maybe make it's own transaction
     foundDoBar = false
+    unCollapsed = false
     unCollapsedEnd = false
     @editor.setSelectedBufferRange endRange
     @editor.selectToEndOfWord()
@@ -117,13 +164,13 @@ class DoEndConverter extends RubyBlockConverter
           text = obj.matchText
           obj.replace "#{text}\n"
           foundDoBar = true
-          unCollapsedDo = true
+          unCollapsed = true
         unless foundDoBar
           # and new line after do$
           @buffer.scanInRange /do/, newStartRange, (obj) ->
             obj.replace "do\n"
             unCollapsed = true
-
+    if unCollapsed
       # indent new block based on original line
       @editor.setCursorBufferPosition startRange.start
       @editor.moveCursorDown 1
@@ -132,3 +179,4 @@ class DoEndConverter extends RubyBlockConverter
       @editor.selectToEndOfLine()
       selection = @editor.getSelection()
       selection.autoIndentSelectedRows()
+    unCollapsed
