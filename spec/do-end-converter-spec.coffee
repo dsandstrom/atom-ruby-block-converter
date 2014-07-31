@@ -144,3 +144,29 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe firstBlockEndText + "\n" + endText
+
+    describe 'when nested in a do-end', ->
+      it 'converts the brackets only', ->
+        startText = "context \"for tim\" do\n  it \"redirects\" {\n    expect(response).to redirect\n  }\nend\n"
+        endText   = "context \"for tim\" do\n  it \"redirects\" do\n    expect(response).to redirect\n  end\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 3
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe endText
+
+    describe 'when nested in a curly bracket', ->
+      it 'converts the brackets only', ->
+        startText = "context \"for tim\" {\n  it \"redirects\" {\n    expect(response).to redirect\n  }\n}\n"
+        endText   = "context \"for tim\" {\n  it \"redirects\" do\n    expect(response).to redirect\n  end\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 3
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe endText
+
+    describe 'when trying to convert do-end', ->
+      it "doesn't convert it", ->
+        startText = "1.times do\n  puts 'hello'\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe startText

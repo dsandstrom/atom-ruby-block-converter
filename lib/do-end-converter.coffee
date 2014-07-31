@@ -10,7 +10,7 @@ class DoEndConverter extends RubyBlockConverter
 
   scanForOpen: (editor, range) ->
     startRange = null
-    editor.buffer.scanInRange /\s\{(\s|$)/, range, (obj) ->
+    editor.buffer.backwardsScanInRange /\s\{(\s|$)/, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
@@ -39,6 +39,7 @@ class DoEndConverter extends RubyBlockConverter
       r = @editor.getSelectedBufferRange()
       startRange = @scanForOpen(@editor, r)
       i += 1
+    # console.log "found start: #{startRange != null}"
     startRange
 
   findClosedCurly: (startRange) ->
@@ -55,15 +56,18 @@ class DoEndConverter extends RubyBlockConverter
       # move down a line
       @editor.moveCursorDown 1
       @editor.moveCursorToEndOfLine()
-      @editor.selectToFirstCharacterOfLine()
+      # @editor.selectToFirstCharacterOfLine()
+      @editor.selectToBeginningOfLine()
       r = @editor.getSelectedBufferRange()
       endRange = @scanForClosed(@editor, r)
       i += 1
     # cancel if end found on a line before cursor
     # needed?
+    # console.log "found end: #{endRange != null}"
     if endRange != null and @initialCursor != null
       if endRange.start.row < @initialCursor.row
         endRange = null
+    # console.log "found end: #{endRange != null}"
     endRange
 
   replaceBlock: (startRange, endRange) ->

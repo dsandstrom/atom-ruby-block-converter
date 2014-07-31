@@ -141,3 +141,29 @@ describe 'RubyBlockConverter', ->
         # editor.moveCursorLeft 2
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe startText
+
+    describe 'when nested in a curly do-end', ->
+      it 'converts it to a single line block with brackets', ->
+        startText   = "context \"for tim\" do\n  it \"redirects\" do\n    expect(response).to redirect\n  end\nend\n"
+        endText = "context \"for tim\" do\n  it \"redirects\" { expect(response).to redirect }\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 3
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe endText
+
+    describe 'when nested in a curly curly bracket', ->
+      it 'converts it to a single line block with brackets', ->
+        startText   = "context \"for tim\" {\n  it \"redirects\" do\n    expect(response).to redirect\n  end\n}\n"
+        endText = "context \"for tim\" {\n  it \"redirects\" { expect(response).to redirect }\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 3
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe endText
+
+    describe 'when trying to convert brackets', ->
+      it "doesn't convert it", ->
+        startText = "1.times {\n  puts 'hello'\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe startText
