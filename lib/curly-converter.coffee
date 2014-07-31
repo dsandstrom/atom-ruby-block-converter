@@ -5,39 +5,13 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class CurlyConverter extends RubyBlockConverter
-  # foundStart = false
-  # foundEnd = false
-  # initialCursor = null
-  # doRange = null
-  # endRange = null
-  # linesInFile = null
-  # collapsed = false
   maxLevels = 3
-
-  # constructor: ->
-  #   super
-  #   # foundStart = false
-  #   # foundEnd   = false
-  #   # initialCursor = @editor.getCursorBufferPosition()
-  #   # @editor.selectAll()
-  #   # linesInFile = @editor.getSelectedBufferRange().getRows().length
-  #
-  #   # @findAndReplaceDo()
-  #   # @findAndReplaceEnd() if foundStart
-  #   # @collapseBlock() if foundStart && foundEnd
-  #   # if !collapsed && initialCursor != null
-  #   #   @editor.setCursorBufferPosition initialCursor
-  #   #
-  #   # @finalizeTransaction foundStart && foundEnd
 
   scanForDo: (editor, range) ->
     # scan backwards for first do
     startRange = null
     editor.buffer.backwardsScanInRange /\sdo\b/, range, (obj) ->
-      # foundStart = true
       startRange = obj.range
-      # afterDo = obj.matchText.replace(/\sdo/, '') ||  ''
-      # obj.replace ' {' + afterDo
       obj.stop()
     startRange
 
@@ -45,17 +19,9 @@ class CurlyConverter extends RubyBlockConverter
     # scan for first end
     endRange = null
     editor.buffer.scanInRange /end/, range, (obj) ->
-      # foundEnd = true
       endRange = obj.range
-      # obj.replace '}'
-      # obj.stop()
+      obj.stop()
     endRange
-
-  # notFirstRow: (editor) ->
-  #   editor.getCursorBufferPosition().row > 0
-  #
-  # notLastRow: (editor) ->
-  #   editor.getCursorBufferPosition().row + 1 < linesInFile
 
   findDo: ->
     startRange = null
@@ -135,5 +101,4 @@ class CurlyConverter extends RubyBlockConverter
       @editor.selectDown lineSeparation
       @editor.selectToEndOfLine()
       @editor.getSelection().joinLines()
-      # @editor.moveCursorToEndOfLine()
       collapsed = true

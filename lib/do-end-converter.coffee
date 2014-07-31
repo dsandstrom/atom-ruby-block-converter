@@ -11,7 +11,6 @@ class DoEndConverter extends RubyBlockConverter
   scanForOpen: (editor, range) ->
     startRange = null
     editor.buffer.scanInRange /\s\{(\s|$)/, range, (obj) ->
-      # console.log 'found start'
       startRange = obj.range
       obj.stop()
     startRange
@@ -19,7 +18,6 @@ class DoEndConverter extends RubyBlockConverter
   scanForClosed: (editor, range) ->
     endRange = null
     editor.buffer.scanInRange /(^|\s)\}(\W|$)/, range, (obj) ->
-      # console.log 'found end'
       endRange = obj.range
       obj.stop()
     endRange
