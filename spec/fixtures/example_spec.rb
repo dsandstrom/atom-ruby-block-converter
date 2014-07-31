@@ -17,10 +17,6 @@ end
 
 it "updates the requested banner" do
   banner = FactoryGirl.create(:banner)
-  # Assuming there are no other banners in the database, this
-  # specifies that the Banner created on the previous line
-  # receives the :update_attributes message with whatever params are
-  # submitted in the request.
   Banner.any_instance.should_receive(:update).with({ "message" => "MyText" })
   put :update, {:id => banner.to_param, :banner => { "message" => "MyText" }}
 end

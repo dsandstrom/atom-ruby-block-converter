@@ -5,20 +5,14 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class CurlyConverter extends RubyBlockConverter
-  doRegex: /\sdo\b/
-  endRegex: /end/
+  DO_REGEX = /\sdo\b/
+  END_REGEX = /end/
 
-  constructor: ->
-    super
-    @startCount = 0
-    @endCount = 0
-    # @matchRanges = []
+  startCount: 0
+  endCount: 0
 
-  addToStartCount: (num) ->
-    @startCount += num
-
-  addToEndCount: (num) ->
-    @endCount += num
+  # constructor: ->
+  #   super
 
   difference: ->
     @endCount - @startCount
@@ -26,7 +20,7 @@ class CurlyConverter extends RubyBlockConverter
   scanForDo: (editor, range) ->
     # scan backwards for first do
     startRange = null
-    editor.buffer.backwardsScanInRange @doRegex, range, (obj) ->
+    editor.buffer.backwardsScanInRange DO_REGEX, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
@@ -38,13 +32,13 @@ class CurlyConverter extends RubyBlockConverter
     # endCount = 0
     # difference = 0
     matchRanges = []
-    editor.buffer.scanInRange @endRegex, range, (obj) ->
+    editor.buffer.scanInRange END_REGEX, range, (obj) ->
       # endCount += 1
       that.endCount += 1
       # endRange = obj.range
       matchRanges.push obj.range
       # obj.stop()
-    editor.buffer.scanInRange @doRegex, range, (obj) ->
+    editor.buffer.scanInRange DO_REGEX, range, (obj) ->
       that.startCount += 1
       # startCount += 1
     # difference = @endCount - @startCount
