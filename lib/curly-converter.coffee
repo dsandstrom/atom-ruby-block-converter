@@ -48,9 +48,9 @@ class CurlyConverter extends RubyBlockConverter
       that.startCount += 1
       # startCount += 1
     # difference = @endCount - @startCount
-    console.log "diff: #{@difference()}"
-    console.log @startCount
-    console.log @endCount
+    # console.log "diff: #{@difference()}"
+    # console.log @startCount
+    # console.log @endCount
     matchRanges
 
   findDo: ->
@@ -104,12 +104,12 @@ class CurlyConverter extends RubyBlockConverter
           matchRanges.push lineMatches
         endRange = matchRanges[@endCount][0] if @difference() == 1
         i += 1
-    console.log endRange
+    # console.log endRange
     # cancel if end found on a line before cursor
     if endRange != null && @initialCursor != null
       if endRange.start.row < @initialCursor.row
         endRange = null
-    console.log endRange
+    # console.log endRange
     endRange
 
   replaceBlock: (startRange, endRange) ->
