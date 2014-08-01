@@ -72,7 +72,6 @@ class DoEndConverter extends RubyBlockConverter
     if endRange != null and @initialCursor != null
       if endRange.start.row < @initialCursor.row
         endRange = null
-    # console.log endRange
     endRange
 
   replaceBlock: (startRange, endRange) ->
