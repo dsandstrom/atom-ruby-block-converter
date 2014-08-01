@@ -50,3 +50,18 @@ context "for tim" do
     expect(response).to redirect
   }
 end
+
+# TODO: move cursor out of do
+before do
+  do
+    var = 'noop'
+  end
+end
+
+context "for tim" {
+  it { expect(response).to redirect }
+}
+
+context "when nil" do
+  before { @banner.message = nil }
+end
