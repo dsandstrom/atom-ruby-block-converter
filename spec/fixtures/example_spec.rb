@@ -50,3 +50,5 @@ context "for tim" do
     expect(response).to redirect
   }
 end
+
+{ hash: variable }
