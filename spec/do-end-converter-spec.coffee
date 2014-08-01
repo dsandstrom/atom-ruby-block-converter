@@ -213,10 +213,7 @@ describe 'RubyBlockConverter', ->
         endText   = "it do\n  it { expect(response).to redirect }\nend\n"
         editor.insertText(startText)
         editor.moveCursorUp 1
-        # editor.moveCursorToEndOfLine()
         editor.moveCursorRight() for n in [0...5]
-        # editor.selectToBeginningOfLine()
-        # console.log editor.getSelection().getText()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 

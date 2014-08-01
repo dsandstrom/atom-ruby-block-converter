@@ -2,9 +2,6 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  # OPEN_REGEX = /(^|\s)\{(\s|$)/
-  # CLOSED_REGEX = /(^|\s)\}(\W|$)/
-
   scanForOpen: (editor, range) ->
     # scan backwards for first {
     startRange = null
@@ -18,7 +15,6 @@ class DoEndConverter extends RubyBlockConverter
     matchRanges = []
     # editor.buffer.scanInRange /(^|\s|\w)\}\s*(\.|\)|$)/g, range, (obj) ->
     editor.buffer.scanInRange /\}\s*(\)|\.|\s|$)/g, range, (obj) ->
-      console.log obj.match
       that.endCount++
       matchRanges.push obj.range
     editor.buffer.scanInRange /(^|\s|\()\{(\s|\w|$)/g, range, (obj) ->
@@ -42,11 +38,9 @@ class DoEndConverter extends RubyBlockConverter
       r = @editor.getSelectedBufferRange()
       startRange = @scanForOpen(@editor, r)
       i += 1
-    # console.log "found start: #{startRange != null}"
     startRange
 
   findClosedCurly: (startRange) ->
-    # console.log startRange
     that = this
     endRange = null
     matchRanges = []
@@ -55,15 +49,11 @@ class DoEndConverter extends RubyBlockConverter
     startingPoint = [startRange.end.row, startRange.end.column]
     @editor.setCursorBufferPosition startingPoint
     @editor.selectToEndOfLine()
-    # console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     lineMatches = @scanForClosed(that, @editor, range)
-    # console.log lineMatches
     if lineMatches.length > 0
       matchRanges = matchRanges.concat lineMatches
-    # console.log matchRanges
     endRange = matchRanges[@endCount - 1] if @foundMatchingEnd()
-    # console.log endRange
     i = 0
     while !@foundMatchingEnd() && endRange == null and i < @maxLevels and @notLastRow(@editor)
       # move down a line
@@ -86,7 +76,6 @@ class DoEndConverter extends RubyBlockConverter
 
   replaceBlock: (startRange, endRange) ->
     @editor.buffer.scanInRange /\}/, endRange, (obj) ->
-      # match = obj.matchText.match(/([^\}])\}(.*)/, '')
       match = obj.matchText.match(/([^\}])\}(.*)/, '')
       if match != null
         beforeClosed = match[1]
