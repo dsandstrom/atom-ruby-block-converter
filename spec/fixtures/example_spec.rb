@@ -44,3 +44,9 @@ it "updates the requested banner" {
 it "does" {
   expect('soup').to eq { }
 }
+
+context "for tim" do
+  it "redirects" {
+    expect(response).to redirect
+  }
+end

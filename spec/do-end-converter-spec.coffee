@@ -246,4 +246,15 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 2
         editor.moveCursorToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        # expect(editor.getText()).toBe textStart
+        expect(editor.getText()).toBe textEnd
+
+    describe 'when nested with {} inside', ->
+      it 'converts the outside to do-end', ->
+        textStart = "it 'does' {\n  expect('soup').to eq {}\n}\n"
+        textEnd = "it 'does' do\n  expect('soup').to eq {}\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 2
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd

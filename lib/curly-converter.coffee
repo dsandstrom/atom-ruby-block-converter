@@ -2,8 +2,6 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class CurlyConverter extends RubyBlockConverter
-  # DO_REGEX = /\sdo\b/
-  # END_REGEX = /end/
 
   scanForDo: (editor, range) ->
     # scan backwards for first do
