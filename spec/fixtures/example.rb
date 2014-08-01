@@ -73,3 +73,7 @@ end
 43.times { |bar| 9.times { |gym| puts donkey + gym } }
 
 it { |bob| it { expect(response).to redirect } }
+
+it { it { expect(response).to redirect } }
+
+it { it { expect(response).to redirect } }

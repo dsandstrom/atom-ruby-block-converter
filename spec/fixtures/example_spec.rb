@@ -40,3 +40,7 @@ it "updates the requested banner" {
   Banner.any_instance.should_receive(:update).with({ "message" => "MyText" })
   put :update, {:id => banner.to_param, :banner => { "message" => "MyText" }}
 }
+
+it "does" {
+  expect('soup').to eq { }
+}

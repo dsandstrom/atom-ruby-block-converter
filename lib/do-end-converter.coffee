@@ -8,7 +8,7 @@ class DoEndConverter extends RubyBlockConverter
   scanForOpen: (editor, range) ->
     # scan backwards for first {
     startRange = null
-    editor.buffer.backwardsScanInRange /(^|\s|\()\{(\s|$)/, range, (obj) ->
+    editor.buffer.backwardsScanInRange /(^|\s|\()\{\s*(\||\w|$)/, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
@@ -16,10 +16,12 @@ class DoEndConverter extends RubyBlockConverter
   scanForClosed: (that, editor, range) ->
     # scan for }, scan for matching {
     matchRanges = []
-    editor.buffer.scanInRange /(^|\s)\}/g, range, (obj) ->
+    # editor.buffer.scanInRange /(^|\s|\w)\}\s*(\.|\)|$)/g, range, (obj) ->
+    editor.buffer.scanInRange /\}\s*(\)|\.|\s|$)/g, range, (obj) ->
+      console.log obj.match
       that.endCount++
       matchRanges.push obj.range
-    editor.buffer.scanInRange /(^|\s|\()\{(\s|$)/g, range, (obj) ->
+    editor.buffer.scanInRange /(^|\s|\()\{(\s|\w|$)/g, range, (obj) ->
       that.startCount += 1
     matchRanges
 
@@ -44,6 +46,7 @@ class DoEndConverter extends RubyBlockConverter
     startRange
 
   findClosedCurly: (startRange) ->
+    # console.log startRange
     that = this
     endRange = null
     matchRanges = []
@@ -78,6 +81,7 @@ class DoEndConverter extends RubyBlockConverter
     if endRange != null and @initialCursor != null
       if endRange.start.row < @initialCursor.row
         endRange = null
+    # console.log endRange
     endRange
 
   replaceBlock: (startRange, endRange) ->
@@ -121,7 +125,7 @@ class DoEndConverter extends RubyBlockConverter
         @editor.selectToEndOfLine()
         newStartRange = @editor.getSelectedBufferRange()
         # and new line after bars
-        @buffer.scanInRange /do\s\|[\w\d]+\|/, newStartRange, (obj) ->
+        @buffer.scanInRange /do\s\|\w+\|/, newStartRange, (obj) ->
           text = obj.matchText
           obj.replace "#{text}\n"
           foundDoBar = true
@@ -138,6 +142,5 @@ class DoEndConverter extends RubyBlockConverter
       @editor.moveCursorToFirstCharacterOfLine()
       @editor.selectDown 1
       @editor.selectToEndOfLine()
-      selection = @editor.getSelection()
-      selection.autoIndentSelectedRows()
+      @editor.getSelection().autoIndentSelectedRows()
     unCollapsed

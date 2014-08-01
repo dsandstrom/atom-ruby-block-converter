@@ -208,13 +208,15 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe startText
 
     describe 'when converting outer nested block', ->
-      it 'converts it to a single line block with brackets', ->
+      it 'converts it to a multi line block', ->
         startText = "it { it { expect(response).to redirect } }\n"
         endText   = "it do\n  it { expect(response).to redirect }\nend\n"
         editor.insertText(startText)
         editor.moveCursorUp 1
         # editor.moveCursorToEndOfLine()
         editor.moveCursorRight() for n in [0...5]
+        # editor.selectToBeginningOfLine()
+        # console.log editor.getSelection().getText()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -235,6 +237,16 @@ describe 'RubyBlockConverter', ->
         textEnd = "1.times do |bub|\n  2.times({ |cow| puts bub + cow })\nend\n"
         editor.insertText textStart
         editor.moveCursorUp 3
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd
+
+    describe 'when nested with { } inside', ->
+      it "doesn't convert it", ->
+        textStart = "it 'does' {\n  expect('soup').to eq { }\n}\n"
+        textEnd = "it 'does' do\n  expect('soup').to eq { }\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 2
         editor.moveCursorToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
