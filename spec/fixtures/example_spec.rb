@@ -63,7 +63,5 @@ context "for tim" {
 }
 
 context "when nil" do
-  before do
-    @banner.message = nil
-  end
+  before { @banner.message = nil }
 end
