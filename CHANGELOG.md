@@ -1,3 +1,6 @@
+## 0.6.0 - 2014-07-31
+* Added support for nested blocks
+
 ## 0.5.0 - 2014-07-30
 * Added support for multi-line blocks
 * Revised/Cleaned up code

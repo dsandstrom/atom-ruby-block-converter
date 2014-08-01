@@ -70,4 +70,6 @@ describe "GET new" do
   end
 end
 
-43.times { |donkey| 9.times { |gym| puts donkey + gym } }
+43.times { |bar| 9.times { |gym| puts donkey + gym } }
+
+it { |bob| it { expect(response).to redirect } }

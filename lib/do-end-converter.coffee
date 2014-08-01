@@ -2,13 +2,13 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  OPEN_REGEX = /\s\{(\s|$)/
-  CLOSED_REGEX = /(^|\s)\}(\W|$)/
+  # OPEN_REGEX = /(^|\s)\{(\s|$)/
+  # CLOSED_REGEX = /(^|\s)\}(\W|$)/
 
   scanForOpen: (editor, range) ->
     # scan backwards for first {
     startRange = null
-    editor.buffer.backwardsScanInRange OPEN_REGEX, range, (obj) ->
+    editor.buffer.backwardsScanInRange /(^|\s)\{(\s|$)/, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
@@ -16,11 +16,11 @@ class DoEndConverter extends RubyBlockConverter
   scanForClosed: (that, editor, range) ->
     # scan for }, scan for matching {
     matchRanges = []
-    editor.buffer.scanInRange CLOSED_REGEX, range, (obj) ->
+    editor.buffer.scanInRange /(^|\s)\}/g, range, (obj) ->
       that.endCount++
       matchRanges.push obj.range
-    editor.buffer.scanInRange OPEN_REGEX, range, (obj) ->
-      that.startCount++
+    editor.buffer.scanInRange /(^|\s)\{(\s|$)/g, range, (obj) ->
+      that.startCount += 1
     matchRanges
 
   findOpenCurly: ->
@@ -52,11 +52,15 @@ class DoEndConverter extends RubyBlockConverter
     startingPoint = [startRange.end.row, startRange.end.column]
     @editor.setCursorBufferPosition startingPoint
     @editor.selectToEndOfLine()
+    # console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     lineMatches = @scanForClosed(that, @editor, range)
+    # console.log lineMatches
     if lineMatches.length > 0
-      matchRanges.push lineMatches
-    endRange = matchRanges[@endCount - 1][0] if @foundMatchingEnd()
+      matchRanges = matchRanges.concat lineMatches
+    # console.log matchRanges
+    endRange = matchRanges[@endCount - 1] if @foundMatchingEnd()
+    # console.log endRange
     i = 0
     while !@foundMatchingEnd() && endRange == null and i < @maxLevels and @notLastRow(@editor)
       # move down a line
@@ -67,8 +71,8 @@ class DoEndConverter extends RubyBlockConverter
       r = @editor.getSelectedBufferRange()
       lineMatches = @scanForClosed(that, @editor, r)
       if lineMatches.length > 0
-        matchRanges.push lineMatches
-      endRange = matchRanges[@endCount - 1][0] if @foundMatchingEnd()
+        matchRanges = matchRanges.concat lineMatches
+      endRange = matchRanges[@endCount - 1] if @foundMatchingEnd()
       i += 1
     # cancel if end found on a line before cursor
     if endRange != null and @initialCursor != null

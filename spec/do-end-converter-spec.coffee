@@ -206,3 +206,25 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe startText
+
+    describe 'when converting outer nested block', ->
+      it 'converts it to a single line block with brackets', ->
+        startText = "it { it { expect(response).to redirect } }\n"
+        endText   = "it do\n  it { expect(response).to redirect }\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 1
+        # editor.moveCursorToEndOfLine()
+        editor.moveCursorRight() for n in [0...5]
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe endText
+
+    # describe 'when converting outer nested block both with bars', ->
+    #   fit 'converts it to a single line block with brackets', ->
+    #     startText = "it { |bob| it { |sux| expect(response).to redirect } }\n"
+    #     endText   = "it do |bob|\n  it { |sux| expect(response).to redirect }\nend\n"
+    #     editor.insertText(startText)
+    #     editor.moveCursorUp 1
+    #     # editor.moveCursorToEndOfLine()
+    #     editor.moveCursorRight() for n in [0...5]
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe endText

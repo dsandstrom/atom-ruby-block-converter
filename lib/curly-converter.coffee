@@ -2,25 +2,24 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class CurlyConverter extends RubyBlockConverter
-  DO_REGEX = /\sdo\b/
-  END_REGEX = /end/
+  # DO_REGEX = /\sdo\b/
+  # END_REGEX = /end/
 
   scanForDo: (editor, range) ->
     # scan backwards for first do
     startRange = null
-    editor.buffer.backwardsScanInRange DO_REGEX, range, (obj) ->
+    editor.buffer.backwardsScanInRange /\sdo\b/, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
 
   scanForEnd: (that, editor, range) ->
-    # scan for first end
+    # scan for end, and matching dos
     matchRanges = []
-    editor.buffer.scanInRange END_REGEX, range, (obj) ->
+    editor.buffer.scanInRange /\bend\b/g, range, (obj) ->
       that.endCount++
       matchRanges.push obj.range
-      # obj.stop()
-    editor.buffer.scanInRange DO_REGEX, range, (obj) ->
+    editor.buffer.scanInRange /\sdo\b/g, range, (obj) ->
       that.startCount++
     matchRanges
 
