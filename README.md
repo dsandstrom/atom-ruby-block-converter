@@ -15,10 +15,10 @@ Place the cursor in between the brackets and hit the shortcut. Default: `ctrl-{`
 Place the cursor in between the do-end and hit the shortcut Default: `ctrl-}`
 
 #### How It Works
-* It looks left, then up, for the nearest do or {. Upon success, it looks right, then down for a matching } or end.
-* When there is a block with only one line of code: the curly converter will join the block onto one line; the do-end converter will separate the three lines and then auto-tab.  I will make this an option.
+* It looks left, then up, for the nearest starting block. Upon success, it looks right, then down for a matching } or end.
+* When there is a block with only one line of code: the curly converter will join the block onto one line; the do-end converter will separate the three lines and then auto-tab.  (Unwrapping blocks should be down from the top level down.)
 * Right now, it will only try up or down 6 lines, but this will probably become an optional value.
-* All actions are done in one transaction, so it is undo/redo friendly.
+* All actions are done in one transaction, so it's friendly to undo/redo operations.
 
 #### Notes
 In Beta
