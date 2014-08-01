@@ -200,12 +200,13 @@ describe 'RubyBlockConverter', ->
         expect(editor.getCursorBufferPosition().column).toBe 19
 
     describe 'when converting outer nested block from bottom', ->
-      it "doesn't convert it", ->
+      it "converts it", ->
         startText = "context \"for tim\" {\n  it { expect(response).to redirect }\n}\n"
+        endText = "context \"for tim\" do\n  it { expect(response).to redirect }\nend\n"
         editor.insertText(startText)
         editor.moveCursorUp 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe startText
+        expect(editor.getText()).toBe endText
 
     describe 'when converting outer nested block', ->
       it 'converts it to a multi line block', ->
@@ -316,10 +317,10 @@ describe 'RubyBlockConverter', ->
 
     describe "when { not a hash }", ->
       it 'converts the outside to do-end', ->
-        textStart = "= 'noop' }\n"
+        textStart = "before {\n  { var = 'noop' }\n}\n"
         textEnd = "before {\n  do\n    var = 'noop'\n  end\n}\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
+        editor.moveCursorUp 2
         editor.moveCursorToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd

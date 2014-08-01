@@ -51,4 +51,13 @@ context "for tim" do
   }
 end
 
-{ hash: variable }
+# TODO: move cursor out of do
+before do
+  do
+    var = 'noop'
+  end
+end
+
+context "for tim" {
+  it { expect(response).to redirect }
+}

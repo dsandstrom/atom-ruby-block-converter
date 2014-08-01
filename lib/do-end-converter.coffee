@@ -2,8 +2,11 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  openRegex: /\{\s*(\||\w|\'|\"|\`|\@|$)/
-  # openRegex: /{/
+  # openRegex: /(^|\(|\w|\'|\"|\`)\s*\{\s*(\||\w|\'|\"|\`|$)/
+  # openRegex: /\{\s*(\||\'\w\'\s*[^=]\}|\"\w\"\s*[^=]\}|\`|\w+\b\s|$)/
+  # openRegex: /\{\s*([^:\'\"]\w+\b[^:]|[\'\"]\w+[\'\"]\s[^=]|$)?/
+  # openRegex: /\{\s*([^:\'\"]\w+\b[^:]|[\'\"]\w+[\'\"]|[^\'\":]\w+\s[^:]|\||$)/
+  openRegex: /\{\s*(\||\'|\".+\"\s[^=]|\`|\w+\s|@|\w+$|$)/
 
   scanForOpen: (editor, range) ->
     # scan backwards for first {
@@ -11,6 +14,7 @@ class DoEndConverter extends RubyBlockConverter
     editor.buffer.backwardsScanInRange @openRegex, range, (obj) ->
       startRange = obj.range
       obj.stop()
+    console.log startRange
     startRange
 
   scanForClosed: (that, editor, range) ->
@@ -28,6 +32,7 @@ class DoEndConverter extends RubyBlockConverter
     # select to the left
     @editor.setCursorBufferPosition @initialCursor
     @editor.selectToFirstCharacterOfLine()
+    console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     # scan for open
     startRange = @scanForOpen(@editor, range)
