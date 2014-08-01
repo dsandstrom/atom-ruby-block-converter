@@ -65,3 +65,10 @@ context "for tim" {
 context "when nil" do
   before { @banner.message = nil }
 end
+
+it "assigns a newly created but unsaved banner as @banner" {
+  # comment
+  post :create, {"banner" => { "message" => "invalid value" }}#toDoEnd
+}
+
+{"banner" => { "message" => "invalid value" }}

@@ -6,7 +6,7 @@ class DoEndConverter extends RubyBlockConverter
   # openRegex: /\{\s*(\||\'\w\'\s*[^=]\}|\"\w\"\s*[^=]\}|\`|\w+\b\s|$)/
   # openRegex: /\{\s*([^:\'\"]\w+\b[^:]|[\'\"]\w+[\'\"]\s[^=]|$)?/
   # openRegex: /\{\s*([^:\'\"]\w+\b[^:]|[\'\"]\w+[\'\"]|[^\'\":]\w+\s[^:]|\||$)/
-  openRegex: /\{\s*(\||\'|\".+\"\s[^=]|\`|\w+\s|@|\w+$|$)/
+  openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+\s|@|\w+$|$)/
 
   scanForOpen: (editor, range) ->
     # scan backwards for first {
