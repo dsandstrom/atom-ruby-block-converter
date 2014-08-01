@@ -6,7 +6,7 @@ class CurlyConverter extends RubyBlockConverter
   scanForDo: (editor, range) ->
     # scan backwards for first do
     startRange = null
-    editor.buffer.backwardsScanInRange /\sdo\b/, range, (obj) ->
+    editor.buffer.backwardsScanInRange /\bdo\b/, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
@@ -17,7 +17,7 @@ class CurlyConverter extends RubyBlockConverter
     editor.buffer.scanInRange /\bend\b/g, range, (obj) ->
       that.endCount++
       matchRanges.push obj.range
-    editor.buffer.scanInRange /\sdo\b/g, range, (obj) ->
+    editor.buffer.scanInRange /\bdo\b/g, range, (obj) ->
       that.startCount++
     matchRanges
 

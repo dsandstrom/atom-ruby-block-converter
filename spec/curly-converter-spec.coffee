@@ -205,3 +205,21 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 1
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe startText
+
+    describe 'when converting inner nested do from inside', ->
+      it "converts it", ->
+        startText   = "before do\n  do\n    var = 'cow'\n  end\nend\n"
+        endText   = "before do\n  { var = 'cow' }\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe endText
+
+    describe 'when converting when do on line alone', ->
+      it "converts it", ->
+        startText   = "do\n  var = 'cow'\nend\n"
+        endText   = "{ var = 'cow' }\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 1
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe endText
