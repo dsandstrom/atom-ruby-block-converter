@@ -62,12 +62,12 @@ end
 
 describe "GET new" do
 
-  context "for a guest" {
+  context "for a guest" do
     it "redirects to root" do
       get :new, {}
       expect(response).to redirect_to root_path
     end
-  }
+  end
 end
 
 43.times { |bar| 9.times { |gym| puts donkey + gym } }

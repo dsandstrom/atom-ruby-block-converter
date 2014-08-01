@@ -21,7 +21,7 @@ Place the cursor in between the do-end and hit the shortcut Default: `ctrl-}`
 * All actions are done in one transaction, so it's friendly to undo/redo operations.
 
 #### Notes
-In Beta
+In Beta, issues appreciated.
 
 #### Commands
 ```coffee

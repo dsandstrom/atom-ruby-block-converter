@@ -339,12 +339,22 @@ describe 'RubyBlockConverter', ->
     #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
     #     expect(editor.getText()).toBe textEnd
 
-      describe "when nested with { not a hash } inside", ->
-        it 'converts the outside to do-end', ->
-          textStart = "before {\n  { var = 'noop' }\n}\n"
-          editor.insertText textStart
-          textEnd = "before {\n  do\n    var = 'noop'\n  end\n}\n"
-          editor.moveCursorUp 2
-          editor.moveCursorToEndOfLine()
-          atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-          expect(editor.getText()).toBe textEnd
+    describe "when nested with { not a hash } inside", ->
+      it 'converts the outside to do-end', ->
+        textStart = "before {\n  { var = 'noop' }\n}\n"
+        editor.insertText textStart
+        textEnd = "before {\n  do\n    var = 'noop'\n  end\n}\n"
+        editor.moveCursorUp 2
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd
+
+    describe "when nested with { not a hash } inside", ->
+      it 'converts the outside to do-end', ->
+        textStart = "before { @var = 'noop' }\n"
+        editor.insertText textStart
+        textEnd = "before do\n  @var = 'noop'\nend\n"
+        editor.moveCursorUp 1
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd

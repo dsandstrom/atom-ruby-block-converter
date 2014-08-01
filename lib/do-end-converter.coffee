@@ -2,7 +2,7 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  openRegex: /\{\s*(\||\w|\'|\"|\`|$)/
+  openRegex: /\{\s*(\||\w|\'|\"|\`|\@|$)/
   # openRegex: /{/
 
   scanForOpen: (editor, range) ->
