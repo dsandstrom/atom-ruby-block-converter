@@ -268,7 +268,7 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
-    describe 'when nested with { hash: :rocket } inside', ->
+    describe 'when { hash: :rocket }', ->
       it "doesn't convert it", ->
         textStart = "{ hash: :rocket }\n"
         editor.insertText textStart
@@ -277,7 +277,7 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
-    describe 'when nested with { hash: "string" } inside', ->
+    describe 'when { hash: "string" }', ->
       it "doesn't convert it", ->
         textStart = "{ hash: \"string\" }\n"
         editor.insertText textStart
@@ -287,7 +287,7 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe textStart
 
 
-    describe "when nested with { :hash => 'string' } inside", ->
+    describe "when { :hash => 'string' }", ->
       it "doesn't convert it", ->
         textStart = "{ :hash => 'string' }\n"
         editor.insertText textStart
@@ -296,7 +296,7 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
-    describe "when nested with { \"hash\" => 'string' } inside", ->
+    describe "when { \"hash\" => 'string' }", ->
       it "doesn't convert it", ->
         textStart = "{ \"hash\" => 'string' }\n"
         editor.insertText textStart
@@ -305,7 +305,7 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
-    describe "when nested with { 'hash' => 'string' } inside", ->
+    describe "when { 'hash' => 'string' }", ->
       it "doesn't convert it", ->
         textStart = "{ \"hash\" => 'string' }\n"
         editor.insertText textStart
@@ -314,8 +314,8 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
-    describe "when nested with { not a hash } inside", ->
-      fit 'converts the outside to do-end', ->
+    describe "when { not a hash }", ->
+      it 'converts the outside to do-end', ->
         textStart = "= 'noop' }\n"
         textEnd = "before {\n  do\n    var = 'noop'\n  end\n}\n"
         editor.insertText textStart
@@ -324,7 +324,7 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
-    describe "when nested with { @attr } inside", ->
+    describe "when { @attr }", ->
       it 'converts the outside to do-end', ->
         textStart = "before { @var = 'noop' }\n"
         editor.insertText textStart
