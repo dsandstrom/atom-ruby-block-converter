@@ -41,9 +41,9 @@ it "updates the requested banner" {
   put :update, {:id => banner.to_param, :banner => { "message" => "MyText" }}
 }
 
-it "does" {
+it "does" do
   expect('soup').to eq { }
-}
+end
 
 context "for tim" do
   it "redirects" {

@@ -259,82 +259,92 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
-    describe 'when nested with { :hash => variable } inside', ->
-      it 'converts the outside to do-end', ->
-        textStart = "it 'does' {\n  { :hash => variable }\n}\n"
-        textEnd = "it 'does' do\n  { :hash => variable }\nend\n"
-        editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe textEnd
+    # describe 'when nested with { :hash => variable } inside', ->
+    #   it 'converts the outside to do-end', ->
+    #     textStart = "it 'does' {\n  { :hash => variable }\n}\n"
+    #     textEnd = "it 'does' do\n  { :hash => variable }\nend\n"
+    #     editor.insertText textStart
+    #     editor.moveCursorUp 2
+    #     editor.moveCursorToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe textEnd
+    #
+    # describe 'when nested with { :hash => :rocket } inside', ->
+    #   it 'converts the outside to do-end', ->
+    #     textStart = "it 'does' {\n  { :hash => :rocket }\n}\n"
+    #     textEnd = "it 'does' do\n  { :hash => :rocket }\nend\n"
+    #     editor.insertText textStart
+    #     editor.moveCursorUp 2
+    #     editor.moveCursorToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe textEnd
+    #
+    # describe 'when nested with { hash: variable } inside', ->
+    #   it 'converts the outside to do-end', ->
+    #     textStart = "it 'does' {\n  { hash: variable }\n}\n"
+    #     textEnd = "it 'does' do\n  { hash: variable }\nend\n"
+    #     editor.insertText textStart
+    #     editor.moveCursorUp 2
+    #     editor.moveCursorToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe textEnd
+    #
+    # describe 'when nested with { hash: :rocket } inside', ->
+    #   it 'converts the outside to do-end', ->
+    #     textStart = "it 'does' {\n  { hash: :rocket }\n}\n"
+    #     textEnd = "it 'does' do\n  { hash: :rocket }\nend\n"
+    #     editor.insertText textStart
+    #     editor.moveCursorUp 2
+    #     editor.moveCursorToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe textEnd
+    #
+    # describe 'when nested with { hash: "string" } inside', ->
+    #   it 'converts the outside to do-end', ->
+    #     textStart = "it 'does' {\n  { hash: \"string\" }\n}\n"
+    #     textEnd = "it 'does' do\n  { hash: \"string\" }\nend\n"
+    #     editor.insertText textStart
+    #     editor.moveCursorUp 2
+    #     editor.moveCursorToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe textEnd
+    #
+    # describe "when nested with { hash: 'string' } inside", ->
+    #   it 'converts the outside to do-end', ->
+    #     textStart = "it 'does' {\n  { hash: 'string' }\n}\n"
+    #     textEnd = "it 'does' do\n  { hash: 'string' }\nend\n"
+    #     editor.insertText textStart
+    #     editor.moveCursorUp 2
+    #     editor.moveCursorToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe textEnd
+    #
+    # describe 'when nested with { :hash => "string" } inside', ->
+    #   it 'converts the outside to do-end', ->
+    #     textStart = "it 'does' {\n  { :hash => \"string\" }\n}\n"
+    #     textEnd = "it 'does' do\n  { :hash => \"string\" }\nend\n"
+    #     editor.insertText textStart
+    #     editor.moveCursorUp 2
+    #     editor.moveCursorToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe textEnd
+    #
+    # describe "when nested with { :hash => 'string' } inside", ->
+    #   it 'converts the outside to do-end', ->
+    #     textStart = "it 'does' {\n  { :hash => 'string' }\n}\n"
+    #     textEnd = "it 'does' do\n  { :hash => 'string' }\nend\n"
+    #     editor.insertText textStart
+    #     editor.moveCursorUp 2
+    #     editor.moveCursorToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+    #     expect(editor.getText()).toBe textEnd
 
-    describe 'when nested with { :hash => :rocket } inside', ->
-      it 'converts the outside to do-end', ->
-        textStart = "it 'does' {\n  { :hash => :rocket }\n}\n"
-        textEnd = "it 'does' do\n  { :hash => :rocket }\nend\n"
-        editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe textEnd
-
-    describe 'when nested with { hash: variable } inside', ->
-      it 'converts the outside to do-end', ->
-        textStart = "it 'does' {\n  { hash: variable }\n}\n"
-        textEnd = "it 'does' do\n  { hash: variable }\nend\n"
-        editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe textEnd
-
-    describe 'when nested with { hash: :rocket } inside', ->
-      it 'converts the outside to do-end', ->
-        textStart = "it 'does' {\n  { hash: :rocket }\n}\n"
-        textEnd = "it 'does' do\n  { hash: :rocket }\nend\n"
-        editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe textEnd
-
-    describe 'when nested with { hash: "string" } inside', ->
-      it 'converts the outside to do-end', ->
-        textStart = "it 'does' {\n  { hash: \"string\" }\n}\n"
-        textEnd = "it 'does' do\n  { hash: \"string\" }\nend\n"
-        editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe textEnd
-
-    describe "when nested with { hash: 'string' } inside", ->
-      it 'converts the outside to do-end', ->
-        textStart = "it 'does' {\n  { hash: 'string' }\n}\n"
-        textEnd = "it 'does' do\n  { hash: 'string' }\nend\n"
-        editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe textEnd
-
-    describe 'when nested with { :hash => "string" } inside', ->
-      it 'converts the outside to do-end', ->
-        textStart = "it 'does' {\n  { :hash => \"string\" }\n}\n"
-        textEnd = "it 'does' do\n  { :hash => \"string\" }\nend\n"
-        editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe textEnd
-
-    describe "when nested with { :hash => 'string' } inside", ->
-      it 'converts the outside to do-end', ->
-        textStart = "it 'does' {\n  { :hash => 'string' }\n}\n"
-        textEnd = "it 'does' do\n  { :hash => 'string' }\nend\n"
-        editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-        expect(editor.getText()).toBe textEnd
+      describe "when nested with { not a hash } inside", ->
+        it 'converts the outside to do-end', ->
+          textStart = "before {\n  { var = 'noop' }\n}\n"
+          editor.insertText textStart
+          textEnd = "before {\n  do\n    var = 'noop'\n  end\n}\n"
+          editor.moveCursorUp 2
+          editor.moveCursorToEndOfLine()
+          atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+          expect(editor.getText()).toBe textEnd
