@@ -223,3 +223,78 @@ describe 'RubyBlockConverter', ->
         editor.moveCursorUp 1
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe endText
+
+    describe 'when converting outer nested block from top', ->
+      it 'converts it to a single line block with brackets', ->
+        startText = "context \"for tim\" do\n  it { expect(response).to redirect }\nend\n"
+        endText   = "context \"for tim\" { it { expect(response).to redirect } }\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 3
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe endText
+
+      it "moves the cursor to the end", ->
+        startText = "context \"for tim\" do\n  it { expect(response).to redirect }\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 3
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getCursorBufferPosition().row).toBe 0
+        expect(editor.getCursorBufferPosition().column).toBe 57
+
+    describe 'when converting outer nested block from bottom', ->
+      it "converts it", ->
+        startText = "context \"for tim\" do\n  it { expect(response).to redirect }\nend\n"
+        endText = "context \"for tim\" { it { expect(response).to redirect } }\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 1
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe endText
+
+    describe 'when converting outer nested block both with bars', ->
+      it 'converts it to a single line block with brackets', ->
+        startText = "it do |bob|\n  it { |sux| expect(response).to redirect }\nend\n"
+        endText   = "it { |bob| it { |sux| expect(response).to redirect } }\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        # editor.moveCursorToEndOfLine()
+        editor.moveCursorRight() for n in [0...5]
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe endText
+
+    describe 'when run twice', ->
+      it 'converts it to a multi line block with do-end', ->
+        firstBlockStartText = "1.times do |bub|\n  2.times do |cow|\n    puts bub + cow\n  end\nend\n"
+        firstBlockEndText   = "1.times do |bub|\n  2.times { |cow| puts bub + cow }\nend\n"
+        editor.insertText firstBlockStartText
+        editor.moveCursorUp 2
+        editor.moveCursorToEndOfLine()
+        editor.moveCursorLeft 1
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        # run again
+        editor.moveCursorToBottom()
+        editor.insertText "\n"
+        startText = "1.times do\n  puts 'hello'\n  puts 'world'\nend\n"
+        endText = "1.times {\n  puts 'hello'\n  puts 'world'\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe firstBlockEndText + "\n" + endText
+
+    describe 'when trying to convert { }', ->
+      it "doesn't convert it", ->
+        startText = "1.times {\n  puts 'hello'\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe startText
+
+      it "doesn't move the cursor", ->
+        startText = "1.times {\n  puts 'hello'\n}\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 2
+        editor.moveCursorRight() for n in [0...3]
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getCursorBufferPosition().row).toBe 1
+        expect(editor.getCursorBufferPosition().column).toBe 4

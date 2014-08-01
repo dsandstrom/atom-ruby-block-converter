@@ -328,8 +328,8 @@ describe 'RubyBlockConverter', ->
     describe "when { @attr }", ->
       it 'converts the outside to do-end', ->
         textStart = "before { @var = 'noop' }\n"
-        editor.insertText textStart
         textEnd = "before do\n  @var = 'noop'\nend\n"
+        editor.insertText textStart
         editor.moveCursorUp 1
         editor.moveCursorToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'

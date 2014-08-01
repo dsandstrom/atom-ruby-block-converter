@@ -62,6 +62,8 @@ context "for tim" {
   it { expect(response).to redirect }
 }
 
-do
-  var = 'cow'
+context "when nil" do
+  before do
+    @banner.message = nil
+  end
 end
