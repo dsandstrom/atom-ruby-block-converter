@@ -34,3 +34,9 @@ it "destroys the requested banner" do
     delete :destroy, { :id => banner.to_param }
   }.to change(Banner, :count).by(-1)
 end
+
+it "updates the requested banner" {
+  banner = FactoryGirl.create(:banner)
+  Banner.any_instance.should_receive(:update).with({ "message" => "MyText" })
+  put :update, {:id => banner.to_param, :banner => { "message" => "MyText" }}
+}

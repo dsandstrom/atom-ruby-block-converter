@@ -218,13 +218,23 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
-    # describe 'when converting outer nested block both with bars', ->
-    #   fit 'converts it to a single line block with brackets', ->
-    #     startText = "it { |bob| it { |sux| expect(response).to redirect } }\n"
-    #     endText   = "it do |bob|\n  it { |sux| expect(response).to redirect }\nend\n"
-    #     editor.insertText(startText)
-    #     editor.moveCursorUp 1
-    #     # editor.moveCursorToEndOfLine()
-    #     editor.moveCursorRight() for n in [0...5]
-    #     atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
-    #     expect(editor.getText()).toBe endText
+    describe 'when converting outer nested block both with bars', ->
+      it 'converts it to a single line block with brackets', ->
+        startText = "it { |bob| it { |sux| expect(response).to redirect } }\n"
+        endText   = "it do |bob|\n  it { |sux| expect(response).to redirect }\nend\n"
+        editor.insertText(startText)
+        editor.moveCursorUp 1
+        # editor.moveCursorToEndOfLine()
+        editor.moveCursorRight() for n in [0...5]
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe endText
+
+    describe 'when nested with ({ }) inside', ->
+      it 'converts it to a multi line block with do-end', ->
+        textStart = "1.times { |bub|\n  2.times({ |cow| puts bub + cow })\n}\n"
+        textEnd = "1.times do |bub|\n  2.times({ |cow| puts bub + cow })\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 3
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd

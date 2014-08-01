@@ -8,7 +8,7 @@ class DoEndConverter extends RubyBlockConverter
   scanForOpen: (editor, range) ->
     # scan backwards for first {
     startRange = null
-    editor.buffer.backwardsScanInRange /(^|\s)\{(\s|$)/, range, (obj) ->
+    editor.buffer.backwardsScanInRange /(^|\s|\()\{(\s|$)/, range, (obj) ->
       startRange = obj.range
       obj.stop()
     startRange
@@ -19,7 +19,7 @@ class DoEndConverter extends RubyBlockConverter
     editor.buffer.scanInRange /(^|\s)\}/g, range, (obj) ->
       that.endCount++
       matchRanges.push obj.range
-    editor.buffer.scanInRange /(^|\s)\{(\s|$)/g, range, (obj) ->
+    editor.buffer.scanInRange /(^|\s|\()\{(\s|$)/g, range, (obj) ->
       that.startCount += 1
     matchRanges
 
@@ -82,6 +82,7 @@ class DoEndConverter extends RubyBlockConverter
 
   replaceBlock: (startRange, endRange) ->
     @editor.buffer.scanInRange /\}/, endRange, (obj) ->
+      # match = obj.matchText.match(/([^\}])\}(.*)/, '')
       match = obj.matchText.match(/([^\}])\}(.*)/, '')
       if match != null
         beforeClosed = match[1]
@@ -120,7 +121,7 @@ class DoEndConverter extends RubyBlockConverter
         @editor.selectToEndOfLine()
         newStartRange = @editor.getSelectedBufferRange()
         # and new line after bars
-        @buffer.scanInRange /do\s\|.*\|/, newStartRange, (obj) ->
+        @buffer.scanInRange /do\s\|[\w\d]+\|/, newStartRange, (obj) ->
           text = obj.matchText
           obj.replace "#{text}\n"
           foundDoBar = true
