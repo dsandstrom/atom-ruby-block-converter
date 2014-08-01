@@ -14,7 +14,6 @@ class DoEndConverter extends RubyBlockConverter
     editor.buffer.backwardsScanInRange @openRegex, range, (obj) ->
       startRange = obj.range
       obj.stop()
-    # console.log startRange
     startRange
 
   scanForClosed: (that, editor, range) ->
@@ -32,7 +31,6 @@ class DoEndConverter extends RubyBlockConverter
     # select to the left
     @editor.setCursorBufferPosition @initialCursor
     @editor.selectToFirstCharacterOfLine()
-    # console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     # scan for open
     startRange = @scanForOpen(@editor, range)

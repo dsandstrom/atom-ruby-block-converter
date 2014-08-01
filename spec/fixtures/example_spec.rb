@@ -61,3 +61,7 @@ end
 context "for tim" {
   it { expect(response).to redirect }
 }
+
+do
+  var = 'cow'
+end
