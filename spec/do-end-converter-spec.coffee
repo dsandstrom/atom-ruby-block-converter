@@ -324,6 +324,25 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
+    describe "when deep {\"hash\" => \"string\" }", ->
+      it "doesn't convert it", ->
+        textStart = "{\"deep\" => {\"hash\" => \"string\" } }\n"
+        editor.insertText textStart
+        editor.moveCursorUp 1
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textStart
+
+    describe "when deep {\"hash\" => \"string\" } and inside", ->
+      it "doesn't convert it", ->
+        textStart = "{\"deep\" => {\"hash\" => \"string\" } }\n"
+        editor.insertText textStart
+        editor.moveCursorUp 1
+        editor.moveCursorToEndOfLine()
+        editor.moveCursorLeft() for n in [0..4]
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textStart
+
     describe "when deep { 'hash' => 'string' }", ->
       it "doesn't convert it", ->
         textStart = "{ 'deep' => {'hash' => 'string' }}\n"
