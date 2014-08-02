@@ -32,6 +32,7 @@ class CurlyConverter extends RubyBlockConverter
     startRange = @scanForDo(@editor, range)
     # interate up lines until do is found or reached max levels
     i = 0
+    console.log @notFirstRow(@editor)
     while startRange == null && i < @maxLevels && @notFirstRow(@editor)
       # move up line up
       @editor.moveCursorUp()

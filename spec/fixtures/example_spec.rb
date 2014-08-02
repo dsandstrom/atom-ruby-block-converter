@@ -15,11 +15,11 @@ it "redirects to root" do
   expect(response).to redirect_to root_path
 end
 
-it "updates the requested banner" do
+it "updates the requested banner" {
   banner = FactoryGirl.create(:banner)
   Banner.any_instance.should_receive(:update).with({ "message" => "MyText" })
   put :update, {:id => banner.to_param, :banner => { "message" => "MyText" }}
-end
+}
 
 it "destroys the requested banner" do
   banner = FactoryGirl.create(:banner)
@@ -66,9 +66,14 @@ context "when nil" do
   before { @banner.message = nil }
 end
 
-it "assigns a newly created but unsaved banner as @banner" {
+it "assigns a newly created but unsaved banner as @banner" do
   # comment
   post :create, {"banner" => { "message" => "invalid value" }}#toDoEnd
-}
+end
 
 {"banner" => { "message" => "invalid value" }}
+
+# TODO: do-end doesn't convert
+let(:user) { FactoryGirl.create(:user) }
+# likewise - outer should, inner should not
+let(:valid_attributes) { { message: banner_bu } }

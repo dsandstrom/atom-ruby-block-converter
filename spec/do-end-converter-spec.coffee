@@ -87,7 +87,8 @@ describe 'RubyBlockConverter', ->
     describe 'when no new line', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { puts 'hello' }")
-        editor.moveCursorUp 2
+        # editor.moveCursorUp 2
+        editor.moveCursorToFirstCharacterOfLine()
         editor.moveCursorRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend"
@@ -98,11 +99,7 @@ describe 'RubyBlockConverter', ->
         endText = "1.times do\n  puts 'hello'\nend\n"
         editor.insertText(startText)
         editor.moveCursorUp 1
-        editor.moveCursorRight() for num in [0...13]
-        i = 0
-        while i < 9
-          editor.moveCursorRight()
-          i += 1
+        editor.moveCursorRight() for num in [0...9]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -111,7 +108,7 @@ describe 'RubyBlockConverter', ->
         startText = "1.times { puts 'hello' }\n"
         editor.insertText(startText)
         editor.moveCursorUp 1
-        editor.moveCursorRight()for num in [0...8]
+        editor.moveCursorRight() for num in [0...8]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe startText
 
@@ -368,6 +365,47 @@ describe 'RubyBlockConverter', ->
         textEnd = "before do\n  @var = 'noop'\nend\n"
         editor.insertText textStart
         editor.moveCursorUp 1
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd
+
+    describe "when variable inside {}", ->
+      it 'converts the outside to do-end', ->
+        textStart = "let(:jon) { noop }\n"
+        textEnd = "let(:jon) do\n  noop\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 1
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd
+
+    describe "when FactoryGirl.create inside {}", ->
+      it 'converts the outside to do-end', ->
+        textStart = "let(:jon) { FactoryUnicorn.doit }\n"
+        textEnd = "let(:jon) do\n  FactoryUnicorn.doit\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 1
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd
+
+    describe "when FactoryUnicorn.doit inside {}", ->
+      it 'converts the outside to do-end', ->
+        textStart = "let(:jon) { FactoryUnicorn.doit }\n"
+        textEnd = "let(:jon) do\n  FactoryUnicorn.doit\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 1
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd
+
+    describe "when let(:var) { { hsh: 'horse' } }", ->
+      it 'converts the outside to do-end', ->
+        textStart = "let(:var) { { hsh: 'horse' } }\n"
+        textEnd = "let(:var) do\n  { hsh: 'horse' }\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 1
+        # editor.moveCursorRight() for n in [0...17]
         editor.moveCursorToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd

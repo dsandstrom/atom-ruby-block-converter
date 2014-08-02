@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby -wKU
 
-1.times do
-  puts 'hello'
-end
+1.times { puts 'hello' }
 
 17.times do |banana|
   puts banana
@@ -29,6 +27,8 @@ end
 
   9.times { |gym| puts donkey + gym }
 end
+
+1.times { puts 'hello' }
 
 1.times do
   puts 'hello'

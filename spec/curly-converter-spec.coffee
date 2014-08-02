@@ -3,6 +3,8 @@ path = require 'path'
 temp = require 'temp'
 {WorkspaceView} = require 'atom'
 
+# TODO: add tests for folded text above
+
 describe 'RubyBlockConverter', ->
   [editor, buffer] = []
 
@@ -36,6 +38,7 @@ describe 'RubyBlockConverter', ->
       it 'converts it to a single line block with brackets', ->
         editor.insertText("1.times do\n  puts 'hello'\nend\n")
         editor.moveCursorUp 2
+        editor.moveCursorToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe "1.times { puts 'hello' }\n"
 

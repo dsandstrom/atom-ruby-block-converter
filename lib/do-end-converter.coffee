@@ -2,14 +2,32 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+\s|@|\w+$|$)/
+  openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/
+  # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/
+  # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|\@|\w+$|$)/
+  # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+|@|\w+$|$)/
 
-  scanForOpen: (editor, range) ->
+  scanForOpen: (editor, range, cursorPoint=null) ->
     # scan backwards for first {
     startRange = null
-    editor.buffer.backwardsScanInRange @openRegex, range, (obj) ->
-      startRange = obj.range
-      obj.stop()
+    # console.log cursorPoint
+    editor.buffer.backwardsScanInRange /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g, range, (obj) ->
+      # console.log cursorPoint
+      if cursorPoint != null
+        # console.log obj
+        sameRow = obj.range.start.row == cursorPoint.row
+        leftOfCursor = obj.range.start.column < cursorPoint.column
+        # console.log sameRow
+        # console.log leftOfCursor
+        # console.log minPoints == null or obj.range == null or (obj.range.start.row == minPoints.row and obj.range.start.column < minPoints.column)
+        if sameRow and leftOfCursor
+          # console.log obj
+          startRange = obj.range
+          obj.stop()
+      else
+        startRange = obj.range
+        obj.stop()
+    # console.log startRange
     startRange
 
   scanForClosed: (that, editor, range) ->
@@ -20,16 +38,22 @@ class DoEndConverter extends RubyBlockConverter
       matchRanges.push obj.range
     editor.buffer.scanInRange /\{/g, range, (obj) ->
       that.startCount += 1
+    # console.log matchRanges
     matchRanges
 
   findOpenCurly: ->
     startRange = null
     # select to the left
     @editor.setCursorBufferPosition @initialCursor
+    # @editor.moveCursorToBeginningOfNextWord()
+    # @editor.selectToFirstCharacterOfLine()
+    @editor.moveCursorToEndOfLine()
     @editor.selectToFirstCharacterOfLine()
+    # @editor.selectLine()
     range = @editor.getSelectedBufferRange()
+    # console.log @editor.getSelection().getText()
     # scan for open
-    startRange = @scanForOpen(@editor, range)
+    startRange = @scanForOpen(@editor, range, @initialCursor)
     # go up lines until one { is found
     i = 0
     while startRange == null and i < @maxLevels and @notFirstRow(@editor)
@@ -42,6 +66,7 @@ class DoEndConverter extends RubyBlockConverter
     startRange
 
   findClosedCurly: (startRange) ->
+    console.log startRange
     that = this
     endRange = null
     matchRanges = []
