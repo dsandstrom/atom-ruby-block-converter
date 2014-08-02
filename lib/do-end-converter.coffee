@@ -2,16 +2,19 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/
+  # openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|\{|$)/
   # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/
   # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|\@|\w+$|$)/
   # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+|@|\w+$|$)/
+  # openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g
+  openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g
 
   scanForOpen: (editor, range, cursorPoint=null) ->
     # scan backwards for first {
     startRange = null
     # console.log cursorPoint
-    editor.buffer.backwardsScanInRange /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g, range, (obj) ->
+    editor.buffer.backwardsScanInRange @openRegex, range, (obj) ->
+      console.log obj
       # console.log cursorPoint
       if cursorPoint != null
         # console.log obj
@@ -37,8 +40,10 @@ class DoEndConverter extends RubyBlockConverter
       that.endCount++
       matchRanges.push obj.range
     editor.buffer.scanInRange /\{/g, range, (obj) ->
-      that.startCount += 1
-    # console.log matchRanges
+      that.startCount++
+    console.log that.startCount
+    console.log that.endCount
+    console.log matchRanges
     matchRanges
 
   findOpenCurly: ->
@@ -51,7 +56,7 @@ class DoEndConverter extends RubyBlockConverter
     @editor.selectToFirstCharacterOfLine()
     # @editor.selectLine()
     range = @editor.getSelectedBufferRange()
-    # console.log @editor.getSelection().getText()
+    console.log @editor.getSelection().getText()
     # scan for open
     startRange = @scanForOpen(@editor, range, @initialCursor)
     # go up lines until one { is found
@@ -72,9 +77,11 @@ class DoEndConverter extends RubyBlockConverter
     matchRanges = []
     # make sure there is no } between the { and cursor
     # move after end of current word
+    # startingPoint = [startRange.end.row, startRange.end.column]
     startingPoint = [startRange.end.row, startRange.end.column]
     @editor.setCursorBufferPosition startingPoint
     @editor.selectToEndOfLine()
+    console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     lineMatches = @scanForClosed(that, @editor, range)
     if lineMatches.length > 0
