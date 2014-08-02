@@ -7,7 +7,8 @@ class DoEndConverter extends RubyBlockConverter
   # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|\@|\w+$|$)/
   # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+|@|\w+$|$)/
   # openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g
-  openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g
+  # openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g
+  openRegex: /(^|([\"\'\w^]|[\s\.\:]\w+\))\s+)\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\']\w+[^:][\s\.]|\n|\{|$)/g
 
   scanForOpen: (editor, range, cursorPoint=null) ->
     # scan backwards for first {
@@ -17,9 +18,11 @@ class DoEndConverter extends RubyBlockConverter
       console.log obj
       # console.log cursorPoint
       if cursorPoint != null
-        # console.log obj
+        console.log obj
+        console.log cursorPoint
         sameRow = obj.range.start.row == cursorPoint.row
-        leftOfCursor = obj.range.start.column < cursorPoint.column
+        # fudge factor for regex
+        leftOfCursor = obj.range.start.column + 2 < cursorPoint.column
         # console.log sameRow
         # console.log leftOfCursor
         # console.log minPoints == null or obj.range == null or (obj.range.start.row == minPoints.row and obj.range.start.column < minPoints.column)

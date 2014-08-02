@@ -35,7 +35,7 @@ describe 'RubyBlockConverter', ->
     describe 'when no variable', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { puts 'hello' }\n")
-        editor.moveCursorUp 2
+        editor.moveCursorUp 1
         editor.moveCursorRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend\n"
@@ -350,7 +350,7 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe textStart
 
     describe "when { not a hash }", ->
-      it 'converts the outside to do-end', ->
+      fit 'converts the outside to do-end', ->
         textStart = "before {\n  { var = 'noop' }\n}\n"
         textEnd = "before {\n  do\n    var = 'noop'\n  end\n}\n"
         editor.insertText textStart
@@ -400,7 +400,7 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe textEnd
 
     describe "when let(:var) { { hsh: 'horse' } }", ->
-      it 'converts the outside to do-end', ->
+      fit 'converts the outside to do-end', ->
         textStart = "let(:var) { { hsh: 'horse' } }\n"
         textEnd = "let(:var) do\n  { hsh: 'horse' }\nend\n"
         editor.insertText textStart
