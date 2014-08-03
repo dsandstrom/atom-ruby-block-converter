@@ -20,7 +20,7 @@ Place the cursor in between the do-end and hit the shortcut Default: `ctrl-}`, w
 * There are also commands for converting without ever collapsing or joining the block.
 * Right now, it will only try up or down 6 lines, but this will probably become an optional value.
 * All actions are done in one transaction, so it's friendly to undo/redo operations.
-* *Experimental:* Hashes are ignored, while RSpec blocks are honored.  Let me know if someting is acting funny (provide an example).
+* *Experimental:* Hashes and string interpolation are ignored, while RSpec blocks are honored.  Let me know if someting is acting funny (provide an example).
 
 #### Notes
 In Beta, issues and pull requests appreciated.
