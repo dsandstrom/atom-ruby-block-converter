@@ -1,3 +1,7 @@
+## 0.7.0 - 2014-08-02
+* Tries to skip hashes
+* Add new command - curly converter without collapse
+
 ## 0.6.0 - 2014-08-01
 * Added support for nested blocks
 

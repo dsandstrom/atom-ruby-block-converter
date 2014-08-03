@@ -5,6 +5,7 @@
       'label': 'Ruby Block Converter'
       'submenu': [
         { 'label': 'To Curly Brackets ({})', 'command': 'ruby-block-converter:toCurlyBrackets' }
+        { 'label': 'To Curly Brackets Without Collapse', 'command': 'ruby-block-converter:toCurlyBracketsWithoutCollapse' }
         { 'label': 'To Do End', 'command': 'ruby-block-converter:toDoEnd' }
       ]
     ]
