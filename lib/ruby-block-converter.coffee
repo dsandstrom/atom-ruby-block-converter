@@ -19,11 +19,11 @@ class RubyBlockConverter
   foundMatchingEnd: ->
     @endCount - @startCount == 1
 
-  performTransaction: (startRange, endRange, collapse=true) ->
+  performTransaction: (startRange, endRange, shouldCollapse=true) ->
     if startRange != null and endRange != null
       @buffer.beginTransaction()
       @replaceBlock(startRange, endRange)
-      if collapse
+      if shouldCollapse
         collapsed = @collapseBlock(startRange, endRange)
       else
         collapsed = false
