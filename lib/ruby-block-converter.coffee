@@ -13,6 +13,7 @@ class RubyBlockConverter
   destroy: ->
 
   foundMatchingEnd: ->
+    # there is one more end than start (the first start is not counted)
     @endCount - @startCount == 1
 
   performTransaction: (startRange, endRange, shouldCollapse=true) ->

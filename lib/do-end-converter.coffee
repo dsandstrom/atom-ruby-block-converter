@@ -2,6 +2,8 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
+  # allow: (rspec blocks) or
+  # (no string hashes, no string start/end with :, bar, new line, end of line)
   openRegex: /([\:]\w+\)\s+\{|\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
 
   scanForOpen: (editor, range, cursorPoint=null) ->
@@ -9,6 +11,7 @@ class DoEndConverter extends RubyBlockConverter
     startRange = null
     editor.buffer.scanInRange @openRegex, range, (obj) ->
       if cursorPoint != null
+        # don't allow unless block starts before cursor
         sameRow = obj.range.start.row == cursorPoint.row
         leftOfCursor = obj.range.start.column < cursorPoint.column
         if sameRow and leftOfCursor
@@ -33,15 +36,12 @@ class DoEndConverter extends RubyBlockConverter
     startRange = null
     # select to the left
     @editor.setCursorBufferPosition @initialCursor
-    # @editor.moveCursorToBeginningOfNextWord()
-    # @editor.selectToFirstCharacterOfLine()
     @editor.moveCursorToEndOfLine()
     @editor.selectToFirstCharacterOfLine()
-    # @editor.selectLine()
     range = @editor.getSelectedBufferRange()
     # scan for open
     startRange = @scanForOpen(@editor, range, @initialCursor)
-    # go up lines until one { is found
+    # go up lines until { is found
     i = 0
     while startRange == null and i < @maxLevels and @notFirstRow(@editor)
       @editor.moveCursorUp 1
@@ -58,7 +58,6 @@ class DoEndConverter extends RubyBlockConverter
     matchRanges = []
     # make sure there is no } between the { and cursor
     # move after end of current word
-    # startingPoint = [startRange.end.row, startRange.end.column]
     startingPoint = [startRange.end.row, startRange.end.column]
     @editor.setCursorBufferPosition startingPoint
     @editor.selectToEndOfLine()
@@ -72,7 +71,6 @@ class DoEndConverter extends RubyBlockConverter
       # move down a line
       @editor.moveCursorDown 1
       @editor.moveCursorToEndOfLine()
-      # @editor.selectToFirstCharacterOfLine()
       @editor.selectToBeginningOfLine()
       r = @editor.getSelectedBufferRange()
       lineMatches = @scanForClosed(that, @editor, r)

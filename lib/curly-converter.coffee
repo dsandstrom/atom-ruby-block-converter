@@ -4,6 +4,7 @@ module.exports =
 class CurlyConverter extends RubyBlockConverter
 
   scanForDo: (editor, range) ->
+    # TODO: maybe select line and scan forwards (like do-end)
     # scan backwards for first do
     startRange = null
     editor.buffer.backwardsScanInRange /\bdo\b/, range, (obj) ->
@@ -79,6 +80,7 @@ class CurlyConverter extends RubyBlockConverter
     endRange
 
   replaceBlock: (startRange, endRange) ->
+    # Switch the block styles
     @editor.buffer.backwardsScanInRange /end/, endRange, (obj) ->
       match = obj.matchText.match(/([\W])end(.*)/, '')
       if match != null
@@ -92,6 +94,8 @@ class CurlyConverter extends RubyBlockConverter
       obj.stop()
 
   resetCursor: (collapsed, startRange=null) ->
+    # move to end of line or original spot
+    # depending on if we joined the lines
     if collapsed
       @editor.moveCursorToEndOfLine()
     else if @initialCursor != null
