@@ -8,7 +8,7 @@ Convert Ruby blocks between single line and multi line formats. Or between curly
 #### Instructions
 > *{ } --> do-end*
 
-Place the cursor in between the brackets and hit the shortcut. Default: `ctrl-{`
+Place the cursor in between the brackets and hit the shortcut. Default: `ctrl-{`, without collapse: `ctrl-alt-;`
 
 > *do-end --> { }*
 

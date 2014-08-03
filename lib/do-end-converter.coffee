@@ -2,11 +2,10 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  # openRegex: /(^|([\"\'\w^]|[\s\.\:]\w+\))\s+)\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\']\w+[^:][\s\.]|\n|$)/g
   openRegex: /([\:]\w+\)\s+\{|\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
 
   scanForOpen: (editor, range, cursorPoint=null) ->
-    # scan backwards for first {
+    # scan for first {
     startRange = null
     editor.buffer.scanInRange @openRegex, range, (obj) ->
       if cursorPoint != null
