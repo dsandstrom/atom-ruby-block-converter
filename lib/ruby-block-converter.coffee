@@ -11,10 +11,6 @@ class RubyBlockConverter
     @linesInFile = @editor.getLineCount()
 
   destroy: ->
-    @editor = null
-    @buffer = null
-    @initialCursor = null
-    @linesInFile = null
 
   foundMatchingEnd: ->
     @endCount - @startCount == 1
