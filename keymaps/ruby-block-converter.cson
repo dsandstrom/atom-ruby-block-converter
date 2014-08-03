@@ -2,3 +2,4 @@
   'ctrl-{': 'ruby-block-converter:toCurlyBrackets'
   'ctrl-alt-;': 'ruby-block-converter:toCurlyBracketsWithoutCollapse'
   'ctrl-}': 'ruby-block-converter:toDoEnd'
+  'ctrl-alt-\'': 'ruby-block-converter:toDoEndWithoutJoin'

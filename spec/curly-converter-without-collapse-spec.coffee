@@ -42,7 +42,7 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe "1.times {\n  puts 'hello'\n}\n"
 
     describe 'when a variable', ->
-      it 'converts it to a single line block with brackets', ->
+      it 'converts brackets only', ->
         editor.insertText("1.times do |bub|\n  puts bub\nend\n")
         editor.moveCursorUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBracketsWithoutCollapse'

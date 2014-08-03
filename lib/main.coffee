@@ -12,6 +12,8 @@ module.exports =
       @toDoEnd()
     atom.workspaceView.command "ruby-block-converter:toCurlyBracketsWithoutCollapse", =>
       @toCurlyBracketsWithoutCollapse()
+    atom.workspaceView.command "ruby-block-converter:toDoEndWithoutJoin", =>
+      @toDoEndWithoutJoin()
     @editor = atom.workspace.getActiveEditor()
 
   deactivate: ->
@@ -30,11 +32,18 @@ module.exports =
 
   # Converts curly bracket blocks to do-end blocks
   toDoEnd: ->
+    @convertToDoEnd(true)
+
+  # Converts curly bracket blocks to do-end blocks without joining lines
+  toDoEndWithoutJoin: ->
+    @convertToDoEnd(false)
+
+  convertToDoEnd: (join=true) ->
     @doEndConverter = new DoEndConverter()
     startRange = @doEndConverter.findOpenCurly()
     if startRange != null
       endRange = @doEndConverter.findClosedCurly(startRange)
-    @doEndConverter.performTransaction(startRange, endRange)
+    @doEndConverter.performTransaction(startRange, endRange, join)
 
   convertToCurly: (collapse=true) ->
     @curlyConverter = new CurlyConverter()

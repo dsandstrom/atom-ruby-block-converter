@@ -12,12 +12,12 @@ Place the cursor in between the brackets and hit the shortcut. Default: `ctrl-{`
 
 > *do-end --> { }*
 
-Place the cursor in between the do-end and hit the shortcut Default: `ctrl-}`
+Place the cursor in between the do-end and hit the shortcut Default: `ctrl-}`, without join: `ctrl-alt-'`
 
 #### How It Works
-* It looks left, then up, for the nearest starting block. Upon success, it looks right, then down for a matching } or end.
+* It looks for the first starting block on the current line, then up. Upon success, it looks right, then down for a matching } or end.
 * When there is a block with only one line of code: the curly converter will join the block onto one line; the do-end converter will separate the three lines and then auto-tab.
-* Optional command for converting to curly brackets without collapsing the block.
+* There are also commands for converting without ever collapsing or joining the block.
 * Right now, it will only try up or down 6 lines, but this will probably become an optional value.
 * All actions are done in one transaction, so it's friendly to undo/redo operations.
 
@@ -29,4 +29,8 @@ In Beta, issues and pull requests appreciated.
 'ruby-block-converter:toCurlyBrackets'
 'ruby-block-converter:toCurlyBracketsWithoutCollapse'
 'ruby-block-converter:toDoEnd'
+'ruby-block-converter:toDoEndWithoutJoin'
 ```
+
+#### Thanks
+Inspired by the Sublime Text [Ruby Block Converter](https://github.com/irohiroki/RubyBlockConverter) by [irohiroki](https://github.com/irohiroki).
