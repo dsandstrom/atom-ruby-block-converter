@@ -21,7 +21,6 @@ describe 'RubyBlockConverter', ->
         editor = e
         buffer = editor.getBuffer()
         editor.setTabLength(2)
-        # editor.setSoftTabs true
 
     waitsForPromise ->
       atom.packages.activatePackage('language-ruby')
