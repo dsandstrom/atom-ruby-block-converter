@@ -1,3 +1,6 @@
+## 0.8.0 - 2014-08-02
+* Add new command - curly converter without join
+
 ## 0.7.0 - 2014-08-02
 * Tries to skip hashes
 * Add new command - curly converter without collapse
