@@ -1,7 +1,7 @@
 {
   "name": "ruby-block-converter",
   "main": "./lib/main",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Convert Ruby blocks between {} and do-end formats",
   "activationEvents": [],
   "repository": "https://github.com/dsandstrom/atom-ruby-block-converter",
