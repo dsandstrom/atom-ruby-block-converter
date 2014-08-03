@@ -109,8 +109,8 @@ class DoEndConverter extends RubyBlockConverter
 
   collapseBlock: (startRange, endRange) ->
     foundDoBar = false
-    unCollapsed = false
-    unCollapsedEnd = false
+    joined = false
+    joinedEnd = false
     @editor.setSelectedBufferRange endRange
     @editor.selectToEndOfWord()
     newEndRange = @editor.getSelectedBufferRange()
@@ -119,8 +119,8 @@ class DoEndConverter extends RubyBlockConverter
       # add new line in front of new end
       @buffer.scanInRange /\send/, newEndRange, (obj) ->
         obj.replace "\nend"
-        unCollapsedEnd = true
-      if unCollapsedEnd
+        joinedEnd = true
+      if joinedEnd
         # range needs to get bigger
         @editor.setCursorBufferPosition startRange.start
         @editor.selectToEndOfLine()
@@ -130,13 +130,13 @@ class DoEndConverter extends RubyBlockConverter
           text = obj.matchText
           obj.replace "#{text}\n"
           foundDoBar = true
-          unCollapsed = true
+          joined = true
         unless foundDoBar
           # and new line after do$
           @buffer.scanInRange /do/, newStartRange, (obj) ->
             obj.replace "do\n"
-            unCollapsed = true
-    if unCollapsed
+            joined = true
+    if joined
       # indent new block based on original line
       @editor.setCursorBufferPosition startRange.start
       @editor.moveCursorDown 1
@@ -144,4 +144,4 @@ class DoEndConverter extends RubyBlockConverter
       @editor.selectDown 1
       @editor.selectToEndOfLine()
       @editor.getSelection().autoIndentSelectedRows()
-    unCollapsed
+    joined
