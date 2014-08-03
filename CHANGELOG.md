@@ -1,12 +1,8 @@
 ## 0.9.0 - 2014-08-02
-* Ignore string interpolation
-
-## 0.8.0 - 2014-08-02
-* Add new command - curly converter without join
-
-## 0.7.0 - 2014-08-02
 * Tries to skip hashes
 * Add new command - curly converter without collapse
+* Add new command - block converter without join
+* Ignore string interpolation
 
 ## 0.6.0 - 2014-08-01
 * Added support for nested blocks
