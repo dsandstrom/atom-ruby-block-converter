@@ -4,7 +4,7 @@ module.exports =
 class DoEndConverter extends RubyBlockConverter
   # allow: (rspec blocks) or
   # (no string hashes, no string start/end with :, bar, new line, end of line)
-  openRegex: /([\:]\w+\)\s+\{|\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
+  openRegex: /([\:]\w+\)\s+\{|[^\#]\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
 
   scanForOpen: (editor, range, cursorPoint=null) ->
     # scan for first {
@@ -13,7 +13,8 @@ class DoEndConverter extends RubyBlockConverter
       if cursorPoint != null
         # don't allow unless block starts before cursor
         sameRow = obj.range.start.row == cursorPoint.row
-        leftOfCursor = obj.range.start.column < cursorPoint.column
+        # fudge factor for extra space after { in regex
+        leftOfCursor = obj.range.start.column + 1 < cursorPoint.column
         if sameRow and leftOfCursor
           startRange = obj.range
           obj.stop()

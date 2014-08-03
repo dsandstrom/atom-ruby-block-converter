@@ -73,7 +73,9 @@ end
 
 {"banner" => { "message" => "invalid value" }}
 
-# TODO: do-end doesn't convert
+
 let(:user) { FactoryGirl.create(:user) }
-# likewise - outer should, inner should not
+
 let(:valid_attributes) { { message: banner_bu } }
+
+within "#var_#{var.id}" { should behave }

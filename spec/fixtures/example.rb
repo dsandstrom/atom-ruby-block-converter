@@ -40,7 +40,7 @@ end.to eq 'world'
 
 1.times do puts 'hello' end
 
-1.times { puts 'hello' }
+1.times { puts = 'hello' }
 
 17.times { |banana| puts banana }
 
@@ -79,3 +79,5 @@ it { |bob| it { expect(response).to redirect } }
 it { it { expect(response).to redirect } }
 
 it { it { expect(response).to redirect } }
+
+1.times { var = 'noop' }

@@ -1,4 +1,7 @@
 ## 0.8.0 - 2014-08-02
+* Ignore string interpolation
+
+## 0.8.0 - 2014-08-02
 * Add new command - curly converter without join
 
 ## 0.7.0 - 2014-08-02

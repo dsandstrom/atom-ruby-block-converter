@@ -350,10 +350,10 @@ describe 'RubyBlockConverter', ->
 
     describe "when { not a hash }", ->
       it 'converts the outside to do-end', ->
-        textStart = "before {\n  { var = 'noop' }\n}\n"
-        textEnd = "before {\n  do\n    var = 'noop'\n  end\n}\n"
+        textStart = "while false { var = 'noop' }\n"
+        textEnd = "while false do\n  var = 'noop'\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 2
+        editor.moveCursorUp 1
         editor.moveCursorToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
@@ -402,6 +402,16 @@ describe 'RubyBlockConverter', ->
       it 'converts the outside to do-end', ->
         textStart = "let(:var) { { hsh: 'horse' } }\n"
         textEnd = "let(:var) do\n  { hsh: 'horse' }\nend\n"
+        editor.insertText textStart
+        editor.moveCursorUp 1
+        editor.moveCursorToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
+        expect(editor.getText()).toBe textEnd
+
+    describe 'when string interpolation', ->
+      it 'converts the outside to do-end', ->
+        textStart = 'within "#var_#{var.id}" { should behave }\n'
+        textEnd = 'within "#var_#{var.id}" do\n  should behave\nend\n'
         editor.insertText textStart
         editor.moveCursorUp 1
         # editor.moveCursorRight() for n in [0...17]
