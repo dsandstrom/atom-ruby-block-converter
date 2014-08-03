@@ -350,7 +350,7 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe textStart
 
     describe "when { not a hash }", ->
-      fit 'converts the outside to do-end', ->
+      it 'converts the outside to do-end', ->
         textStart = "before {\n  { var = 'noop' }\n}\n"
         textEnd = "before {\n  do\n    var = 'noop'\n  end\n}\n"
         editor.insertText textStart
@@ -400,7 +400,7 @@ describe 'RubyBlockConverter', ->
         expect(editor.getText()).toBe textEnd
 
     describe "when let(:var) { { hsh: 'horse' } }", ->
-      fit 'converts the outside to do-end', ->
+      it 'converts the outside to do-end', ->
         textStart = "let(:var) { { hsh: 'horse' } }\n"
         textEnd = "let(:var) do\n  { hsh: 'horse' }\nend\n"
         editor.insertText textStart

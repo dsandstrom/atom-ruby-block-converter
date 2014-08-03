@@ -2,29 +2,23 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  # openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|\{|$)/
-  # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/
-  # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|\@|\w+$|$)/
-  # openRegex: /(^|\w\)|.\w+|\"|\'|\`)\s*\{(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+|@|\w+$|$)/
-  # openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g
-  # openRegex: /\{\s*(\||\'\w+\"\s[^=]|\"\w+\"\s[^=]|\`|\w+(\s+|\.)|@|\w+$|$)/g
-  openRegex: /(^|([\"\'\w^]|[\s\.\:]\w+\))\s+)\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\']\w+[^:][\s\.]|\n|\{|$)/g
+  # openRegex: /(^|([\"\'\w^]|[\s\.\:]\w+\))\s+)\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\']\w+[^:][\s\.]|\n|$)/g
+  openRegex: /([\:]\w+\)\s+\{|\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
 
   scanForOpen: (editor, range, cursorPoint=null) ->
     # scan backwards for first {
     startRange = null
     # console.log cursorPoint
-    editor.buffer.backwardsScanInRange @openRegex, range, (obj) ->
-      console.log obj
+    editor.buffer.scanInRange @openRegex, range, (obj) ->
+      # console.log obj
       # console.log cursorPoint
       if cursorPoint != null
-        console.log obj
-        console.log cursorPoint
+        # console.log obj
+        # console.log cursorPoint
         sameRow = obj.range.start.row == cursorPoint.row
-        # fudge factor for regex
-        leftOfCursor = obj.range.start.column + 2 < cursorPoint.column
-        # console.log sameRow
-        # console.log leftOfCursor
+        leftOfCursor = obj.range.start.column < cursorPoint.column
+          # console.log sameRow
+          # console.log leftOfCursor
         # console.log minPoints == null or obj.range == null or (obj.range.start.row == minPoints.row and obj.range.start.column < minPoints.column)
         if sameRow and leftOfCursor
           # console.log obj
@@ -44,9 +38,9 @@ class DoEndConverter extends RubyBlockConverter
       matchRanges.push obj.range
     editor.buffer.scanInRange /\{/g, range, (obj) ->
       that.startCount++
-    console.log that.startCount
-    console.log that.endCount
-    console.log matchRanges
+    # console.log that.startCount
+    # console.log that.endCount
+    # console.log matchRanges
     matchRanges
 
   findOpenCurly: ->
@@ -59,7 +53,7 @@ class DoEndConverter extends RubyBlockConverter
     @editor.selectToFirstCharacterOfLine()
     # @editor.selectLine()
     range = @editor.getSelectedBufferRange()
-    console.log @editor.getSelection().getText()
+    # console.log @editor.getSelection().getText()
     # scan for open
     startRange = @scanForOpen(@editor, range, @initialCursor)
     # go up lines until one { is found
@@ -74,7 +68,7 @@ class DoEndConverter extends RubyBlockConverter
     startRange
 
   findClosedCurly: (startRange) ->
-    console.log startRange
+    # console.log startRange
     that = this
     endRange = null
     matchRanges = []
@@ -84,7 +78,7 @@ class DoEndConverter extends RubyBlockConverter
     startingPoint = [startRange.end.row, startRange.end.column]
     @editor.setCursorBufferPosition startingPoint
     @editor.selectToEndOfLine()
-    console.log @editor.getSelection().getText()
+    # console.log @editor.getSelection().getText()
     range = @editor.getSelectedBufferRange()
     lineMatches = @scanForClosed(that, @editor, range)
     if lineMatches.length > 0
@@ -107,6 +101,7 @@ class DoEndConverter extends RubyBlockConverter
     if endRange != null and @initialCursor != null
       if endRange.start.row < @initialCursor.row
         endRange = null
+    # console.log endRange
     endRange
 
   replaceBlock: (startRange, endRange) ->
