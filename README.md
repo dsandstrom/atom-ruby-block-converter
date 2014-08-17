@@ -6,13 +6,15 @@ Convert Ruby blocks between single line and multi line formats. Or between curly
 ![Screenshot](https://github.com/dsandstrom/atom-ruby-block-converter/raw/master/screen-1.gif) ![Screenshot](https://github.com/dsandstrom/atom-ruby-block-converter/raw/master/screen-2.gif)
 
 ### Instructions
-> *{ } --> do-end*
+###### *{ } => do-end*
 
-Place the cursor in between the brackets and hit the shortcut. Default: `ctrl-{`, without collapse: `alt-{`
+Place the cursor in between the brackets and hit the shortcut.
+Default: `ctrl-{`, without collapse: `alt-{`
 
-> *do-end --> { }*
+###### *do-end => { }*
 
-Place the cursor in between the do-end and hit the shortcut Default: `ctrl-}`, without join: `alt-}`
+Place the cursor in between the do-end and hit the shortcut.
+Default: `ctrl-}`, without join: `alt-}`
 
 ### Features
 * Hashes and string interpolation are ignored
