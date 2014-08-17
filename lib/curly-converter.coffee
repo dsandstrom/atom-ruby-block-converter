@@ -111,5 +111,13 @@ class CurlyConverter extends RubyBlockConverter
       @editor.moveCursorToFirstCharacterOfLine()
       @editor.selectDown lineSeparation
       @editor.selectToEndOfLine()
+      # remove extra tabs and spaces
       @editor.getSelection().joinLines()
+      @removeExtraCharacters @editor.getSelection()
       collapsed = true
+
+  removeExtraCharacters: (selection) ->
+    selected = selection.getText()
+    selected = selected.replace(/\t+/, ' ')
+    selected = selected.replace(/\s\s+/, ' ')
+    selection.insertText(selected)

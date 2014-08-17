@@ -43,7 +43,21 @@ describe 'RubyBlockConverter', ->
 
     describe 'when tabs', ->
       it 'converts it to a single line block with brackets', ->
+        editor.insertText("1.times do\n\tputs 'hello'\nend\n")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe "1.times { puts 'hello' }\n"
+
+    describe 'when two tabs', ->
+      it 'converts it to a single line block with brackets', ->
         editor.insertText("1.times do\n\t\tputs 'hello'\nend\n")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe "1.times { puts 'hello' }\n"
+
+    describe 'when extra spaces', ->
+      it 'converts it and removes the extra', ->
+        editor.insertText("1.times  do\n  puts 'hello'\nend\n")
         editor.moveCursorUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe "1.times { puts 'hello' }\n"
@@ -211,7 +225,7 @@ describe 'RubyBlockConverter', ->
     describe 'when converting inner nested do from inside', ->
       it "converts it", ->
         startText   = "before do\n  do\n    var = 'cow'\n  end\nend\n"
-        endText   = "before do\n  { var = 'cow' }\nend\n"
+        endText   = "before do\n { var = 'cow' }\nend\n"
         editor.insertText(startText)
         editor.moveCursorUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
