@@ -1,3 +1,6 @@
+## Head
+* Remove extra tabs and spaces when joining lines
+
 ## 0.9.0 - 2014-08-02
 * Tries to skip hashes
 * Add new command - curly converter without collapse

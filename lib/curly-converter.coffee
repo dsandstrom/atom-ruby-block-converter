@@ -118,6 +118,6 @@ class CurlyConverter extends RubyBlockConverter
 
   removeExtraCharacters: (selection) ->
     selected = selection.getText()
-    selected = selected.replace(/\t+/, ' ')
-    selected = selected.replace(/\s\s+/, ' ')
+    selected = selected.replace(/\t+/g, ' ')
+    selected = selected.replace(/\s\s+/g, ' ')
     selection.insertText(selected)

@@ -69,6 +69,13 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
         expect(editor.getText()).toBe "1.times { |bub| puts bub }\n"
 
+    describe 'when extra spaces and variable', ->
+      it 'converts it and removes the extra', ->
+        editor.insertText("1.times do  |bub| \n   puts bub\nend\n")
+        editor.moveCursorUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:toCurlyBrackets'
+        expect(editor.getText()).toBe "1.times { |bub| puts bub }\n"
+
     describe 'when nested', ->
       it 'converts it to a nested single line block with brackets', ->
         textStart = "1.times do |bub|\n  2.times do |cow|\n    puts bub + cow\nend\nend\n"
