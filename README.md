@@ -5,27 +5,26 @@ Convert Ruby blocks between single line and multi line formats. Or between curly
 
 ![Screenshot](https://github.com/dsandstrom/atom-ruby-block-converter/raw/master/screen-1.gif) ![Screenshot](https://github.com/dsandstrom/atom-ruby-block-converter/raw/master/screen-2.gif)
 
-#### Instructions
+### Instructions
 > *{ } --> do-end*
 
-Place the cursor in between the brackets and hit the shortcut. Default: `ctrl-{`, without collapse: `ctrl-alt-;`
+Place the cursor in between the brackets and hit the shortcut. Default: `ctrl-{`, without collapse: `alt-{`
 
 > *do-end --> { }*
 
-Place the cursor in between the do-end and hit the shortcut Default: `ctrl-}`, without join: `ctrl-alt-'`
+Place the cursor in between the do-end and hit the shortcut Default: `ctrl-}`, without join: `alt-}`
 
-#### How It Works
+### Features
+* Hashes and string interpolation are ignored
+* RSpec blocks are honored.
+* There are separate commands if you don't want the block to collapse or join
+
+### How It Works
 * It looks for the first starting block on the current line, then up. Upon success, it looks right, then down for a matching } or end.
 * When there is a block with only one line of code: the curly converter will join the block onto one line; the do-end converter will separate the three lines and then auto-tab.
-* There are also commands for converting without ever collapsing or joining the block.
 * Right now, it will only try up or down 6 lines, but this will probably become an optional value.
-* All actions are done in one transaction, so it's friendly to undo/redo operations.
-* *Experimental:* Hashes and string interpolation are ignored, while RSpec blocks are honored.  Let me know if someting is acting funny (and provide the failing example or PR).
 
-#### Notes
-In Beta, issues and pull requests appreciated.
-
-#### Commands
+### Commands
 ```coffee
 'ruby-block-converter:toCurlyBrackets'
 'ruby-block-converter:toCurlyBracketsWithoutCollapse'
@@ -33,5 +32,5 @@ In Beta, issues and pull requests appreciated.
 'ruby-block-converter:toDoEndWithoutJoin'
 ```
 
-#### Thanks
+### Thanks
 Inspired by the Sublime Text [Ruby Block Converter](https://github.com/irohiroki/RubyBlockConverter) by [irohiroki](https://github.com/irohiroki).
