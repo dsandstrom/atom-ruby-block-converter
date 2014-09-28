@@ -34,5 +34,8 @@ Default: `ctrl-}`, without join: `alt-}`
 'ruby-block-converter:toDoEndWithoutJoin'
 ```
 
+### Dependencies
+Requires Atom v0.126 and up
+
 ### Thanks
 Inspired by the Sublime Text [Ruby Block Converter](https://github.com/irohiroki/RubyBlockConverter) by [irohiroki](https://github.com/irohiroki).
