@@ -1,3 +1,6 @@
+## 1.1.0 - 2014-09-27
+* Fix deprecations
+
 ## 1.0.0 - 2014-08-17
 * Remove extra tabs and spaces when joining lines
 
