@@ -35,8 +35,8 @@ class CurlyConverter extends RubyBlockConverter
     i = 0
     while startRange == null && i < @maxLevels && @notFirstRow(@editor)
       # move up line up
-      @editor.moveCursorUp()
-      @editor.moveCursorToEndOfLine()
+      @editor.moveUp()
+      @editor.moveToEndOfLine()
       @editor.selectToFirstCharacterOfLine()
       r = @editor.getSelectedBufferRange()
       startRange = @scanForDo(@editor, r)
@@ -64,8 +64,8 @@ class CurlyConverter extends RubyBlockConverter
       i = 0
       while !@foundMatchingEnd() && endRange == null && i < @maxLevels && @notLastRow(@editor)
         # move down a line
-        @editor.moveCursorDown 1
-        @editor.moveCursorToEndOfLine()
+        @editor.moveDown 1
+        @editor.moveToEndOfLine()
         @editor.selectToFirstCharacterOfLine()
         r = @editor.getSelectedBufferRange()
         lineMatches = @scanForEnd(that, @editor, r)
@@ -97,7 +97,7 @@ class CurlyConverter extends RubyBlockConverter
     # move to end of line or original spot
     # depending on if we joined the lines
     if collapsed
-      @editor.moveCursorToEndOfLine()
+      @editor.moveToEndOfLine()
     else if @initialCursor != null
       @editor.setCursorBufferPosition @initialCursor
 
@@ -108,12 +108,12 @@ class CurlyConverter extends RubyBlockConverter
     if 1 <= lineSeparation and lineSeparation <= 2
       # join lines if it makes sense
       @editor.setCursorBufferPosition startRange.start
-      @editor.moveCursorToFirstCharacterOfLine()
+      @editor.moveToFirstCharacterOfLine()
       @editor.selectDown lineSeparation
       @editor.selectToEndOfLine()
       # remove extra tabs and spaces
-      @editor.getSelection().joinLines()
-      @removeExtraCharacters @editor.getSelection()
+      @editor.getLastSelection().joinLines()
+      @removeExtraCharacters @editor.getLastSelection()
       collapsed = true
 
   removeExtraCharacters: (selection) ->

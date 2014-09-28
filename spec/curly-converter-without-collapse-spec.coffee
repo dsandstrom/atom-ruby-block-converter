@@ -36,14 +36,14 @@ describe 'RubyBlockConverter', ->
     describe 'when no variable', ->
       it 'converts brackets only', ->
         editor.insertText("1.times do\n  puts 'hello'\nend\n")
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 2
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBracketsWithoutCollapse'
         expect(editor.getText()).toBe "1.times {\n  puts 'hello'\n}\n"
 
     describe 'when a variable', ->
       it 'converts brackets only', ->
         editor.insertText("1.times do |bub|\n  puts bub\nend\n")
-        editor.moveCursorUp 2
+        editor.moveUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toCurlyBracketsWithoutCollapse'
         expect(editor.getText()).toBe "1.times { |bub|\n  puts bub\n}\n"

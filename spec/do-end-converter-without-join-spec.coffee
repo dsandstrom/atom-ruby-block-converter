@@ -34,15 +34,15 @@ describe 'RubyBlockConverter', ->
     describe 'when no variable', ->
       it 'converts to do-end only', ->
         editor.insertText("1.times { puts 'hello' }\n")
-        editor.moveCursorUp 1
-        editor.moveCursorRight() for num in [0...11]
+        editor.moveUp 1
+        editor.moveRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEndWithoutJoin'
         expect(editor.getText()).toBe "1.times do puts 'hello' end\n"
 
     describe 'when a variable', ->
       it 'converts to do-end only', ->
         editor.insertText("1.times { |bub| puts 'hello' }\n")
-        editor.moveCursorUp 2
-        editor.moveCursorRight() for num in [0...11]
+        editor.moveUp 2
+        editor.moveRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEndWithoutJoin'
         expect(editor.getText()).toBe "1.times do |bub| puts 'hello' end\n"

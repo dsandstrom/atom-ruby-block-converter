@@ -34,16 +34,16 @@ describe 'RubyBlockConverter', ->
     describe 'when no variable', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { puts 'hello' }\n")
-        editor.moveCursorUp 1
-        editor.moveCursorRight() for num in [0...11]
+        editor.moveUp 1
+        editor.moveRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend\n"
 
     describe 'when a variable', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { |bub| puts 'hello' }\n")
-        editor.moveCursorUp 2
-        editor.moveCursorRight() for num in [0...11]
+        editor.moveUp 2
+        editor.moveRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do |bub|\n  puts 'hello'\nend\n"
 
@@ -52,9 +52,9 @@ describe 'RubyBlockConverter', ->
         textStart = "1.times do |bub|\n  2.times { |cow| puts bub + cow }\nend\n"
         textEnd = "1.times do |bub|\n  2.times do |cow|\n    puts bub + cow\n  end\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        editor.moveCursorLeft 1
+        editor.moveUp 2
+        editor.moveToEndOfLine()
+        editor.moveLeft 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -63,15 +63,15 @@ describe 'RubyBlockConverter', ->
         startText = "1.times {\n  puts 'hello'\n  puts 'world'\n}\n"
         endText = "1.times do\n  puts 'hello'\n  puts 'world'\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 2
+        editor.moveUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
     describe 'when cursor at end of line', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { puts 'hello' }\n")
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 2
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend\n"
 
@@ -79,16 +79,16 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         startText = "1.times { puts 'hello' }\n\n"
         editor.insertText(startText)
-        editor.moveCursorUp 1
+        editor.moveUp 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe startText
 
     describe 'when no new line', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { puts 'hello' }")
-        # editor.moveCursorUp 2
-        editor.moveCursorToFirstCharacterOfLine()
-        editor.moveCursorRight() for num in [0...11]
+        # editor.moveUp 2
+        editor.moveToFirstCharacterOfLine()
+        editor.moveRight() for num in [0...11]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend"
 
@@ -97,8 +97,8 @@ describe 'RubyBlockConverter', ->
         startText = "1.times { puts 'hello' }\n"
         endText = "1.times do\n  puts 'hello'\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 1
-        editor.moveCursorRight() for num in [0...9]
+        editor.moveUp 1
+        editor.moveRight() for num in [0...9]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -106,8 +106,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         startText = "1.times { puts 'hello' }\n"
         editor.insertText(startText)
-        editor.moveCursorUp 1
-        editor.moveCursorRight() for num in [0...8]
+        editor.moveUp 1
+        editor.moveRight() for num in [0...8]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe startText
 
@@ -117,8 +117,8 @@ describe 'RubyBlockConverter', ->
         startText = "1.times do#{nls}1.times { puts 'hello' }\nend\n"
         endText   = "1.times do#{nls}1.times do\n    puts 'hello'\n  end\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 2
-        editor.moveCursorRight() for num in [0...13]
+        editor.moveUp 2
+        editor.moveRight() for num in [0...13]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -127,17 +127,17 @@ describe 'RubyBlockConverter', ->
         firstBlockStartText = "1.times do |bub|\n  2.times { |cow| puts bub + cow }\nend\n"
         firstBlockEndText = "1.times do |bub|\n  2.times do |cow|\n    puts bub + cow\n  end\nend\n"
         editor.insertText firstBlockStartText
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
-        editor.moveCursorLeft 1
+        editor.moveUp 2
+        editor.moveToEndOfLine()
+        editor.moveLeft 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         # run again
-        editor.moveCursorToBottom()
+        editor.moveToBottom()
         editor.insertText "\n"
         startText = "1.times {\n  puts 'hello'\n  puts 'world'\n}\n"
         endText = "1.times do\n  puts 'hello'\n  puts 'world'\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 2
+        editor.moveUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe firstBlockEndText + "\n" + endText
 
@@ -146,7 +146,7 @@ describe 'RubyBlockConverter', ->
         startText = "context \"for tim\" do\n  it \"redirects\" {\n    expect(response).to redirect\n  }\nend\n"
         endText   = "context \"for tim\" do\n  it \"redirects\" do\n    expect(response).to redirect\n  end\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 3
+        editor.moveUp 3
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -155,7 +155,7 @@ describe 'RubyBlockConverter', ->
         startText = "context \"for tim\" {\n  it \"redirects\" {\n    expect(response).to redirect\n  }\n}\n"
         endText   = "context \"for tim\" {\n  it \"redirects\" do\n    expect(response).to redirect\n  end\n}\n"
         editor.insertText(startText)
-        editor.moveCursorUp 3
+        editor.moveUp 3
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -163,15 +163,15 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         startText = "1.times do\n  puts 'hello'\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 2
+        editor.moveUp 2
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe startText
 
       it "doesn't move the cursor", ->
         startText = "1.times do\n  puts 'hello'\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 2
-        editor.moveCursorRight() for n in [0...3]
+        editor.moveUp 2
+        editor.moveRight() for n in [0...3]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getCursorBufferPosition().row).toBe 1
         expect(editor.getCursorBufferPosition().column).toBe 4
@@ -181,16 +181,16 @@ describe 'RubyBlockConverter', ->
         startText = "context \"for tim\" {\n  it { expect(response).to redirect }\n}\n"
         endText   = "context \"for tim\" do\n  it { expect(response).to redirect }\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 5
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 5
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
       it "doesn't move the cursor", ->
         startText = "context \"for tim\" {\n  it { expect(response).to redirect }\n}\n"
         editor.insertText(startText)
-        editor.moveCursorUp 5
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 5
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getCursorBufferPosition().row).toBe 0
         expect(editor.getCursorBufferPosition().column).toBe 19
@@ -200,7 +200,7 @@ describe 'RubyBlockConverter', ->
         startText = "context \"for tim\" {\n  it { expect(response).to redirect }\n}\n"
         endText = "context \"for tim\" do\n  it { expect(response).to redirect }\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 1
+        editor.moveUp 1
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -209,8 +209,8 @@ describe 'RubyBlockConverter', ->
         startText = "it { it { expect(response).to redirect } }\n"
         endText   = "it do\n  it { expect(response).to redirect }\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 1
-        editor.moveCursorRight() for n in [0...5]
+        editor.moveUp 1
+        editor.moveRight() for n in [0...5]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -219,9 +219,9 @@ describe 'RubyBlockConverter', ->
         startText = "it { |bob| it { |sux| expect(response).to redirect } }\n"
         endText   = "it do |bob|\n  it { |sux| expect(response).to redirect }\nend\n"
         editor.insertText(startText)
-        editor.moveCursorUp 1
-        # editor.moveCursorToEndOfLine()
-        editor.moveCursorRight() for n in [0...5]
+        editor.moveUp 1
+        # editor.moveToEndOfLine()
+        editor.moveRight() for n in [0...5]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe endText
 
@@ -230,8 +230,8 @@ describe 'RubyBlockConverter', ->
         textStart = "1.times { |bub|\n  2.times({ |cow| puts bub + cow })\n}\n"
         textEnd = "1.times do |bub|\n  2.times({ |cow| puts bub + cow })\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 3
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 3
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -240,8 +240,8 @@ describe 'RubyBlockConverter', ->
         textStart = "it 'does' {\n  expect('soup').to eq { }\n}\n"
         textEnd = "it 'does' do\n  expect('soup').to eq { }\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 2
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         # expect(editor.getText()).toBe textStart
         expect(editor.getText()).toBe textEnd
@@ -251,8 +251,8 @@ describe 'RubyBlockConverter', ->
         textStart = "it 'does' {\n  expect('soup').to eq {}\n}\n"
         textEnd = "it 'does' do\n  expect('soup').to eq {}\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 2
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 2
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -260,8 +260,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{ :hash => variable }\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -269,8 +269,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{ hash: :rocket }\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -278,8 +278,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{ hash: \"string\" }\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -288,8 +288,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{ :hash => 'string' }\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -297,8 +297,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{ \"hash\" => 'string' }\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -306,8 +306,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{ 'hash' => 'string' }\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -315,8 +315,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{\"deep\" => {\"hash\" => \"string\" }}\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -324,8 +324,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{\"deep\" => {\"hash\" => \"string\" } }\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -333,9 +333,9 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{\"deep\" => {\"hash\" => \"string\" } }\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
-        editor.moveCursorLeft() for n in [0..4]
+        editor.moveUp 1
+        editor.moveToEndOfLine()
+        editor.moveLeft() for n in [0..4]
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -343,8 +343,8 @@ describe 'RubyBlockConverter', ->
       it "doesn't convert it", ->
         textStart = "{ 'deep' => {'hash' => 'string' }}\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textStart
 
@@ -353,8 +353,8 @@ describe 'RubyBlockConverter', ->
         textStart = "while false { var = 'noop' }\n"
         textEnd = "while false do\n  var = 'noop'\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -363,8 +363,8 @@ describe 'RubyBlockConverter', ->
         textStart = "before { @var = 'noop' }\n"
         textEnd = "before do\n  @var = 'noop'\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -373,8 +373,8 @@ describe 'RubyBlockConverter', ->
         textStart = "let(:jon) { noop }\n"
         textEnd = "let(:jon) do\n  noop\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -383,8 +383,8 @@ describe 'RubyBlockConverter', ->
         textStart = "let(:jon) { FactoryUnicorn.doit }\n"
         textEnd = "let(:jon) do\n  FactoryUnicorn.doit\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -393,8 +393,8 @@ describe 'RubyBlockConverter', ->
         textStart = "let(:jon) { FactoryUnicorn.doit }\n"
         textEnd = "let(:jon) do\n  FactoryUnicorn.doit\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -403,8 +403,8 @@ describe 'RubyBlockConverter', ->
         textStart = "let(:var) { { hsh: 'horse' } }\n"
         textEnd = "let(:var) do\n  { hsh: 'horse' }\nend\n"
         editor.insertText textStart
-        editor.moveCursorUp 1
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd
 
@@ -413,8 +413,8 @@ describe 'RubyBlockConverter', ->
         textStart = 'within "#var_#{var.id}" { should behave }\n'
         textEnd = 'within "#var_#{var.id}" do\n  should behave\nend\n'
         editor.insertText textStart
-        editor.moveCursorUp 1
-        # editor.moveCursorRight() for n in [0...17]
-        editor.moveCursorToEndOfLine()
+        editor.moveUp 1
+        # editor.moveRight() for n in [0...17]
+        editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:toDoEnd'
         expect(editor.getText()).toBe textEnd

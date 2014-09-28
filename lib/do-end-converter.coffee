@@ -37,7 +37,7 @@ class DoEndConverter extends RubyBlockConverter
     startRange = null
     # select to the left
     @editor.setCursorBufferPosition @initialCursor
-    @editor.moveCursorToEndOfLine()
+    @editor.moveToEndOfLine()
     @editor.selectToFirstCharacterOfLine()
     range = @editor.getSelectedBufferRange()
     # scan for open
@@ -45,8 +45,8 @@ class DoEndConverter extends RubyBlockConverter
     # go up lines until { is found
     i = 0
     while startRange == null and i < @maxLevels and @notFirstRow(@editor)
-      @editor.moveCursorUp 1
-      @editor.moveCursorToFirstCharacterOfLine()
+      @editor.moveUp 1
+      @editor.moveToFirstCharacterOfLine()
       @editor.selectToEndOfLine()
       r = @editor.getSelectedBufferRange()
       startRange = @scanForOpen(@editor, r)
@@ -70,8 +70,8 @@ class DoEndConverter extends RubyBlockConverter
     i = 0
     while !@foundMatchingEnd() && endRange == null and i < @maxLevels and @notLastRow(@editor)
       # move down a line
-      @editor.moveCursorDown 1
-      @editor.moveCursorToEndOfLine()
+      @editor.moveDown 1
+      @editor.moveToEndOfLine()
       @editor.selectToBeginningOfLine()
       r = @editor.getSelectedBufferRange()
       lineMatches = @scanForClosed(that, @editor, r)
@@ -101,8 +101,8 @@ class DoEndConverter extends RubyBlockConverter
   resetCursor: (collapsed, startRange) ->
     if collapsed
       @editor.setCursorBufferPosition startRange.end
-      @editor.moveCursorDown 1
-      @editor.moveCursorToEndOfLine()
+      @editor.moveDown 1
+      @editor.moveToEndOfLine()
     else if @initialCursor != null
       @editor.setCursorBufferPosition @initialCursor
 
@@ -138,9 +138,9 @@ class DoEndConverter extends RubyBlockConverter
     if joined
       # indent new block based on original line
       @editor.setCursorBufferPosition startRange.start
-      @editor.moveCursorDown 1
-      @editor.moveCursorToFirstCharacterOfLine()
+      @editor.moveDown 1
+      @editor.moveToFirstCharacterOfLine()
       @editor.selectDown 1
       @editor.selectToEndOfLine()
-      @editor.getSelection().autoIndentSelectedRows()
+      @editor.getLastSelection().autoIndentSelectedRows()
     joined
