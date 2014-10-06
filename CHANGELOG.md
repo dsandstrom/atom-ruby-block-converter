@@ -1,3 +1,6 @@
+## 1.2.0 - 2014-09-27
+* Added config for max lines to go up/down
+
 ## 1.1.0 - 2014-09-27
 * Fix deprecations
 
