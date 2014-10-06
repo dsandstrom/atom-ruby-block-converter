@@ -4,10 +4,10 @@
     'submenu': [
       'label': 'Ruby Block Converter'
       'submenu': [
-        { 'label': 'To Curly Brackets ({})', 'command': 'ruby-block-converter:toCurlyBrackets' }
-        { 'label': 'To Curly Brackets Without Collapse', 'command': 'ruby-block-converter:toCurlyBracketsWithoutCollapse' }
-        { 'label': 'To Do End', 'command': 'ruby-block-converter:toDoEnd' }
-        { 'label': 'To Do End Without Join', 'command': 'ruby-block-converter:toDoEndWithoutJoin' }
+        { 'label': 'To Curly Brackets ({})', 'command': 'ruby-block-converter:to-curly-brackets' }
+        { 'label': 'To Curly Brackets Without Collapse', 'command': 'ruby-block-converter:to-curly-brackets-without-collapse' }
+        { 'label': 'To Do End', 'command': 'ruby-block-converter:to-do-end' }
+        { 'label': 'To Do End Without Join', 'command': 'ruby-block-converter:to-do-end-without-join' }
       ]
     ]
   }

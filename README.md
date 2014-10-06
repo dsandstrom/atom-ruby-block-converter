@@ -28,10 +28,10 @@ Default: `ctrl-}`, without join: `alt-}`
 
 ### Commands
 ```coffee
-'ruby-block-converter:toCurlyBrackets'
-'ruby-block-converter:toCurlyBracketsWithoutCollapse'
-'ruby-block-converter:toDoEnd'
-'ruby-block-converter:toDoEndWithoutJoin'
+'ruby-block-converter:to-curly-brackets'
+'ruby-block-converter:to-curly-brackets-without-collapse'
+'ruby-block-converter:to-do-end'
+'ruby-block-converter:to-do-end-without-join'
 ```
 
 ### Dependencies

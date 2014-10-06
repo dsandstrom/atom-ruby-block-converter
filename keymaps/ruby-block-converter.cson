@@ -1,5 +1,5 @@
 '.editor':
-  'ctrl-{': 'ruby-block-converter:toCurlyBrackets'
-  'alt-{': 'ruby-block-converter:toCurlyBracketsWithoutCollapse'
-  'ctrl-}': 'ruby-block-converter:toDoEnd'
-  'alt-}': 'ruby-block-converter:toDoEndWithoutJoin'
+  'ctrl-{': 'ruby-block-converter:to-curly-brackets'
+  'alt-{': 'ruby-block-converter:to-curly-brackets-without-collapse'
+  'ctrl-}': 'ruby-block-converter:to-do-end'
+  'alt-}': 'ruby-block-converter:to-do-end-without-join'

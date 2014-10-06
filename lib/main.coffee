@@ -12,13 +12,13 @@ module.exports =
   doEndConverter: null
 
   activate: (state) ->
-    atom.workspaceView.command "ruby-block-converter:toCurlyBrackets", =>
+    atom.workspaceView.command "ruby-block-converter:to-curly-brackets", =>
       @toCurlyBrackets()
-    atom.workspaceView.command "ruby-block-converter:toDoEnd", =>
+    atom.workspaceView.command "ruby-block-converter:to-do-end", =>
       @toDoEnd()
-    atom.workspaceView.command "ruby-block-converter:toCurlyBracketsWithoutCollapse", =>
+    atom.workspaceView.command "ruby-block-converter:to-curly-brackets-without-collapse", =>
       @toCurlyBracketsWithoutCollapse()
-    atom.workspaceView.command "ruby-block-converter:toDoEndWithoutJoin", =>
+    atom.workspaceView.command "ruby-block-converter:to-do-end-without-join", =>
       @toDoEndWithoutJoin()
     @editor = atom.workspace.getActiveEditor()
 
