@@ -2,6 +2,12 @@ CurlyConverter = require './curly-converter'
 DoEndConverter = require './do-end-converter'
 
 module.exports =
+  config:
+    maxLines:
+      type: 'integer'
+      default: 6
+      description: 'The maximum amount of lines to go up or down to look for a match.'
+
   curlyConverter: null
   doEndConverter: null
 

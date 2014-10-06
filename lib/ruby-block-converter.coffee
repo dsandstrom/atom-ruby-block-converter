@@ -1,6 +1,5 @@
 module.exports =
 class RubyBlockConverter
-  maxLevels: 6
   startCount: 0
   endCount: 0
 
@@ -9,6 +8,7 @@ class RubyBlockConverter
     @buffer = @editor.buffer
     @initialCursor = @editor.getCursorBufferPosition()
     @linesInFile = @editor.getLineCount()
+    @maxLines = atom.config.get('ruby-block-converter.maxLines')
 
   destroy: ->
 

@@ -13,6 +13,7 @@ describe 'RubyBlockConverter', ->
     atom.workspace = atom.workspaceView.model
     filePath = path.join(directory, 'example.rb')
     atom.config.set('editor.tabLength', 2)
+    atom.config.set('ruby-block-converter.maxLines', 6)
 
     waitsForPromise ->
       atom.workspace.open(filePath).then (e) ->

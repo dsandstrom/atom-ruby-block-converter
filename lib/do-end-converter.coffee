@@ -44,7 +44,7 @@ class DoEndConverter extends RubyBlockConverter
     startRange = @scanForOpen(@editor, range, @initialCursor)
     # go up lines until { is found
     i = 0
-    while startRange == null and i < @maxLevels and @notFirstRow(@editor)
+    while startRange == null and i < @maxLines and @notFirstRow(@editor)
       @editor.moveUp 1
       @editor.moveToFirstCharacterOfLine()
       @editor.selectToEndOfLine()
@@ -68,7 +68,7 @@ class DoEndConverter extends RubyBlockConverter
       matchRanges = matchRanges.concat lineMatches
     endRange = matchRanges[@endCount - 1] if @foundMatchingEnd()
     i = 0
-    while !@foundMatchingEnd() && endRange == null and i < @maxLevels and @notLastRow(@editor)
+    while !@foundMatchingEnd() && endRange == null and i < @maxLines and @notLastRow(@editor)
       # move down a line
       @editor.moveDown 1
       @editor.moveToEndOfLine()
