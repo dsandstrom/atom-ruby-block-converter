@@ -10,7 +10,7 @@ describe 'RubyBlockConverter', ->
 
   beforeEach ->
     directory = temp.mkdirSync()
-    atom.project.setPath(directory)
+    atom.project.setPaths(directory)
     atom.workspaceView = new WorkspaceView()
     atom.workspace = atom.workspaceView.model
     filePath = path.join(directory, 'example.rb')
