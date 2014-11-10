@@ -125,7 +125,7 @@ class DoEndConverter extends RubyBlockConverter
         @editor.selectToEndOfLine()
         newStartRange = @editor.getSelectedBufferRange()
         # and new line after bars
-        @buffer.scanInRange /do\s\|\w+\|/, newStartRange, (obj) ->
+        @buffer.scanInRange /do\s\|[\w\,\s]+\|/, newStartRange, (obj) ->
           text = obj.matchText
           obj.replace "#{text}\n"
           foundDoBar = true

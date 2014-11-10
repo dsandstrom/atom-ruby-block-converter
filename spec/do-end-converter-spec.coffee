@@ -48,6 +48,22 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
         expect(editor.getText()).toBe "1.times do |bub|\n  puts 'hello'\nend\n"
 
+    describe 'when two variables', ->
+      it 'converts it to a multi line block with do-end', ->
+        editor.insertText("1.times { |bub, tom| puts 'hello' }\n")
+        editor.moveUp 2
+        editor.moveRight() for num in [0...11]
+        atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
+        expect(editor.getText()).toBe "1.times do |bub, tom|\n  puts 'hello'\nend\n"
+
+    describe 'when two variables without a space', ->
+      it 'converts it to a multi line block with do-end', ->
+        editor.insertText("1.times { |bub,tom| puts 'hello' }\n")
+        editor.moveUp 2
+        editor.moveRight() for num in [0...11]
+        atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
+        expect(editor.getText()).toBe "1.times do |bub,tom|\n  puts 'hello'\nend\n"
+
     describe 'when nested', ->
       it 'converts it to a multi line block with do-end', ->
         textStart = "1.times do |bub|\n  2.times { |cow| puts bub + cow }\nend\n"

@@ -48,6 +48,8 @@ end.to eq 'world'
 
 17.times { |banana| puts banana }
 
+17.times { |banana, pineapple| puts banana }
+
 # TODO: doesn't unwrap well
 43.times do |donkey|
   9.times { |gym| puts donkey + gym }
