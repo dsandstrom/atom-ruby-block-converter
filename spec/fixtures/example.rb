@@ -8,6 +8,10 @@ end
   puts banana
 end
 
+17.times do |banana, pineapple|
+  puts banana
+end
+
 43.times do |donkey|
   9.times do |gym|
     puts donkey + gym

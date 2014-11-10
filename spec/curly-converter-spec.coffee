@@ -70,6 +70,20 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:to-curly-brackets'
         expect(editor.getText()).toBe "1.times { |bub| puts bub }\n"
 
+    describe 'when two variables', ->
+      it 'converts it to a single line block with brackets', ->
+        editor.insertText("1.times do |bub, tom|\n  puts bub\nend\n")
+        editor.moveUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:to-curly-brackets'
+        expect(editor.getText()).toBe "1.times { |bub, tom| puts bub }\n"
+
+    describe 'when two variables without a space', ->
+      it 'converts it to a single line block with brackets', ->
+        editor.insertText("1.times do |bub,tom|\n  puts bub\nend\n")
+        editor.moveUp 2
+        atom.workspaceView.trigger 'ruby-block-converter:to-curly-brackets'
+        expect(editor.getText()).toBe "1.times { |bub,tom| puts bub }\n"
+
     describe 'when extra spaces and variable', ->
       it 'converts it and removes the extra', ->
         editor.insertText("1.times do  |bub| \n   puts bub\nend\n")
