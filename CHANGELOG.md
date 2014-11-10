@@ -1,3 +1,7 @@
+## 2.1.0 - 2014-11-09
+* Fixed deprecations
+* Added tests for folded text
+
 ## 2.0.0 - 2014-10-05
 * Added config for max lines to go up/down
 * Changed command names from camel case to lowercase dashed
