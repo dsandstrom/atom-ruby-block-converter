@@ -435,3 +435,16 @@ describe 'RubyBlockConverter', ->
         editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
         expect(editor.getText()).toBe textEnd
+
+    describe 'when folded text above', ->
+      it 'converts it to a multi line block with do-end', ->
+        textToFold = "1.times do\n  puts 'fold me'\n end\n\n"
+        textStart = "1.times { puts 'hello' }\n"
+        textEnd = textToFold + "1.times do\n  puts 'hello'\nend\n"
+        editor.insertText textToFold
+        editor.insertText textStart
+        editor.foldBufferRow 0
+        editor.moveUp 1
+        editor.moveToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
+        expect(editor.getText()).toBe textEnd

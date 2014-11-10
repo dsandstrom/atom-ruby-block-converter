@@ -3,8 +3,6 @@ path = require 'path'
 temp = require 'temp'
 {WorkspaceView} = require 'atom'
 
-# TODO: add tests for folded text above
-
 describe 'RubyBlockConverter', ->
   [editor, buffer] = []
 
