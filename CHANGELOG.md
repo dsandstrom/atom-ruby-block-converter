@@ -1,3 +1,6 @@
+## 2.3.0 - 2014-11-16
+* Fixed some rspec examples
+
 ## 2.2.0 - 2014-11-16
 * Changed Linux/Win keymaps
 
