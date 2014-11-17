@@ -489,10 +489,10 @@ describe 'RubyBlockConverter', ->
         atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
         expect(editor.getText()).toBe textEnd
 
-    describe 'when `Task["monkey:make"].invoke` inside {}', ->
+    describe 'when `Rake::Task["monkey:make"].invoke` inside {}', ->
       it 'converts it do-end', ->
-        textStart = 'expect { Task["monkey:make"].invoke }.to change(Monkey, :count)\n'
-        textEnd = 'expect do\n  Task["monkey:make"].invoke\nend.to change(Monkey, :count)\n'
+        textStart = 'expect { Rake::Task["monkey:make"].invoke }.to change(Monkey, :count)\n'
+        textEnd = 'expect do\n  Rake::Task["monkey:make"].invoke\nend.to change(Monkey, :count)\n'
         editor.insertText textStart
         editor.moveUp 1
         editor.moveToEndOfLine()
