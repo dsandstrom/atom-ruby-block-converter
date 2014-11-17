@@ -8,13 +8,19 @@ class DoEndConverter extends RubyBlockConverter
 
   openRegex : ->
     segments = []
-    blockStart = "[^\\#]\\{\\s*" # /[^\#]\{\s*/
-    segments.push("[\\:]\\w+\\)\\s+\\{") # /[\:]\w+\)\s+\{/
-    segments.push("#{blockStart}[\\\"\\']\\w[\\\"\\']\\s+\\=[^>]") # /[\"\']\w[\"\']\s+\=[^>]/
-    segments.push("#{blockStart}[^:\\\"\\'\|]\\w+[^:][\\s\\.]") # /[^:\"\'\|]\w+[^:][\s\.]/
-    segments.push("#{blockStart}\\|") # /\|/
-    segments.push("#{blockStart}\\n") # /\n/
-    segments.push("#{blockStart}$") # /$/
+    blockStart = "[^\\#]\\{\\s*"
+    # rspec blocks
+    segments.push("[\\:]\\w+\\)\\s+\\{")
+    # no string hashes
+    segments.push("#{blockStart}[\\\"\\']\\w[\\\"\\']\\s+\\=[^>]")
+    # no strings that start/end with :
+    segments.push("#{blockStart}[^:\\\"\\'\|]\\w*[^:][\\s\\.]")
+    # bar variables
+    segments.push("#{blockStart}\\|")
+    # new linke
+    segments.push("#{blockStart}\\n")
+    # end of line
+    segments.push("#{blockStart}$")
     openRegex = new RegExp(segments.join("|"))
 
   scanForOpen: (editor, range, cursorPoint=null) ->
