@@ -9,12 +9,20 @@ Convert Ruby blocks between single line and multi line formats. Or between curly
 ###### *{ } => do-end*
 
 Place the cursor in between the brackets and hit the shortcut.
-Default: `ctrl-{`, without collapse: `alt-{`
+
+|                  | Linux/Win |   Mac    |
+|------------------|-----------|----------|
+| Normal           | `alt-[`   | `ctrl-{` |
+| Without collapse | `alt-{`   | `alt-{`  |
 
 ###### *do-end => { }*
 
 Place the cursor in between the do-end and hit the shortcut.
-Default: `ctrl-}`, without join: `alt-}`
+
+|                 | Linux/Win |   Mac    |
+|-----------------|-----------|----------|
+| Normal          | `alt-]`   | `ctrl-}` |
+| Without joining | `alt-}`   | `alt-}`  |
 
 ### Features
 * Hashes and string interpolation are ignored
@@ -24,7 +32,7 @@ Default: `ctrl-}`, without join: `alt-}`
 ### How It Works
 * It looks for the first starting block on the current line, then up. Upon success, it looks right, then down for a matching } or end.
 * When there is a block with only one line of code: the curly converter will join the block onto one line; the do-end converter will separate the three lines and then auto-tab.
-* Right now, it will only try up or down 6 lines, but this will probably become an optional value.
+* It will only try up or down 6 lines, but this configurable in your settings.
 
 ### Commands
 ```coffee
