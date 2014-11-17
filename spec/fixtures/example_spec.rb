@@ -85,5 +85,9 @@ it do
 end
 
 it do
-  expect { qr.invoke }.to change(Monkey, :count)
+  expect { q.invoke }.to change(Monkey, :count)
+end
+
+it do
+  expect { ['monkey'].invoke }.to change(Monkey, :count)
 end
