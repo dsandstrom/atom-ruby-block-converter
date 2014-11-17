@@ -4,7 +4,7 @@ module.exports =
 class DoEndConverter extends RubyBlockConverter
   # allow: (rspec blocks) or
   # (no string hashes, no string start/end with :, bar, new line, end of line)
-  # openRegex: /([\:]\w+\)\s+\{|[^\#]\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
+  openRegex: /([\:]\w+\)\s+\{|[^\#]\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
 
   openRegex : ->
     segments = []
@@ -14,7 +14,7 @@ class DoEndConverter extends RubyBlockConverter
     # no string hashes
     segments.push("#{blockStart}[\\\"\\']\\w[\\\"\\']\\s+\\=[^>]")
     # no strings that start/end with :
-    segments.push("#{blockStart}[^:\\\"\\'\|]\\w*[^:][\\s\\.]")
+    segments.push("#{blockStart}[^:\\\"\\'\|]\\w*[^:][\\s\\.\\\"\\']")
     # bar variables
     segments.push("#{blockStart}\\|")
     # new linke

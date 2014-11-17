@@ -87,7 +87,3 @@ end
 it do
   expect { q.invoke }.to change(Monkey, :count)
 end
-
-it do
-  expect { ['monkey'].invoke }.to change(Monkey, :count)
-end
