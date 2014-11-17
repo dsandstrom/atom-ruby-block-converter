@@ -448,3 +448,23 @@ describe 'RubyBlockConverter', ->
         editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
         expect(editor.getText()).toBe textEnd
+
+    describe "when `qr.invoke` inside {}", ->
+      it 'converts it do-end', ->
+        textStart = "expect { qr.invoke }.to change(Monkey, :count)\n"
+        textEnd = "expect do\n  qr.invoke\nend.to change(Monkey, :count)\n"
+        editor.insertText textStart
+        editor.moveUp 1
+        editor.moveToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
+        expect(editor.getText()).toBe textEnd
+
+    # describe "when `q.invoke` inside {}", ->
+    #   it 'converts it do-end', ->
+    #     textStart = "expect { q.invoke }.to change(Monkey, :count)\n"
+    #     textEnd = "expect do\n  q.invoke\nend.to change(Monkey, :count)\n"
+    #     editor.insertText textStart
+    #     editor.moveUp 1
+    #     editor.moveToEndOfLine()
+    #     atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
+    #     expect(editor.getText()).toBe textEnd

@@ -79,3 +79,11 @@ let(:user) { FactoryGirl.create(:user) }
 let(:valid_attributes) { { message: banner_bu } }
 
 within "#var_#{var.id}" { should behave }
+
+it do
+  expect { Rake::Task['paper_trail:purge_old'].invoke }.to change(PaperTrail::Version, :count)
+end
+
+it do
+  expect { qr.invoke }.to change(Monkey, :count)
+end

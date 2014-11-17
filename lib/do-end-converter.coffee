@@ -4,12 +4,23 @@ module.exports =
 class DoEndConverter extends RubyBlockConverter
   # allow: (rspec blocks) or
   # (no string hashes, no string start/end with :, bar, new line, end of line)
-  openRegex: /([\:]\w+\)\s+\{|[^\#]\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
+  # openRegex: /([\:]\w+\)\s+\{|[^\#]\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
+
+  openRegex : ->
+    segments = []
+    blockStart = "[^\\#]\\{\\s*" # /[^\#]\{\s*/
+    segments.push("[\\:]\\w+\\)\\s+\\{") # /[\:]\w+\)\s+\{/
+    segments.push("#{blockStart}[\\\"\\']\\w[\\\"\\']\\s+\\=[^>]") # /[\"\']\w[\"\']\s+\=[^>]/
+    segments.push("#{blockStart}[^:\\\"\\'\|]\\w+[^:][\\s\\.]") # /[^:\"\'\|]\w+[^:][\s\.]/
+    segments.push("#{blockStart}\\|") # /\|/
+    segments.push("#{blockStart}\\n") # /\n/
+    segments.push("#{blockStart}$") # /$/
+    openRegex = new RegExp(segments.join("|"))
 
   scanForOpen: (editor, range, cursorPoint=null) ->
-    # scan for first {
     startRange = null
-    editor.buffer.scanInRange @openRegex, range, (obj) ->
+    # scan for first {
+    editor.buffer.scanInRange @openRegex(), range, (obj) ->
       if cursorPoint != null
         # don't allow unless block starts before cursor
         sameRow = obj.range.start.row == cursorPoint.row
