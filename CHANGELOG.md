@@ -1,3 +1,6 @@
+## 2.2.0 - 2014-11-16
+* Changed Linux/Win keymaps
+
 ## 2.1.0 - 2014-11-09
 * Fixed deprecations
 * Added tests for folded text
