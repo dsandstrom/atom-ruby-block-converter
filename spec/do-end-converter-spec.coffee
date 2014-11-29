@@ -1,7 +1,7 @@
 fs = require 'fs-plus'
 path = require 'path'
 temp = require 'temp'
-{WorkspaceView} = require 'atom'
+{Workspace} = require 'atom'
 
 describe 'RubyBlockConverter', ->
   [editor, buffer] = []
@@ -9,8 +9,8 @@ describe 'RubyBlockConverter', ->
   beforeEach ->
     directory = temp.mkdirSync()
     atom.project.setPaths(directory)
-    atom.workspaceView = new WorkspaceView()
-    atom.workspace = atom.workspaceView.model
+    atom.workspace = new Workspace
+    atom.workspaceView = atom.views.getView(atom.workspace).__spacePenView
     filePath = path.join(directory, 'example.rb')
     atom.config.set('editor.tabLength', 2)
     atom.config.set('ruby-block-converter.maxLines', 6)
