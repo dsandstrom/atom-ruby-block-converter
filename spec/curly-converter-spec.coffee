@@ -346,3 +346,13 @@ describe 'RubyBlockConverter', ->
         editor.moveUp 2
         atom.workspaceView.trigger 'ruby-block-converter:to-curly-brackets'
         expect(editor.getText()).toBe textEnd
+
+    describe 'when undoing text above', ->
+      it 'should revert to original text', ->
+        textStart = "1.times do\n  puts 'hello'\nend\n"
+        editor.insertText(textStart)
+        editor.moveUp 2
+        editor.moveToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:to-curly-brackets'
+        editor.undo()
+        expect(editor.getText()).toBe textStart

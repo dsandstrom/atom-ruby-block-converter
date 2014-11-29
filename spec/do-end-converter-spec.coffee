@@ -498,3 +498,13 @@ describe 'RubyBlockConverter', ->
         editor.moveToEndOfLine()
         atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
         expect(editor.getText()).toBe textEnd
+
+    describe 'when undoing text above', ->
+      it 'should revert to original text', ->
+        textStart = "1.times { puts 'hello' }\n"
+        editor.insertText(textStart)
+        editor.moveUp 1
+        editor.moveRight() for num in [0...11]
+        atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
+        editor.undo()
+        expect(editor.getText()).toBe textStart
