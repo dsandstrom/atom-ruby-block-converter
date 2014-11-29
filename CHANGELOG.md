@@ -1,3 +1,6 @@
+## 2.5.0 - 2014-11-28
+* Reset cursor to original position for better undoing
+
 ## 2.4.0 - 2014-11-28
 * Replace deprecated transaction methods
 

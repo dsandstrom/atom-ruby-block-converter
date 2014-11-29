@@ -357,11 +357,11 @@ describe 'RubyBlockConverter', ->
         editor.undo()
         expect(editor.getText()).toBe textStart
 
-      # it 'should not have selected text', ->
-      #   textStart = "1.times do\n  puts 'hello'\nend\n"
-      #   editor.insertText(textStart)
-      #   editor.moveUp 2
-      #   editor.moveToEndOfLine()
-      #   atom.workspaceView.trigger 'ruby-block-converter:to-curly-brackets'
-      #   editor.undo()
-      #   expect(editor.getLastSelection().getText()).toBe ''
+      it 'should not have selected text', ->
+        textStart = "1.times do\n  puts 'hello'\nend\n"
+        editor.insertText(textStart)
+        editor.moveUp 2
+        editor.moveToEndOfLine()
+        atom.workspaceView.trigger 'ruby-block-converter:to-curly-brackets'
+        editor.undo()
+        expect(editor.getLastSelection().getText()).toBe ''

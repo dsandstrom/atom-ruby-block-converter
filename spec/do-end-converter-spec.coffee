@@ -509,11 +509,11 @@ describe 'RubyBlockConverter', ->
         editor.undo()
         expect(editor.getText()).toBe textStart
 
-      # it 'should not of have selected text', ->
-      #   textStart = "1.times { puts 'hello' }\n"
-      #   editor.insertText(textStart)
-      #   editor.moveUp 1
-      #   editor.moveRight() for num in [0...11]
-      #   atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
-      #   editor.undo()
-      #   expect(editor.getLastSelection().getText()).toBe ''
+      it 'should not of have selected text', ->
+        textStart = "1.times { puts 'hello' }\n"
+        editor.insertText(textStart)
+        editor.moveUp 1
+        editor.moveRight() for num in [0...11]
+        atom.workspaceView.trigger 'ruby-block-converter:to-do-end'
+        editor.undo()
+        expect(editor.getLastSelection().getText()).toBe ''

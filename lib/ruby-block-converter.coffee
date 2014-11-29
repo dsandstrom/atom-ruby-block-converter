@@ -18,6 +18,7 @@ class RubyBlockConverter
 
   performTransaction: (startRange, endRange, shouldCollapse=true) ->
     if startRange and endRange
+      @resetCursor(false)
       @editor.transact =>
         @replaceBlock(startRange, endRange)
         if shouldCollapse
