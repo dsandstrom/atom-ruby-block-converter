@@ -47,13 +47,13 @@ module.exports =
   convertToDoEnd: (join=true) ->
     @doEndConverter = new DoEndConverter()
     startRange = @doEndConverter.findOpenCurly()
-    if startRange != null
+    if startRange
       endRange = @doEndConverter.findClosedCurly(startRange)
     @doEndConverter.performTransaction(startRange, endRange, join)
 
   convertToCurly: (collapse=true) ->
     @curlyConverter = new CurlyConverter()
     startRange = @curlyConverter.findDo()
-    if startRange != null
+    if startRange
       endRange = @curlyConverter.findEnd(startRange)
     @curlyConverter.performTransaction(startRange, endRange, collapse)

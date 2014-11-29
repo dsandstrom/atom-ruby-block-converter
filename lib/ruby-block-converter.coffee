@@ -18,14 +18,13 @@ class RubyBlockConverter
 
   performTransaction: (startRange, endRange, shouldCollapse=true) ->
     if startRange and endRange
-      @buffer.beginTransaction()
-      @replaceBlock(startRange, endRange)
-      if shouldCollapse
-        collapsed = @collapseBlock(startRange, endRange)
-      else
-        collapsed = false
-      @resetCursor(collapsed, startRange)
-      @buffer.commitTransaction()
+      @editor.transact =>
+        @replaceBlock(startRange, endRange)
+        if shouldCollapse
+          collapsed = @collapseBlock(startRange, endRange)
+        else
+          collapsed = false
+        @resetCursor(collapsed, startRange)
     else if @initialCursor != null
       @editor.setCursorBufferPosition @initialCursor
 
