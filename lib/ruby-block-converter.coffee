@@ -17,7 +17,7 @@ class RubyBlockConverter
     @endCount - @startCount == 1
 
   performTransaction: (startRange, endRange, shouldCollapse=true) ->
-    if startRange != null and endRange != null
+    if startRange and endRange
       @buffer.beginTransaction()
       @replaceBlock(startRange, endRange)
       if shouldCollapse
