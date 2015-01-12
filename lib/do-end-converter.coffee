@@ -2,9 +2,6 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  # allow: (rspec blocks) or
-  # (no string hashes, no string start/end with :, bar, new line, end of line)
-  openRegex: /([\:]\w+\)\s+\{|[^\#]\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
 
   openRegex : ->
     segments = []
@@ -129,11 +126,15 @@ class DoEndConverter extends RubyBlockConverter
     joinedEnd = false
     @editor.setSelectedBufferRange endRange
     @editor.selectToEndOfWord()
+    console.log @editor.getSelection().getText()
     newEndRange = @editor.getSelectedBufferRange()
+    console.log newEndRange
     # only do same line
     if startRange.start.row == endRange.start.row
       # add new line in front of new end
+      console.log 'looking for end'
       @buffer.scanInRange /\send/, newEndRange, (obj) ->
+        console.log 'found end'
         obj.replace "\nend"
         joinedEnd = true
       if joinedEnd
