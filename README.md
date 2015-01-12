@@ -43,7 +43,7 @@ Place the cursor in between the do-end and hit the shortcut.
 ```
 
 ### Dependencies
-Requires Atom v0.126 and up
+Requires Atom v0.168 and up
 
 ### Thanks
 Inspired by the Sublime Text [Ruby Block Converter](https://github.com/irohiroki/RubyBlockConverter) by [irohiroki](https://github.com/irohiroki).

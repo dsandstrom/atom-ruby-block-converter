@@ -3,7 +3,7 @@
   "main": "./lib/main",
   "version": "2.5.0",
   "description": "Convert Ruby blocks between {} and do-end formats",
-  "activationEvents": [],
+  "activationCommands": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/dsandstrom/atom-ruby-block-converter"
@@ -18,7 +18,7 @@
     }
   ],
   "engines": {
-    "atom": ">0.125.0"
+    "atom": ">0.168.0"
   },
   "devDependencies": {
     "fs-plus": "2.x",
