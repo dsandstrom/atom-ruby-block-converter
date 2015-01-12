@@ -4,7 +4,7 @@ class RubyBlockConverter
   endCount: 0
 
   constructor: ->
-    @editor = atom.workspace.getActiveEditor()
+    @editor = atom.workspace.getActiveTextEditor()
     @buffer = @editor.buffer
     @initialCursor = @editor.getCursorBufferPosition()
     @linesInFile = @editor.getLineCount()
