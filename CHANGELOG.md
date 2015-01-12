@@ -1,3 +1,7 @@
+## 3.0.0 - 2015-1-11
+* Changed Mac keymaps to match Linux
+* Fixed deprecations
+
 ## 2.5.0 - 2014-11-28
 * Reset cursor to original position for better undoing
 

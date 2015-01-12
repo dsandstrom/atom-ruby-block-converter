@@ -10,19 +10,19 @@ Convert Ruby blocks between single line and multi line formats. Or between curly
 
 Place the cursor in between the brackets and hit the shortcut.
 
-|                  | Linux/Win |   Mac    |
-|------------------|-----------|----------|
-| Normal           | `alt-[`   | `ctrl-{` |
-| Without collapse | `alt-{`   | `alt-{`  |
+|                  |  Keys   |
+|------------------|---------|
+| Normal           | `alt-[` |
+| Without collapse | `alt-{` |
 
 ###### *do-end => { }*
 
 Place the cursor in between the do-end and hit the shortcut.
 
-|                 | Linux/Win |   Mac    |
-|-----------------|-----------|----------|
-| Normal          | `alt-]`   | `ctrl-}` |
-| Without joining | `alt-}`   | `alt-}`  |
+|                 |  Keys   |
+|-----------------|---------|
+| Normal          | `alt-]` |
+| Without joining | `alt-}` |
 
 ### Features
 * Hashes and string interpolation are ignored

@@ -1,11 +1,5 @@
-'.platform-linux .editor, .platform-win32 .editor':
+'.editor':
   'alt-[': 'ruby-block-converter:to-curly-brackets'
   'alt-{': 'ruby-block-converter:to-curly-brackets-without-collapse'
   'alt-]': 'ruby-block-converter:to-do-end'
-  'alt-}': 'ruby-block-converter:to-do-end-without-join'
-
-'.platform-darwin .editor':
-  'ctrl-{': 'ruby-block-converter:to-curly-brackets'
-  'alt-{': 'ruby-block-converter:to-curly-brackets-without-collapse'
-  'ctrl-}': 'ruby-block-converter:to-do-end'
   'alt-}': 'ruby-block-converter:to-do-end-without-join'
