@@ -1,3 +1,6 @@
+## 3.1.0 - 2015-1-25
+* Fix do end converter when no spaces inside of braces
+
 ## 3.0.0 - 2015-1-11
 * Changed Mac keymaps to match Linux
 * Fixed deprecations
