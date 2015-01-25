@@ -38,6 +38,14 @@ describe 'RubyBlockConverter', ->
         workspaceElement.trigger 'ruby-block-converter:to-do-end'
         expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend\n"
 
+    describe 'when no variable and no spaces', ->
+      it 'converts it to a multi line block with do-end', ->
+        editor.insertText("1.times {puts 'hello'}\n")
+        editor.moveUp 1
+        editor.moveRight() for num in [0...11]
+        workspaceElement.trigger 'ruby-block-converter:to-do-end'
+        expect(editor.getText()).toBe "1.times do\n  puts 'hello'\nend\n"
+
     describe 'when a variable', ->
       it 'converts it to a multi line block with do-end', ->
         editor.insertText("1.times { |bub| puts 'hello' }\n")
