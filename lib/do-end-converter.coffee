@@ -126,15 +126,11 @@ class DoEndConverter extends RubyBlockConverter
     joinedEnd = false
     @editor.setSelectedBufferRange endRange
     @editor.selectToEndOfWord()
-    console.log @editor.getSelection().getText()
     newEndRange = @editor.getSelectedBufferRange()
-    console.log newEndRange
     # only do same line
     if startRange.start.row == endRange.start.row
       # add new line in front of new end
-      console.log 'looking for end'
-      @buffer.scanInRange /\send/, newEndRange, (obj) ->
-        console.log 'found end'
+      @buffer.scanInRange /\s?end/, newEndRange, (obj) ->
         obj.replace "\nend"
         joinedEnd = true
       if joinedEnd
@@ -143,8 +139,9 @@ class DoEndConverter extends RubyBlockConverter
         @editor.selectToEndOfLine()
         newStartRange = @editor.getSelectedBufferRange()
         # and new line after bars
-        @buffer.scanInRange /do\s\|[\w\,\s]+\|/, newStartRange, (obj) ->
+        @buffer.scanInRange /do\s*\|[\w\,\s]+\|/, newStartRange, (obj) ->
           text = obj.matchText
+          text = text.replace(/do\|/, 'do |')
           obj.replace "#{text}\n"
           foundDoBar = true
           joined = true
