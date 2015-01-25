@@ -87,3 +87,7 @@ it { it { expect(response).to redirect } }
 it { it { expect(response).to redirect } }
 
 1.times { var = 'noop' }
+
+set.map {|image| image.id }
+
+1.times {|bub| puts 'hello'}

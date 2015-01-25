@@ -2,9 +2,6 @@ RubyBlockConverter = require './ruby-block-converter'
 
 module.exports =
 class DoEndConverter extends RubyBlockConverter
-  # allow: (rspec blocks) or
-  # (no string hashes, no string start/end with :, bar, new line, end of line)
-  openRegex: /([\:]\w+\)\s+\{|[^\#]\{\s*([\"\']\w+[\"\']\s+\=[^>]|[^:\"\'\|]\w+[^:][\s\.]|\||\n|$))/
 
   openRegex : ->
     segments = []
@@ -133,7 +130,7 @@ class DoEndConverter extends RubyBlockConverter
     # only do same line
     if startRange.start.row == endRange.start.row
       # add new line in front of new end
-      @buffer.scanInRange /\send/, newEndRange, (obj) ->
+      @buffer.scanInRange /\s?end/, newEndRange, (obj) ->
         obj.replace "\nend"
         joinedEnd = true
       if joinedEnd
@@ -142,8 +139,9 @@ class DoEndConverter extends RubyBlockConverter
         @editor.selectToEndOfLine()
         newStartRange = @editor.getSelectedBufferRange()
         # and new line after bars
-        @buffer.scanInRange /do\s\|[\w\,\s]+\|/, newStartRange, (obj) ->
+        @buffer.scanInRange /do\s*\|[\w\,\s]+\|/, newStartRange, (obj) ->
           text = obj.matchText
+          text = text.replace(/do\|/, 'do |')
           obj.replace "#{text}\n"
           foundDoBar = true
           joined = true
