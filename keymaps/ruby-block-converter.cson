@@ -1,4 +1,4 @@
-'.editor':
+'atom-text-editor':
   'alt-[': 'ruby-block-converter:to-curly-brackets'
   'alt-{': 'ruby-block-converter:to-curly-brackets-without-collapse'
   'alt-]': 'ruby-block-converter:to-do-end'
