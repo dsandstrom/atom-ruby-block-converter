@@ -1,3 +1,6 @@
+## 3.2.0 - 2015-2-26
+* Fix deprecated editor class in keymaps
+
 ## 3.1.0 - 2015-1-25
 * Fix do end converter when no spaces inside of braces
 
