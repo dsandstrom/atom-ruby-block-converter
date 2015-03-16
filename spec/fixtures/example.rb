@@ -91,3 +91,10 @@ it { it { expect(response).to redirect } }
 set.map {|image| image.id }
 
 1.times {|bub| puts 'hello'}
+
+expect { p(n) }
+
+
+context "for tim" {
+  it { expect(response).to redirect }
+}

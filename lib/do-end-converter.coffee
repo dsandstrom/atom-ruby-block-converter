@@ -11,7 +11,9 @@ class DoEndConverter extends RubyBlockConverter
     # no string hashes
     segments.push("#{blockStart}[\\\"\\']\\w[\\\"\\']\\s+\\=[^>]")
     # no strings that start/end with :
-    segments.push("#{blockStart}[^:\\\"\\'\|]\\w*([^:]|::\\w*)[\\s\\.\\\"\\'\\[]")
+    segments.push(
+      "#{blockStart}[^:\\\"\\'\|]\\w*([^:]|::\\w*)[\\s\\.\\\"\\'\\[\\(]"
+    )
     # bar variables
     segments.push("#{blockStart}\\|")
     # new line
