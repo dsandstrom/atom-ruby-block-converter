@@ -1,3 +1,6 @@
+## 3.3.0 - 2015-3-15
+* Fix do-end when method inside
+
 ## 3.2.0 - 2015-2-26
 * Fix deprecated editor class in keymaps
 
