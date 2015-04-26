@@ -1,3 +1,6 @@
+## 3.4.0 - 2015-4-25
+* Use subscriber for command activation
+
 ## 3.3.0 - 2015-3-15
 * Fix do-end when method inside
 

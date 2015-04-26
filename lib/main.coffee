@@ -1,18 +1,23 @@
+{CompositeDisposable} = require 'atom'
 CurlyConverter = require './curly-converter'
 DoEndConverter = require './do-end-converter'
 
 module.exports =
+  subscriptions:  null
+  curlyConverter: null
+  doEndConverter: null
+
   config:
     maxLines:
       type: 'integer'
       default: 6
-      description: 'The maximum amount of lines to go up or down to look for a match.'
-
-  curlyConverter: null
-  doEndConverter: null
+      description:
+        'The maximum amount of lines to go up or down to look for a match.'
 
   activate: (state) ->
-    atom.commands.add 'atom-workspace',
+    @subscriptions = new CompositeDisposable
+
+    @subscriptions.add atom.commands.add 'atom-workspace',
       "ruby-block-converter:to-curly-brackets": =>
         @toCurlyBrackets()
       "ruby-block-converter:to-do-end": =>
