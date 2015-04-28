@@ -1,3 +1,6 @@
+## 3.5.0 - 2015-4-28
+* Add keywords to package.json
+
 ## 3.4.1 - 2015-4-28
 * Dispose of command's subscription on deactivate
 
