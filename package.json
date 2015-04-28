@@ -1,7 +1,7 @@
 {
   "name": "ruby-block-converter",
   "main": "./lib/main",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "Convert Ruby blocks between {} and do-end formats",
   "activationCommands": {},
   "repository": {
