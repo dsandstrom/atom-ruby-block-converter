@@ -11,6 +11,11 @@
   "bugs": {
     "url": "https://github.com/dsandstrom/atom-ruby-block-converter/issues"
   },
+  "keywords": [
+    "ruby",
+    "ruby on rails",
+    "format"
+  ],
   "licenses": [
     {
       "type": "MIT",
