@@ -1,3 +1,6 @@
+## 3.4.1 - 2015-4-28
+* Dispose of command's subscription on deactivate
+
 ## 3.4.0 - 2015-4-25
 * Use subscriber for command activation
 

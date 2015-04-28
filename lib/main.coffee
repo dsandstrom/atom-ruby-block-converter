@@ -32,6 +32,7 @@ module.exports =
     @curlyConverter = null
     @doEndConverter?.destroy()
     @doEndConverter = null
+    @subscriptions.dispose()
 
   # Converts do-end blocks to curly bracket blocks
   toCurlyBrackets: ->
