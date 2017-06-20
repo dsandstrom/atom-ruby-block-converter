@@ -11,16 +11,16 @@ Convert Ruby blocks between single line and multi line formats. Or between curly
 
 Place the cursor in between the brackets and hit the shortcut.
 
-|                 | MacOS        | Keys    |
-|:----------------|:-------------|:--------|
-| Normal          | `ctrl-}`     | `alt-]` |
-| Without joining | `ctrl-alt-}` | `alt-}` |
+|                 | macOS        | Linux/Win |
+|:----------------|:-------------|:----------|
+| Normal          | `ctrl-}`     | `alt-]`   |
+| Without joining | `ctrl-alt-}` | `alt-}`   |
 
 ###### *do-end => { }*
 
 Place the cursor in between the do-end and hit the shortcut.
 
-|                  | MacOS        | Linux/Win |
+|                  | macOS        | Linux/Win |
 |:-----------------|:-------------|:----------|
 | Normal           | `ctrl-{`     | `alt-[`   |
 | Without collapse | `ctrl-alt-{` | `alt-{`   |
@@ -44,7 +44,7 @@ Place the cursor in between the do-end and hit the shortcut.
 ```
 
 ### Notes
-* Version 4.0.0 introduces changes to the MacOS keymaps
+* Version 4.0.0 introduces changes to the macOS keymaps
 
 ### Thanks
 Inspired by the Sublime Text [Ruby Block Converter](https://github.com/irohiroki/RubyBlockConverter) by [irohiroki](https://github.com/irohiroki).
