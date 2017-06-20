@@ -7,6 +7,7 @@ describe 'RubyBlockConverter', ->
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
+    jasmine.attachToDOM(workspaceElement)
     directory = temp.mkdirSync()
     atom.project.setPaths(directory)
     filePath = path.join(directory, 'example.rb')
