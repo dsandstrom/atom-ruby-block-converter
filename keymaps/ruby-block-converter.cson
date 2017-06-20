@@ -1,5 +1,11 @@
-'atom-text-editor':
+'.platform-linux atom-text-editor, .platform-win32 atom-text-editor':
   'alt-[': 'ruby-block-converter:to-curly-brackets'
   'alt-{': 'ruby-block-converter:to-curly-brackets-without-collapse'
   'alt-]': 'ruby-block-converter:to-do-end'
   'alt-}': 'ruby-block-converter:to-do-end-without-join'
+
+'.platform-darwin atom-text-editor':
+  'ctrl-{': 'ruby-block-converter:to-curly-brackets'
+  'ctrl-alt-{': 'ruby-block-converter:to-curly-brackets-without-collapse'
+  'ctrl-}': 'ruby-block-converter:to-do-end'
+  'ctrl-alt-}': 'ruby-block-converter:to-do-end-without-join'
