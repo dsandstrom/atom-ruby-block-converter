@@ -1,5 +1,6 @@
 # Ruby Block Converter
-###### An Atom Package - [Atom.io](https://atom.io/packages/ruby-block-converter) : [Github](https://github.com/dsandstrom/atom-ruby-block-converter) : [![Build Status](https://travis-ci.org/dsandstrom/atom-ruby-block-converter.svg?branch=master)](https://travis-ci.org/dsandstrom/atom-ruby-block-converter)
+###### An Atom Package - [Atom.io](https://atom.io/packages/ruby-block-converter) : [Github](https://github.com/dsandstrom/atom-ruby-block-converter)
+[![Build Status](https://travis-ci.org/dsandstrom/atom-ruby-block-converter.svg?branch=master)](https://travis-ci.org/dsandstrom/atom-ruby-block-converter)
 
 Convert Ruby blocks between single line and multi line formats. Or between curly brackets and do-end statements.
 
@@ -10,19 +11,19 @@ Convert Ruby blocks between single line and multi line formats. Or between curly
 
 Place the cursor in between the brackets and hit the shortcut.
 
-|                  |  Keys   |
-|------------------|---------|
-| Normal           | `alt-[` |
-| Without collapse | `alt-{` |
+|                 | MacOS        | Keys    |
+|:----------------|:-------------|:--------|
+| Normal          | `ctrl-}`     | `alt-]` |
+| Without joining | `ctrl-alt-}` | `alt-}` |
 
 ###### *do-end => { }*
 
 Place the cursor in between the do-end and hit the shortcut.
 
-|                 |  Keys   |
-|-----------------|---------|
-| Normal          | `alt-]` |
-| Without joining | `alt-}` |
+|                  | MacOS        | Linux/Win |
+|:-----------------|:-------------|:----------|
+| Normal           | `ctrl-{`     | `alt-[`   |
+| Without collapse | `ctrl-alt-{` | `alt-{`   |
 
 ### Features
 * Hashes and string interpolation are ignored
