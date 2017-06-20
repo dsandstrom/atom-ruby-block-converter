@@ -43,8 +43,8 @@ Place the cursor in between the do-end and hit the shortcut.
 'ruby-block-converter:to-do-end-without-join'
 ```
 
-### Dependencies
-Requires Atom v0.168 and up
+### Notes
+* Version 4.0.0 introduces changes to the MacOS keymaps
 
 ### Thanks
 Inspired by the Sublime Text [Ruby Block Converter](https://github.com/irohiroki/RubyBlockConverter) by [irohiroki](https://github.com/irohiroki).

@@ -1,3 +1,6 @@
+## 4.0.0 - 2017-6-20
+* Change keymaps for MacOS
+
 ## 3.5.0 - 2015-4-28
 * Add keywords to package.json
 
