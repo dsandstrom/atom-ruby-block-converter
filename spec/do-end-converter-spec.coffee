@@ -1,21 +1,13 @@
-fs = require 'fs-plus'
-path = require 'path'
-temp = require 'temp'
-
 describe 'RubyBlockConverter', ->
   [editor, editorView] = []
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
-    jasmine.attachToDOM(workspaceElement)
-    directory = temp.mkdirSync()
-    atom.project.setPaths(directory)
-    filePath = path.join(directory, 'example.rb')
     atom.config.set('editor.tabLength', 2)
     atom.config.set('ruby-block-converter.maxLines', 6)
 
     waitsForPromise ->
-      atom.workspace.open(filePath).then (e) ->
+      atom.workspace.open('test.rb').then (e) ->
         editor = e
         editorView = atom.views.getView(editor)
 
