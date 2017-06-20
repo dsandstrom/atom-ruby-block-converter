@@ -3,10 +3,10 @@ path = require 'path'
 temp = require 'temp'
 
 describe 'RubyBlockConverter', ->
-  [workspaceElement, editor, buffer] = []
+  [editor, editorView] = []
 
   beforeEach ->
-    workspaceElement = atom.views.getView(atom.workspace).__spacePenView
+    workspaceElement = atom.views.getView(atom.workspace)
     directory = temp.mkdirSync()
     atom.project.setPaths(directory)
     filePath = path.join(directory, 'example.rb')
@@ -16,8 +16,7 @@ describe 'RubyBlockConverter', ->
     waitsForPromise ->
       atom.workspace.open(filePath).then (e) ->
         editor = e
-        buffer = editor.getBuffer()
-        editor.setTabLength(2)
+        editorView = atom.views.getView(editor)
 
     waitsForPromise ->
       atom.packages.activatePackage('language-ruby')
@@ -27,7 +26,10 @@ describe 'RubyBlockConverter', ->
 
   describe 'toCurlyBracketsWithoutCollapse', ->
     it 'does not change an empty file', ->
-      workspaceElement.trigger 'ruby-block-converter:to-curly-brackets-without-collapse'
+      atom.commands.dispatch(
+        editorView,
+        'ruby-block-converter:to-curly-brackets-without-collapse'
+      )
       expect(editor.getText()).toBe ''
 
     describe 'when no variable', ->
@@ -35,12 +37,18 @@ describe 'RubyBlockConverter', ->
         editor.insertText("1.times do\n  puts 'hello'\nend\n")
         editor.moveUp 2
         editor.moveToEndOfLine()
-        workspaceElement.trigger 'ruby-block-converter:to-curly-brackets-without-collapse'
+        atom.commands.dispatch(
+          editorView,
+          'ruby-block-converter:to-curly-brackets-without-collapse'
+        )
         expect(editor.getText()).toBe "1.times {\n  puts 'hello'\n}\n"
 
     describe 'when a variable', ->
       it 'converts brackets only', ->
         editor.insertText("1.times do |bub|\n  puts bub\nend\n")
         editor.moveUp 2
-        workspaceElement.trigger 'ruby-block-converter:to-curly-brackets-without-collapse'
+        atom.commands.dispatch(
+          editorView,
+          'ruby-block-converter:to-curly-brackets-without-collapse'
+        )
         expect(editor.getText()).toBe "1.times { |bub|\n  puts bub\n}\n"
