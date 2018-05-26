@@ -540,3 +540,24 @@ describe 'RubyBlockConverter', ->
         atom.commands.dispatch(editorView, 'ruby-block-converter:to-do-end')
         editor.undo()
         expect(editor.getLastSelection().getText()).toBe ''
+
+    describe 'when a line with "{" also contains "do"', ->
+      trigger = ->
+        editor.moveUp 1
+        editor.moveToEndOfLine()
+        atom.commands.dispatch(editorView, 'ruby-block-converter:to-do-end')
+
+      beforeEach ->
+        textStart = 'let(:domain) { "test" }'
+        editor.insertText(textStart)
+
+      it 'converts it do-end', ->
+        expectedText = '''
+          let(:domain) do
+            "test"
+          end
+        '''
+
+        trigger()
+
+        expect(editor.getText()).toBe(expectedText)

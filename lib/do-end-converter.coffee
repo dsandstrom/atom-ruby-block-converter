@@ -149,7 +149,7 @@ class DoEndConverter extends RubyBlockConverter
           joined = true
         unless foundDoBar
           # and new line after do$
-          @buffer.scanInRange /do/, newStartRange, (obj) ->
+          @buffer.scanInRange /(?!do\w.*do(?!\w))do/, newStartRange, (obj) ->
             obj.replace "do\n"
             joined = true
     if joined
