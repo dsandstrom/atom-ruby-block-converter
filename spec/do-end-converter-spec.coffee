@@ -547,11 +547,12 @@ describe 'RubyBlockConverter', ->
         editor.moveToEndOfLine()
         atom.commands.dispatch(editorView, 'ruby-block-converter:to-do-end')
 
-      beforeEach ->
-        textStart = 'let(:domain) { "test" }'
-        editor.insertText(textStart)
+      insertText = (text) ->
+        editor.insertText(text)
 
       it 'converts it do-end', ->
+        insertText 'let(:domain) { "test" }'
+
         expectedText = '''
           let(:domain) do
             "test"
@@ -561,3 +562,17 @@ describe 'RubyBlockConverter', ->
         trigger()
 
         expect(editor.getText()).toBe(expectedText)
+
+      describe 'and there is a space before "do" and the block has no indentation', ->
+        it 'converts it do-end', ->
+          insertText 'describe("let\'s do it"){ it { is_expected.to eq(42) } }'
+
+          expectedText = '''
+            describe("let\'s do it") do
+              it { is_expected.to eq(42) }
+            end
+          '''
+
+          trigger()
+
+          expect(editor.getText()).toBe(expectedText)
