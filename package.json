@@ -4,13 +4,7 @@
   "version": "4.0.1",
   "description": "Convert Ruby blocks between {} and do-end formats",
   "activationCommands": {},
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dsandstrom/atom-ruby-block-converter"
-  },
-  "bugs": {
-    "url": "https://github.com/dsandstrom/atom-ruby-block-converter/issues"
-  },
+  "repository": "git@github.com:dsandstrom/atom-ruby-block-converter",
   "keywords": [
     "ruby",
     "ruby on rails",
