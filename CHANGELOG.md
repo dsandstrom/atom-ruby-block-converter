@@ -1,3 +1,6 @@
+## 4.1.0 - 2018-6-27
+* Fix collaption of a block when line contains "do"
+
 ## 4.0.0 - 2017-6-20
 * Change keymaps for MacOS
 
